@@ -1,0 +1,90 @@
+---
+title: '\ '
+output: blogdown::html_page
+editor_options: 
+  chunk_output_type: console
+quiz_title: "99.1.3 Theory quiz: selecting and filtering"
+quiz_type: 'simple_theory'
+course_abbrev: 'IDAR'
+---
+
+```{r, echo = F, message = F, warning = F}
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, 
+               here,
+               googledrive,
+               knitr)
+
+source(here("global/functions/misc_functions.R"))
+
+# Setup for uploading images
+if (!drive_has_token()) drive_auth(email = "trainingteam@thegraphnetwork.org")
+options(gargle_oauth_email = "trainingteam@thegraphnetwork.org")
+knitr::opts_knit$set(upload.fun = gdrive_upload) # pulled by knitr to upload image
+
+opts_chunk$set(warning = F, message = F)
+```
+
+## Prologue
+
+This quiz tests your understanding of the `filter()` and `select()` functions. Good luck!
+
+For multiple choice questions, please enter the correct letter option into the provided box.
+
+------------------------------------------------------------------------
+
+## Question-1
+
+Which of the following R statements will pick three columns from the `mtcars` data frame? Answer: {c}
+
+a.  `filter(mtcars, wt, mpg)`
+
+b.  `filter(mtcars, wt, mpg, cyl)`
+
+c.  `select(mtcars, wt, mpg, cyl)`
+
+------------------------------------------------------------------------
+
+## Question-2
+
+Fill in the blank:
+
+The **select** function is to columns as the **{filter}** function is to rows.
+
+------------------------------------------------------------------------
+
+## Question-3
+
+The image shows a selection of packages from the "tidyverse".
+
+![](images/tidyverse_website.png)
+
+The functions **select** and **filter** are from which package? Answer: {dplyr}
+
+------------------------------------------------------------------------
+
+## Question-4
+
+Answer T for TRUE or F for FALSE.
+
+In R, `=` can be used as an assignment operator, while `==` is used for testing equality. Answer: {[T][TRUE]}
+
+------------------------------------------------------------------------
+
+## Questionzz
+
+Consider the **select** statement below:
+
+```{r eval = F}
+df <- outbreaks::ebola_kikwit_1995 %>% select(-death)
+```
+
+Which of these describes what the statement does? Answer: {a}
+
+a.  It drops the "death" column from the `ebola_kikwit_1995` data frame and assigns the output to `df`.
+
+b.  It selects the "death" column from the `ebola_kikwit_1995` data frame and assigns the output to `df`.
+
+c.  It selects the "death" column from the `ebola_kikwit_1995` data frame and displays the result on the screen.
+
+------------------------------------------------------------------------

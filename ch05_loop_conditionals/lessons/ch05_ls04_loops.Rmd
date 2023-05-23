@@ -1,0 +1,276 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+  word_document:
+    toc: true
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: console
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+library(dplyr)
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+# Source autograder script quietly 
+mute(here("ch05_loop_conditionals/lessons/ch05_ls04_loops_autograder.R"))
+```
+
+<!-- # Loops: automating tasks -->
+
+## Learning objectives
+
+1.  You will learn how to use `for` loops to automate tasks in R.
+
+## Introduction to the dataset
+
+In this lesson, we will use some data from the [Gapminder project](https://www.gapminder.org/). 
+```{r render = reactable_10_rows, message = FALSE}
+
+gapminder = read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder.csv')
+gapminder
+
+```
+
+## Automation with `for` loops
+
+For loops can be really useful to automate tasks in R. 
+
+Suppose we want to plot the variation in time of the life expectancy in Switzerland. We can do that using the code below. In the plot, we use as title: `Switzerland - lifeExp` and save the plot in the `images` folder.  
+
+```{r} 
+## filter the country to plot
+gap_to_plot <- gapminder %>%
+  filter(country == "Switzerland")
+
+## plot
+my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = lifeExp)) + 
+  geom_point() +
+  ## add title and save
+  labs(title = "Switzerland - lifeExp")
+
+ggsave(filename = 'Switzerland_lifeExp.png', path = here("ch05_loop_conditionals/images"), plot = my_plot)
+my_plot
+```
+
+To be able to create this plot with another country, let's replace the 'Switzerland' string by a variable called `ctry`. 
+
+```{r} 
+
+ctry = 'Switzerland'
+
+gap_to_plot <- gapminder %>%
+  filter(country == ctry)
+
+## plot
+my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = lifeExp)) + 
+  geom_point() +
+  ## add title and save
+  labs(title = paste(ctry, " - ", "lifeExp", sep = ""))
+
+ggsave(filename = paste(ctry, '_lifeExp.png', sep = ""), path = here("ch05_loop_conditionals/images"), plot = my_plot)
+my_plot
+```
+
+Suppose now, that we want to create this plot also for 'Brazil', 'Colombia' and 'Angola'. Instead of running the code above three times, we can create a loop that given a vector, change the value of `ctry` after each iteration. Let's do this in the code below: 
+
+```{r} 
+
+countries = c("Brazil", "Colombia", "Angola")
+
+for (ctry in countries){
+  gap_to_plot <- gapminder %>%
+    filter(country == ctry)
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = lifeExp)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(ctry, " - ", "lifeExp", sep = ""))
+  
+  ggsave(filename = paste(ctry, '_lifeExp.png', sep = ""), path = here("ch05_loop_conditionals/images"), plot = my_plot)
+  }
+
+```
+
+::: practice
+
+ Based on the code above, select between the chunks of code below, which allows you to generate the plot for a list of countries and columns. The code must allow you to plot any column of the gapminder data set. 
+
+* A
+```{r eval = F, include = T}
+
+
+countries = c("Brazil", "Colombia", "Angola")
+cols_plot = c("pop", "lifeExp","gdpPercap")
+
+for (col in countries){
+  for (ctry in cols_plot) {
+    
+    gap_to_plot <- gapminder %>%
+    filter(country == ctry)
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes_string(x ="year", y = col)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(ctry, " - ", col, sep = ""))
+  
+  ggsave(filename = paste(ctry, '_' , col, '.png', sep = ""), path = here("ch05_loop_conditionals/images"), plot = my_plot)
+  }
+}
+
+```
+
+* B
+```{r eval = F, include = T}
+
+
+countries = c("Brazil", "Colombia", "Angola")
+cols_plot = c("pop", "lifeExp","gdpPercap")
+
+for (ctry in countries){
+  for (col in cols_plot) {
+    
+    gap_to_plot <- gapminder %>%
+    filter(country == ctry)
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes_string(x ="year", y = lifeExp)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(ctry, " - ", col, sep = ""))
+  
+  ggsave(filename = paste(ctry, '_' , 'lifeExp', '.png', sep = ""), path = here("ch05_loop_conditionals/images"), plot = my_plot)
+  }
+}
+
+```
+
+* C
+```{r eval = F, include = T}
+
+
+countries = c("Brazil", "Colombia", "Angola")
+cols_plot = c("pop", "lifeExp","gdpPercap")
+
+for (ctry in countries){
+  for (col in cols_plot) {
+    
+    gap_to_plot <- gapminder %>%
+    filter(country == ctry)
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes_string(x ="year", y = col)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(ctry, " - ", "lifeExp", sep = ""))
+  
+  ggsave(filename = paste(ctry, '_' , col, '.png', sep = ""), path = here("ch05_loop_conditionals/images"), plot = my_plot)
+  }
+}
+
+```
+
+
+* D
+```{r eval = F, include = T}
+
+
+countries = c("Brazil", "Colombia", "Angola")
+cols_plot = c("pop", "lifeExp","gdpPercap")
+
+for (ctry in countries){
+  for (col in cols_plot) {
+    
+    gap_to_plot <- gapminder %>%
+    filter(country == ctry)
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes_string(x ="year", y = col)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(ctry, " - ", col, sep = ""))
+  
+  ggsave(filename = paste(ctry, '_' , col, '.png', sep = ""), path = here("ch05_loop_conditionals/images"), plot = my_plot)
+  }
+}
+
+```
+::: 
+
+```{r, echo = FALSE}
+
+q1 <- "D"
+
+.check_q1()
+
+
+```
+
+We can also save the data filtered by country in a `.csv` file by adding the function `write.csv` in the loop.
+
+```{r} 
+countries = c("Brazil", "Colombia", "Angola")
+
+for (ctry in countries){
+  gap_to_plot <- gapminder %>%
+    filter(country == ctry)
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = lifeExp)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(ctry, " - ", "lifeExp", sep = ""))
+  
+  setwd(here("ch05_loop_conditionals/data"))
+  
+  write.csv(gap_to_plot, paste("gapminder_",ctry, ".csv", sep = ""), row.names = FALSE)
+  
+  ggsave(filename = paste(ctry, '_lifeExp.png', sep = ""), path = here("ch05_loop_conditionals/images"), plot = my_plot)
+}
+
+ 
+```
+
+
+```{r include = F}
+.score_print()
+```
+
+
+--------------------------------------------------------------------------------
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r tgc_contributors_list(ids = c("dcpcamara", "eduardo", "lolovanco", "kendavidn"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   The Ocean Health Index Team. "Introduction to Open Data Science." Accessed Jun 10, 2022. <http://ohi-science.org/data-science-training/programming.html#automation-with-for-loops>
+
+
+<!-- (Chicago format. You can use https://www.citationmachine.net) -->
+
+`r tgc_license()`
+
+

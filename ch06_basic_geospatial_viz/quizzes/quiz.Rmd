@@ -1,0 +1,440 @@
+---
+title: '\ '
+output: blogdown::html_page
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo = F, message = F, warning = F}
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, 
+               here,
+               googledrive,
+               knitr)
+
+source(here("global/functions/misc_functions.R"))
+
+# Setup for uploading images
+if (!drive_has_token()) drive_auth(email = "trainingteam@thegraphnetwork.org")
+options(gargle_oauth_email = "trainingteam@thegraphnetwork.org")
+knitr::opts_knit$set(upload.fun = gdrive_upload) # pulled by knitr to upload image
+
+opts_chunk$set(warning = F, message = F)
+```
+
+```{r draft-datasets-1}
+library(tidyverse)
+library(sf)
+mers_1 <- read_csv("ch06_basic_geospatial_viz/data/mers-joy/Ramshaw_et_al_MERSCoV_dataset.csv")
+mers_1 %>% glimpse()
+# count per country
+mers_1 %>% 
+  count(country,sort = T)
+# how many missings?
+mers_1 %>% 
+  filter(is.na(long))
+# filter by country and set crs
+mers_1_sau <- mers_1 %>% 
+  filter(country == "SAU") %>% 
+  filter(!is.na(long)) %>% 
+  st_as_sf(coords = c("long","lat"),
+           crs = 4326)
+# make a ggplot map
+mers_1_sau %>% 
+  ggplot() +
+  geom_sf()
+# count how many types of transmission routes
+mers_1 %>% count(transmission_route)
+# make a thematic map (dot map)
+mers_1_sau %>% 
+  ggplot() +
+  geom_sf(aes(color = transmission_route))
+# add a shapefile as map backgroup
+# first read the sau shapefile
+shapefile_sau <- read_sf(dsn = "ch06_basic_geospatial_viz/data/mers-joy/ramshaw_et_al_shapefiles/ramshaw_et_al_shapefiles/SAU_Al_Ahsa_Governorate.shp")
+# second add one layer to dot map
+ggplot() +
+  geom_sf(data = shapefile_sau) +
+  geom_sf(data = mers_1_sau,
+          aes(color = transmission_route))
+# not enough, so download new data
+geoboundaries_sau <- rgeoboundaries::geoboundaries(country = "SAU",adm_lvl = 1)
+# try it again
+ggplot() +
+  geom_sf(data = geoboundaries_sau) +
+  geom_sf(data = mers_1_sau,
+          aes(color = transmission_route))
+# agregar anotaciones
+library(ggspatial)
+ggplot() +
+  geom_sf(data = geoboundaries_sau) +
+  geom_sf(data = mers_1_sau,
+          aes(color = transmission_route)) +
+  annotation_north_arrow(location = "tr") +
+  annotation_scale(location = "br")
+# agregar etiquetas usando el shapefile
+library(ggsflabel)
+ggplot() +
+  geom_sf(data = geoboundaries_sau) +
+  geom_sf(data = shapefile_sau) +
+  geom_sf_label_repel(
+    data = shapefile_sau,
+    mapping = aes(label = ADM1_NAME)) +
+  geom_sf(data = mers_1_sau,
+          aes(color = transmission_route)) +
+  annotation_north_arrow(location = "tr") +
+  annotation_scale(location = "br")
+# ¿hay sobrelape de puntos?
+mers_1 %>% count(long,lat,sort = T)
+mers_1_sau %>% 
+  ggplot() +
+  geom_sf(alpha = 0.3)
+mers_1_count_sf <- mers_1 %>% 
+  count(country,long,lat,sort = T) %>% 
+  filter(!is.na(long)) %>% 
+  st_as_sf(coords = c("long","lat"),
+           crs = 4326)
+# crear dot plot con proportional points
+mers_1_count_sf %>% 
+  ggplot() +
+  geom_sf(aes(size = n))
+# crear dot map con basemap de osm
+library(ggspatial)
+mers_1_count_sf %>% 
+  ggplot() +
+  annotation_map_tile(type = "osm", zoomin = 0) +
+  geom_sf(aes(size = n),
+          alpha = 0.2)
+# cambiar  sistema de coordenadas
+mers_1_count_sf %>% 
+  ggplot() +
+  annotation_map_tile(type = "osm", zoomin = 0) +
+  geom_sf(aes(size = n),
+          alpha = 0.2) +
+  coord_sf(crs = 3035)
+```
+
+```{r draft-datasets-2}
+library(tidyverse)
+library(sf)
+mers_2 <- read_csv("ch06_basic_geospatial_viz/data/mers-joy/Reeves_et_al_MERS_dataset.csv") %>% 
+  janitor::clean_names()
+mers_2 %>% glimpse()
+# transformar en formato sf para explorar
+mers_2_sf <- mers_2 %>% 
+  st_as_sf(coords = c("longitude","latitude"),
+           crs = 4326)
+# distribucion espacial de datos
+mers_2_sf %>% 
+  ggplot() +
+  geom_sf()
+# revisar distribucion de variables
+mers_2 %>% skimr::skim(age)
+mers_2 %>% count(sex)
+# hay puntos sobrelapados?
+mers_2 %>% count(latitude,longitude,sort = T)
+# crear resumen de datos espaciales
+mers_2_mean <- mers_2 %>% 
+  group_by(latitude,longitude) %>% 
+  summarise(
+    n = n(),
+    mean_age = mean(age)) %>% 
+  ungroup()
+# distribucion
+mers_2_mean_sf <- mers_2_mean %>% 
+  st_as_sf(coords = c("longitude","latitude"),
+           crs = 4326)
+# revisar distribucion
+mers_2_mean_sf %>% 
+  ggplot() +
+  geom_sf()
+# revisar distribucion espacial de variables
+mers_2_mean_sf %>% 
+  ggplot() +
+  geom_sf(aes(size = n))
+# revisar distribucion de edad por punto
+mers_2_mean_sf %>% 
+  ggplot() +
+  geom_sf(aes(size = n,
+              color = mean_age))
+#' para identificar si hay una agregacion 
+#' con muy baja o muy alta edad
+#' usar colorspace para agregar
+#' una escala color continua divergente
+#' con punto medio en el valor de la mediana
+mers_2_mean_sf %>% 
+  ggplot() +
+  geom_sf(aes(size = n,
+              color = mean_age)) +
+  colorspace::scale_color_continuous_sequential()
+# contacto con camelidos
+
+mers_2_prop <- mers_2 %>% 
+  select(latitude,longitude,camel_contact) %>% 
+  mutate(camel_contact_yes = case_when(
+    camel_contact == "yes" ~ 1,
+    TRUE ~ 0
+  )) %>% 
+  group_by(latitude,longitude) %>% 
+  summarise(
+    n = n(),
+    prop_camel_contact = mean(camel_contact_yes)) %>% 
+  ungroup()
+
+# distribucion
+mers_2_prop_sf <- mers_2_prop %>% 
+  st_as_sf(coords = c("longitude","latitude"),
+           crs = 4326)
+# revisar distribucion
+mers_2_prop_sf %>% 
+  ggplot() +
+  geom_sf()
+
+# distribucion espacial de variables
+mers_2_prop_sf %>% 
+  ggplot() +
+  geom_sf(aes(size = prop_camel_contact),
+          alpha = 0.5)
+```
+
+```{r draft-datasets-3}
+library(tidyverse)
+library(sf)
+# read case data
+yfever_1 <- read_rds("ch06_basic_geospatial_viz/data/yellowf-bra/YF_Brazil-figshare/data_clean/YFcases/YFlong.rds") %>% 
+  janitor::clean_names()
+
+# explore data
+yfever_1 %>% glimpse()
+yfever_1 %>% as_tibble() %>% 
+  select(muni_no,case) %>% arrange(desc(case))
+yfever_1 %>% skimr::skim(year,case)
+
+# summarize case data
+yfever_1_sum <- yfever_1 %>% 
+  group_by(muni_no) %>% 
+  summarise(total_case = sum(case, na.rm = TRUE)) %>% 
+  ungroup()
+
+# read shapefile data
+yfever_2 <- read_sf("ch06_basic_geospatial_viz/data/yellowf-bra/YF_Brazil-figshare/data_clean/BRAZpolygons.shp")
+yfever_2
+
+# left join shapefile and case data
+yfever_2_case <- yfever_2 %>% 
+  left_join(yfever_1_sum)
+
+# create choropleth map
+yfever_2_case %>% 
+  ggplot() +
+  geom_sf(aes(fill = total_case), color = NA) +
+  colorspace::scale_fill_continuous_sequential()
+```
+
+```{r draft-datasets-4}
+library(tidyverse)
+library(sf)
+
+typh_1 <- read_csv("ch06_basic_geospatial_viz/data/typhoid-uga/HOUSEHOLD DATASET.csv") %>%
+  janitor::clean_names()
+
+typh_2 <- read_csv("ch06_basic_geospatial_viz/data/typhoid-uga/HOSPITAL DATASET.csv") %>% 
+  janitor::clean_names()
+
+typh_3 <- read_csv("ch06_basic_geospatial_viz/data/typhoid-uga/NATIONAL_DATASET.csv") %>% 
+  janitor::clean_names()
+
+typh_1 %>% glimpse()
+typh_2 %>% glimpse()
+typh_3 %>% glimpse()
+
+typh_1 %>% 
+  count(parish_longitude,parish_latitude,sort = T)
+
+typh_1_summ <- typh_1 %>% 
+  select(
+    parish_longitude,parish_latitude,
+    timesofconfirmedtyphoidfever) %>% 
+  mutate(timesofconfirmedtyphoidfever = as.factor(timesofconfirmedtyphoidfever))
+
+typh_1_sf <- typh_1_summ %>% 
+  # filter(!is.na(long)) %>% 
+  st_as_sf(
+    coords = c("parish_longitude","parish_latitude"),
+    crs = 4326)
+
+typh_1_sf %>% 
+  ggplot() +
+  geom_sf()
+
+uganda_border <- rgeoboundaries::geoboundaries(
+  country = "UGA",adm_lvl = 1)
+
+library(ggsflabel)
+ggplot() +
+  geom_sf(data = uganda_border) +
+  geom_sf_label_repel(data = uganda_border, 
+                      mapping = aes(label = shapeName)) +
+  geom_sf(data = typh_1_sf)
+
+library(ggspatial)
+ggplot() +
+  annotation_map_tile(type = "osm", zoomin = 0) +
+  geom_sf(data = typh_1_sf,
+          mapping = aes(
+            color = timesofconfirmedtyphoidfever),
+          alpha = 0.8) +
+  colorspace::scale_color_discrete_sequential(
+    palette = "Reds 2")
+```
+
+# true
+
+## Prologue
+
+This quiz tests your understanding of the `st_as_sf()` function. Good luck!
+
+For multiple choice questions, please enter the correct letter option into the provided box.
+
+------------------------------------------------------------------------
+
+## Question-1
+
+
+
+Thematic maps visualize *Spatial data*, which refers to the *data generating process* of their spatial information:
+
+-   Choropleth maps visualize *Areal data*.
+-   Dot maps visualize *Point patterns*.
+
+## Question-2
+
+
+All *Thematic maps* need **Vector data** in a GIS software to be plotted:
+
+-   Choropleth maps use *Polygon* geometry.
+-   Dot maps use *Point* geometry.
+-   Physical features in a map use *Line* geometry.
+
+## Question-3
+
+The [`{sf}` package]((https://r-spatial.github.io/sf/)) provides a set of tools for working with geospatial **vectors**, i.e., all the **geometry types** used in the vast majority of geographic research, like polygons, points, and lines.
+
+## Question-4
+
+*Vector data* require a **Coordinate Reference System (CRS)** to relate the spatial elements of the data with the *surface of Earth*.
+
+## Question-5
+
+To convert a `data.frame` to an `sf` object, we can use the `st_as_sf()` from the `{sf}` package.
+
+In case of **Point** data:
+
+-   the `coords` argument need to specify the names of the variables holding the **Coordinates**, and
+-   the `crs` argument specify the **Coordinate Reference System (CRS)** to be assigned (here WGS84, which is the CRS code \#`4326`).
+
+## Question-6
+
+In case of Spatial **Polygon** data, another type of **Vector data** used to create *Choropleth maps*, you do not need to use any argument inside `st_as_sf()`
+
+## Question-7
+
+Each **individual shapefile** can only contain *one vector type* (all points, all lines or all polygons). You will not find a mixture of point, line and polygon objects in a single shapefile.
+
+## Question-8
+
+All of these *sub-component files* must be present in a given directory (folder) for the shapefile to be readable.
+
+## Question-9
+
+Vector data can be imported from .shp files called shapefiles
+
+## Question-10
+
+Vector data can be read external data and be converted from foreing objects using the sf package 
+
+## Question-11
+
+You can zoom in and change the CRS of a ggplot map using the coord_sf function 
+
+## Question-12
+
+You can convert between coordinate systems using the st_transform function
+
+## Question-13
+
+The *"orange peel" analogy* is useful to understand **projections**. If you imagine that the earth is an *orange*, how you *peel it* and then *flatten the peel* 
+
+-   A **datum** is the choice of fruit to use.
+-   *Datum* - A particular modeled version of the Earth.
+
+-   *Projections* - As defined above, it refers to the mathematical equation that was used to project the truly round earth onto a flat surface.
+-   A **projection** is how you peel your orange and then flatten the peel.
+
+# templace
+
+## Prologue
+
+This quiz tests your understanding of the `filter()` and `select()` functions. Good luck!
+
+For multiple choice questions, please enter the correct letter option into the provided box.
+
+------------------------------------------------------------------------
+
+## Question-1
+
+Which of the following R statements will pick three columns from the `mtcars` data frame? Answer: {c}
+
+a.  `filter(mtcars, wt, mpg)`
+
+b.  `filter(mtcars, wt, mpg, cyl)`
+
+c.  `select(mtcars, wt, mpg, cyl)`
+
+------------------------------------------------------------------------
+
+## Question-2
+
+Fill in the blank:
+
+The **select** function is to columns as the **{filter}** function is to rows.
+
+------------------------------------------------------------------------
+
+## Question-3
+
+The image shows a selection of packages from the "tidyverse".
+
+```{r echo = F}
+include_graphics("quiz_images/tidyverse_website.png")
+```
+
+The functions **select** and **filter** are from which package? Answer: {dplyr}
+
+------------------------------------------------------------------------
+
+## Question-4
+
+Answer T for TRUE or F for FALSE.
+
+In R, `=` can be used as an assignment operator, while `==` is used for testing equality. Answer: {[T][TRUE]}
+
+------------------------------------------------------------------------
+
+## Question-5
+
+Consider the **select** statement below:
+
+```{r eval = F}
+df <- outbreaks::ebola_kikwit_1995 %>% select(-death)
+```
+
+Which of these describes what the statement does? Answer: {a}
+
+a.  It drops the "death" column from the `ebola_kikwit_1995` data frame and assigns the output to `df`.
+
+b.  It selects the "death" column from the `ebola_kikwit_1995` data frame and assigns the output to `df`.
+
+c.  It selects the "death" column from the `ebola_kikwit_1995` data frame and displays the result on the screen.
+
+------------------------------------------------------------------------

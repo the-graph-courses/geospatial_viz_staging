@@ -1,0 +1,317 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+  word_document:
+    toc: true
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: console
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+# Source autograder script quietly 
+mute(here("ch04_functions/lessons/ch04_ls02_functions_autograder.R"))
+```
+
+# Functions: multiple arguments
+
+## Learning objectives
+
+1.  You will learn how to create more complex functions, with two or more arguments.
+
+2.  You will learn how arguments are called in a R function.
+
+## Introduction to the dataset
+
+In this lesson, we will continue to to use the COVID-19 dataset containing the results from a serological survey conducted in Yaounde, Cameroon in late 2020.
+
+```{r render = reactable_10_rows, message = FALSE}
+
+yaounde <- read_csv(here("ch04_functions/data/yaounde_data.csv"))
+
+yaounde
+
+```
+
+## Functions with more than one argument and definition of arguments
+
+It is definitely possible to write more complex functions with multiple arguments. For instance:
+
+```{r}
+
+sum_y <- function(x, y) {
+  result <- x + y
+  return(result)
+}
+
+sum_y(1, 12)
+
+```
+
+In this example, we defined that our function should have an `x` and a `y` arguments. If you try to use the function without passing one of the arguments, it will result in an error. This happens because whenever we create a function in which we do not define default values for the arguments, they are mandatory. For example:
+
+```{r}
+
+sum_y(1)
+
+```
+
+This generates an error, since both `x` and `y` arguments do not have any default values attributed to them.
+
+### Default values for the arguments of a function {.unnumbered}
+
+::: key-point
+You can define **default values** for the arguments of your function. In this manner, if a function is **called** without **attributing a value to an argument**, then this argument takes its default value. 
+:::
+
+See the example below, where `y` is given the default value of `0`.
+
+```{r}
+
+sum_y <- function(x, y = 0) {
+  result <- x + y
+  return(result)
+}
+
+sum_y(1)
+
+```
+
+You will notice that we defined the default value for `y` as `0`. So, using `sum_y(1)` will not return any error message. Thus, `x` is a mandatory argument and `y` is an optional argument in our last example.
+
+::: watch-out
+If we would like an argument to be optional, but we don't want it to necessarily have a default value, we can assign the default value to `NULL`. Just pay attention that `NULL` values are of the class `NULL` (just type in the console `class(NULL)`). Remember that you can't mix different types of data! For instance, in our function `sum_y`, you can't make the operation `sum_y(1, NULL)`. Try it for yourself.
+:::
+
+### The order of the arguments {.unnumbered}
+
+If you paid attention so far, you might have noticed that one way of passing arguments to a function is simply by inputing them by position. For instance:
+
+```{r}
+
+simple_function <- function(arg1, arg2, arg3) {
+  cat(arg1, arg2, arg3)
+}
+
+x <- "Hello!"
+
+simple_function(x, 12, TRUE)
+
+```
+
+In this case, `arg1` will be `x` (which, in turn, received the word "Hello!"), `arg2` will be `12`, and `arg3` will be `TRUE`.
+
+When you pass the arguments by name, you can specify them in any order you want:
+
+```{r}
+
+simple_function(arg1 = x, arg3 = TRUE, arg2 = 12)
+
+```
+
+And we can obviously mix pass by position and pass by name, and even change their order:
+
+```{r}
+
+simple_function(12, arg1 = x, arg3 = TRUE)
+
+```
+
+:::recap
+You can give several arguments to a function **by position** `function(value1,value2,value3)` or **by name** `function(arg1=value1, arg2=value2, arg3=value3)`. 
+
+If you give them via **name** then **the order does not matter**: `function(arg3=value3, arg1=value1, arg2=value2)`
+
+BUT
+
+If you give them via **position** only, then **order DOES matter**: `function(value2, value3, value1)` will be intaken by your function as `function(arg1=value2, arg2=value3, arg3=value1)`. It's a mess and can lead to errors !
+:::
+
+:::pro-tip
+Often, the first argument in a R function is the data on which it will work, while the following arguments are parameters that will modify its behavior. For example, the function `median` accepts as its first argument `x`, which is a vector of numerical values, and then an argument `na.rm` that will change the way it calculates the median of the values of `x`. Remember that `na.rm` is a logical argument of some functions that strip the NA values before doing the calculations!
+:::
+
+::: practice
+1. Create a function called `BMI` that calculates the Body Mass Index (BMI) of one or more persons. Remember that BMI is calculated as weight in kg divided by the squared height (in meters). This is obviously a function that needs two mandatory arguments: weight and height. 
+
+Tip: check the dataset before writing your function. (OR look back at what you learnt with `mutate` in *Introductory Data Analysis with R* - Data wrangling with dplyr chapter)
+
+```{r include = F}
+
+BMI <- function(weight, height) { 
+                        x <- weight / (height ^ 2) 
+                       return(x) }  
+
+q1 <- BMI
+
+.check_q1()
+
+.hint_q1()
+
+```
+
+2. Use the `yaounde` dataset to compute the BMI of the patients in the study. 
+
+```{r include = F}
+
+q2 <- BMI(weight = yaounde$weight_kg, height = yaounde$height_cm/100)
+
+.check_q2()
+
+.hint_q2()
+
+```
+:::
+
+## More complex functions
+
+Functions can become as complex as you want. Just make sure to not hardcode and to test everything. 
+
+::: challenge
+The following is a much more complex version of the BMI function, which allows to compute a table with the counts of subjects in each category (BMI allows you to determine if the person is obese or not).
+
+If the example is scary to you now, **don't worry** ! by the end of this chapter you will feel at ease with functions like these.
+:::
+
+You will notice the use of a function from R base called `cut`. We have seen it in the **conditional statements** lessons. Remember that you can always learn more about a function by using the help function. Type `?cut` or `help(cut)` in the console to learn more about it.
+
+Also, you will notice that we introduced a conditional statement in our function. We used the `if` function to make an internal test of the argument `return_table`. According to the `if` chain, if `return_table = TRUE`, the function must return the internal object `BMI_table`. Otherwise (as specified by the `else` statement) it will return the vector of BMI values `x`.
+
+```{r }
+
+BMI <- function(weight, height, return_table = FALSE) { 
+  
+  x <- weight / (height ^ 2) 
+  
+  BMI_classes <- cut(x, 
+                     breaks = c(-Inf, 18.5, 24.9, 29.9, 34.9, 39.9, Inf), 
+                     labels = c("Underweight", "Normal weight", "Overweight", "Obesity class I", "Obesity class II", "Obesity class III"))
+  
+  BMI_table <- table(BMI_classes)
+  
+  if (return_table == TRUE) { 
+    return(BMI_table)
+  } else {
+      return(x)
+  }
+}
+
+```
+
+Let's check our new BMI functions when defining `return_table = FALSE`. We will use data from the `yaounde` dataset. Notice that we are converting the height from centimeters to meters by dividing the vector by 100. Also, since the final result will be a vector of 971 numbers, we will limit the output to just the first 10 observations.
+
+```{r }
+
+ya_w <- yaounde$weight_kg
+
+ya_h <- yaounde$height_cm / 100
+
+bmi_result1 <- BMI(weight = ya_w, height = ya_h, return_table = FALSE)
+
+bmi_result1[1:10]
+
+```
+
+Now, let's try the BMI functions defining `return_table = TRUE`. Now, we have a beautiful table with the counts for each BMI category, just like we programmed in our function.
+
+```{r }
+
+bmi_result2 <- BMI(weight = ya_w, height = ya_h, return_table = TRUE)
+
+bmi_result2
+
+```
+
+```{r include = F}
+.score_print()
+```
+
+::: practice
+Note this data set has de column `age_category`. This column is really useful to have known about the behavior of the other columns of the data set in different age groups. But, sometimes, a data set provides a column with age but not a column as `age_category`, or, the range provided in the age category can not be useful for you. For this reason, it’s interesting to know how to create this column given a data set with an age column. So, let’s create a function to do this! To create this function, follow the instructions below:
+
+The function must have four parameters:
+
+* `data`: That receives a data frame that should have a column with age.
+
+* `age_column`: Name of the age column in the data parameter.
+
+* `age_range`: vector with the range of values will be used in the breaks of the `cut` function
+
+* `age_name`: vector with the name of the age groups that will be used in the  labels of the `cut` function
+
+The function must return an updated version of the data frame with a new column called `age_group`.
+
+Tip: If you fill the parameters `age_range` and `age_name` as:
+
+* `age_range = c(5,15,30,45,65, Inf)`
+* `age_name = c('5 - 14', '15 - 29', '30 - 44', '45 - 64', '65 +')`.
+
+the `age_group` column returned should be equal to the `age_category` column.
+
+
+:::
+
+```{r include = F}
+
+age_range = c(5,15,30,45,65, Inf)
+age_name = c('5 - 14', '15 - 29', '30 - 44', '45 - 64', '65 +')
+
+agg_age <- function(data, age_column, age_range, age_name){
+  
+  age_groups <- cut(data %>% pull(age_column), 
+                    breaks = age_range, 
+                    labels = age_name, include.lowest = T, right = F)
+  
+  data['age_group'] = age_groups
+  
+  return (data)
+}
+
+q3 <- agg_age
+
+.check_q3()
+
+.hint_q3()
+
+
+```
+
+```{r include = F}
+.score_print()
+```
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r tgc_contributors_list(ids = c("dcpcamara", "eduardo", "lolovanco", "kendavidn"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   Barnier, Julien. "Introduction à R et au tidyverse." Accessed May 23, 2022. <https://juba.github.io/tidyverse>
+
+-   Wickham, Hadley; Grolemund, Garrett. "R for Data Science." Accessed May 25, 2022. <https://r4ds.had.co.nz/>
+
+<!-- (Chicago format. You can use https://www.citationmachine.net) -->
+
+`r tgc_license()`

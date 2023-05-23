@@ -1,0 +1,331 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+  word_document:
+    toc: true
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: console
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+library(dplyr)
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+# Source autograder script quietly 
+mute(here("ch05_loop_conditionals/lessons/ch05_ls05_loops_autograder.R"))
+```
+
+<!-- # Loops: best practices -->
+
+## Learning objectives
+
+1.  You will learn good practices to building a loop.
+2.  You will learn how to use multiple `for` loops.
+
+## Introduction to the dataset
+
+In this lesson, we will use the data comprise of 136 cases of influenza A H7N9 in China.
+
+```{r render = reactable_10_rows, message = FALSE}
+
+flu <- read_csv(here("ch05_loop_conditionals/data/fluH7N9_china_2013.csv"))
+flu
+
+```
+
+## Good practices building a loop
+
+Let's remember the example of the last lesson: 
+
+Imagine we have the following data set to analyse and you need to compute the median of each variable.
+
+```{r render = reactable_10_rows} 
+
+set.seed(1)
+df <- tibble(
+  height = runif(n = 20, min = 1.50, max = 2.10),
+  weight = runif(n = 20, min = 50, max = 150),
+  age = runif(n = 20, min = 18, max = 80),
+  heart_rate = runif(n = 20, min = 40, max = 120),
+  bmi = weight / (height ^2)
+)
+
+df
+```
+
+To do this, we can simply define an output vector for each desired metric, where the result will be saved after each iteration. 
+
+```{r}
+
+out_median = c()                                  # create an empty vector
+
+for (column in colnames(df)){                     # sequence 
+    
+  col_median = median(df[[column]])               # body
+  
+  out_median = append(out_median, col_median)     # save the result 
+}
+
+out_median
+```
+
+
+::: watch-out
+
+In the last example, we defined our output vector as an empty vector using `c()`. However, this is not the optimal way to do that. The optimal way is to define a vector of the exact amount of space necessary and the right type of values that will be stored in the vector. 
+
+We can do that using the `vector()` function. This function has two arguments: 
+
+* `mode` that must be filled with the type of the vector ("“logical”, “integer”, “double”, “character”, etc); 
+* `length`: that must be filled with the length of the vector that we want to create. 
+
+To use `c()` or `vector()` results in minimal difference for small loops (as the example above). **But it can save a valuable amount of time when using a bigger loop.** 
+:::
+
+In the example above, we could define our output using the `vector()` function as:
+```{r}
+out_median = vector("double", ncol(df))
+out_median
+```
+
+When we define a vector using the `vector()`, we will not use the `append()` method over the loop. You can see above that the vector already has the exact length to be used in the loop. So, if you use the `append()` method, you will change the length of the vector. 
+
+```{r}
+append(out_median, 1)
+```
+
+Therefore, when using the `vector()` we need to change the value of the vector by your index. For example, to change the first value of the vector `out_median` we use: 
+```{r}
+out_median = vector("double", ncol(df))
+
+out_median[[1]] = 4
+
+out_median 
+```
+
+::: pro-tip
+You might have noticed that we used `[[]]` instead of `[]`. We follow [Hadley Wickham's](https://hadley.nz) advice that it’s better to use `[[]]` even for atomic vectors because it makes it clear that we want to work with a single element.
+:::
+
+Now, let's change the definition of the vector in our last example. In the example, we were iterating over the columns names and appending the values in an empty vector. But, now, how we need to change the elements of our vector by index, we will need to iterate over the values of the index. To do this, we will need to change the definition of our sequence. Now we will use `for (i in 1:ncol(df))`.
+
+So, rewriting, we have: 
+
+```{r} 
+out_median = vector("double", ncol(df))                                # create an empty vector
+
+for (i in 1:ncol(df)){                     # sequence 
+    
+  col_median = median(df[[i]])               # body
+  
+  out_median[[i]] = col_median     # save the result 
+}
+
+out_median
+
+```
+
+Note that we have the same output obtained using the `c()`. 
+
+::: watch-out
+
+In the loop code above, we define the sequence using `1:ncol(df)`, where `ncol(df)`represents the number of columns in `df`. There is an optimal way to do it in R. We can use the `seq_along(x)` function, which create a sequence based on the length of the `x` element in the function. 
+
+The `seq_along(x)` is a safe version of the familiar `1:length(x)`. The crucial thing that `seq_along()` does is that if you have a zero-length vector, it will do the right thing:
+
+```{r}
+
+x <- vector("double", 0)
+
+# right
+seq_along(x)
+
+# wrong
+1:length(x)
+
+```
+
+Since we warned that it is important to **not** iterate over a zero-length vector deliberately, it’s easy to create them accidentally. If you use `1:length(x)` instead of `seq_along(x)`, you’re likely to get a confusing error message. The `seq_along(x)` function will prevent this.
+
+::: 
+
+So, in our last example, we will change `1:ncol(df)` to `seq_along(df)`.  
+```{r}
+
+seq_along(df)
+
+```
+
+So, in each loop iteration, `i` will assume one of the values in `seq_along(df)` (e.g., 1 in the first iteration, 2 in the second iteration, and so on up to i = 5 in the fifth iteration).
+
+Thus, more optimally, our last example can be rewritten as: 
+
+```{r} 
+
+out_median = vector("double", ncol(df))                                # create an empty vector
+
+for (i in seq_along(df)) {                     # sequence 
+    
+  col_median = median(df[[i]])               # body
+  
+  out_median[[i]] = col_median     # save the result 
+}
+
+out_median
+
+
+```
+
+and, as expected the result is the same. 
+
+::: recap 
+
+To build a `for` loop, follow the steps below: 
+
+* Create an empty element to save the values obtained in the loop. Remember to define it **outside** the loop, and that's recommended to use `vector()` instead of `c()`;
+* Define a sequence that will be iterated. Remember that's recommended to use `seq_along(x)` instead of `1:length(x)`; 
+* Define the operations that will be done inside the loop (the `body`); 
+* Save your result in the element created outside the loop. Remember that's recommended to use `[[]]` instead of `[]` when accessing values by index.
+:::
+
+::: practice
+-   Using the `flu` data set determine the type of the column `case_id`. 
+
+```{r include = F}
+
+q1 <- class(flu[["case_id"]])
+
+.check_q1()
+
+.hint_q1()
+```
+
+- Using a `for` loop, compute the type of each column in the `flu` data set and store it in a vector. Your answer must be this vector. 
+
+```{r include = F}
+
+flu_var_types <- vector("character", ncol(flu))
+
+for (i in seq_along(flu)) {
+  flu_var_types[[i]]    <-    class(  flu[[i]]  )
+}
+
+q2 <- flu_var_types
+
+.check_q2()
+
+.hint_q2()
+
+```
+
+
+:::
+
+We also can concatenate multiple `for` loops. Let's see an example with the `flu` data set.
+
+The `flu` data set represents the cases of Influenza in 2013, in some provinces in China. Using that data set we can create a new data frame with three columns:
+
+* `province`: Representing the province of China where the cases were notified;
+* `cases_m`: Representing the cumulative number of cases between the men in this period; 
+* `cases_f`: Representing the cumulative number of cases between the women in this period.  
+
+Let's create this data frame for the provinces 'Anhui', 'Beijing', and 'Shangai'. In order to do this, we need, for each province, filter the data by the province, count the number of `m` and `f` values in the `gender` variable and save it in our data frame. 
+
+First, let's use the `group_by` function to aggregate our data set by the values in `province` and `gender` to get the number of cases between men and women in each province. 
+
+
+```{r render = reactable_10_rows}
+flu_group = filter(flu %>% group_by(province, gender) %>%
+                   summarise(obs = n(),
+                             .groups = 'drop'))  
+flu_group
+```
+
+Now, let's create a new data frame where we will save the results of our loop. Let's define two vectors, one with the province values (called `prov` in the code) and another with the gender values (called `sex` in the code). 
+
+```{r render = reactable_10_rows}
+
+# vector with the provinces 
+prov = c("Anhui", "Beijing", "Shanghai")
+
+# vector with the gender values 
+sex = c("m", "f")
+
+df_group <- tibble(
+  province = prov,
+  cases_m = vector("integer", length(prov)),
+  cases_f = vector("integer", length(prov)))
+
+df_group
+```
+
+::: reminder
+We can access the values of a data frame, and replace them, by the number of the row and column that we want to access. For example, we can get the value in the first row (province = 'Anhui') and second column (column `cases_m`), and change it to `10`, using the notation: 
+
+```{r render = reactable_10_rows}
+df_group[[1,2]] = 10 
+
+df_group
+```
+
+:::
+
+We will use the information in the box above to finish our `for` loop. 
+
+```{r render = reactable_10_rows}
+for (i in seq_along(prov)){
+  
+  for (j in seq_along(sex)){
+    df_group[[i, j+1]] = filter(flu_group, (province == prov[[i]] & gender == sex[[j]])) $ obs
+    }
+  }
+
+df_group
+```
+Notice that we used `j + 1` to access the column of the data frame, because, when `j = 1`, then `sex[[1]] = 'm'`, and the column `cases_m` is the second (2) column of the data frame. In the same way, when `j = 2`, then `sex[[2]] = 'f'`, and the column `cases_f` is the third (3) column of the data frame.
+
+::: key-point 
+When we have two for `for` loops, first, we will have the first iteration of the first loop and so, we will iterate over all the values in the second loop before iterate the second value of the first for loop. 
+:::
+
+```{r include = F}
+.score_print()
+```
+
+--------------------------------------------------------------------------------
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r tgc_contributors_list(ids = c("dcpcamara", "eduardo", "lolovanco", "kendavidn"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   Barnier, Julien. "Introduction à R et au tidyverse." Accessed May 23, 2022. <https://juba.github.io/tidyverse>
+
+-   Wickham, Hadley; Grolemund, Garrett. "R for Data Science." Accessed May 25, 2022. <https://r4ds.had.co.nz/>
+
+<!-- (Chicago format. You can use https://www.citationmachine.net) -->
+
+`r tgc_license()`
+
+

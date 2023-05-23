@@ -1,0 +1,543 @@
+---
+title: '\ '
+output:
+  # word_document:
+  #   toc: true
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: inline
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+## autograders
+suppressMessages(source(here::here("ch06_basic_geospatial_viz/lessons/ch06_ls08_foreign_objects_autograder.R")))
+```
+
+```{r,echo=FALSE}
+ggplot2::theme_set(new = theme_bw())
+```
+
+------------------------------------------------------------------------
+
+<!-- # Geospatial analysis: read external data -->
+
+## Introduction
+
+Let say that you receive a raw `data.frame` with coordinate points per row, and I want to create a Thematic map with it, how can I make it using `{ggplot2}`? Or that you use a package to get spatial data but in a object class like `SpatVector` or `SpatialPolygonsDataFrame`, how can I use them with `{ggplot2}`?
+
+![Figure 1. (A) Map from a raw data.frame with coordinate points. (B) Dot map with the same data converted to a `sf` object.](images/geoboundaries_05.png)
+
+We need `sf` class objects to create `ggplot` maps! So, today we are going to learn how to **convert foreign** spatial objects to `sf`, either polygon or point data, to keep making `ggplot2` maps!
+
+![](images/0-whitebox.JPG)
+
+## Learning objectives
+
+1.  Convert **foreign** objects to **`sf` class** using the `st_as_sf()` function from the `{sf}` package.
+
+2.  Convert foreign **polygon** data in `SpatVector` class to `sf`.
+
+3.  Convert foreign **point** data in `data.frame` class to `sf`.
+
+![](images/0-whitebox.JPG)
+
+## Prerequisites
+
+This lesson requires the following packages:
+
+```{r,eval=TRUE,echo=TRUE,message=FALSE}
+if(!require('pacman')) install.packages('pacman')
+
+pacman::p_load(malariaAtlas,
+               ggplot2,
+               cholera,
+               geodata,
+               dplyr,
+               here,
+               sf)
+
+pacman::p_load_gh("afrimapr/afrilearndata",
+                  "wmgeolab/rgeoboundaries")
+```
+
+![](images/0-whitebox.JPG)
+
+## Mapping country borders with `{geodata}`
+
+![](images/0-whitebox.JPG)
+
+• `{geodata}` advantage:
+
+![](images/0-whitebox.JPG)
+
+• country borders data with a *multiple column output*,
+
+![](images/0-whitebox.JPG)
+
+• provides the names of all the levels above the one requested.
+
+![](images/0-whitebox.JPG)
+
+• e.g., the first three administrative levels in Bolivia:
+
+![](images/0-whitebox.JPG)
+
+```{r,message=FALSE,warning=FALSE}
+bolivia_level3 <- gadm(country = "Bolivia", level = 3, path = tempdir())
+```
+
+![](images/0-whitebox.JPG)
+
+```{r}
+bolivia_level3 %>% 
+  
+  as_tibble() %>% 
+  select(    ) #👈👈👈👈👈👈👈👈👈👈👈👈👈
+```
+
+![](images/0-whitebox.JPG)
+
+• `filter()` a subset of sub-divisions (e.g. level 3)
+
+![](images/0-whitebox.JPG)
+
+• within a region (level 1) or department (level 2).
+
+![](images/0-whitebox.JPG)
+
+• e.g., all the provinces (level 2) within the `Santa Cruz` department (level 3):
+
+![](images/0-whitebox.JPG)
+
+```{r}
+bolivia_level3 %>% 
+  
+  as_tibble() %>% 
+  select(starts_with("NAME_")) %>% 
+  
+  filter(   ) #👈👈👈👈👈👈👈👈👈👈👈👈👈👈
+```
+
+![](images/0-whitebox.JPG)
+
+• However, How can I create `ggplot` maps with a `SpatVector` class object?
+
+![](images/0-whitebox.JPG)
+
+``` r
+gadm(country = "Bolivia", level = 3, path = tempdir())
+```
+
+![](images/0-whitebox.JPG)
+
+    👉 class       : SpatVector 👈
+       geometry    : polygons 
+       dimensions  : 344, 16  (geometries, attributes)
+       extent      : -69.64525, -57.45443, -22.90657, -9.670923
+       coord. ref. : +proj=longlat +datum=WGS84 +no_defs 
+
+![](images/0-whitebox.JPG)
+
+### Convert foreign Polygon geometries to `sf` {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• Let's use `st_as_sf()` from `{sf}`
+
+![](images/0-whitebox.JPG)
+
+```{r}
+# spatvector
+bolivia_level3 %>% class()
+
+# sf
+bolivia_level3 %>% .......() %>% class() #👈👈👈👈👈👈👈👈
+```
+
+![](images/0-whitebox.JPG)
+
+• Useful for `SpatVector` and `SpatialPolygonsDataFrame` objects
+
+![](images/0-whitebox.JPG)
+
+::: rstudio-cloud
+Convert the country borders of Germany from `SpatVector` to a `sf` class object using the `st_as_sf()` function:
+
+```{r,eval=FALSE,echo=TRUE}
+gadm(country = "Germany", level = 2, path = tempdir()) %>% 
+  ...........
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+• Now with `sf` objects:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+ggplot() +
+  geom_sf(data = geoboundaries(country = "Bolivia")) +
+  geom_sf(data = bolivia_level3 %>% 
+            
+            ........() %>%                 #👈👈👈👈
+            
+            filter(NAME_1 == "Santa Cruz"),
+          mapping = aes(fill = NAME_1))
+```
+
+![](images/0-whitebox.JPG)
+
+### Vector data {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+::: vocab
+![](images/0-graybox.JPG)
+
+• **Why is the class object called `SpatVector`?**
+
+![](images/0-graybox.JPG)
+
+• "SpatVector" stands for *"Spatial Vector"*, and "Vector" stands for **"Vector data"**.
+
+![](images/0-graybox.JPG)
+
+• **Vector data** is the formal name for the *Geometry types* like Point, Lines, and Polygons.
+
+![](images/0-graybox.JPG)
+
+• It requires a **Coordinate Reference System (CRS)** to relate the spatial elements of the data with the *surface of Earth*.
+
+![](images/0-graybox.JPG)
+
+• It is also the **most common format** of Spatial data used in GIS. Which is commonly stored in Shapefiles.
+:::
+
+![](images/0-whitebox.JPG)
+
+::: watch-out
+![](images/0-graybox.JPG)
+
+• Do not get confused by the `vector` class object,
+
+![](images/0-graybox.JPG)
+
+• it is an R class just like `data.frame` and `matrix`.
+:::
+
+![](images/0-whitebox.JPG)
+
+• Above: how to convert *foreign* **Polygon** data to `sf` class.
+
+![](images/0-whitebox.JPG)
+
+• Now: how to convert *foreign* **Point** data to `sf` class!
+
+![](images/0-whitebox.JPG)
+
+## Disease information with `{malariaAtlas}`
+
+![](images/0-whitebox.JPG)
+
+• `{malariaAtlas}` visualize and manipulate global malaria data
+
+![](images/0-whitebox.JPG)
+
+• hosted by the [Malaria Atlas Project](https://malariaatlas.org/).
+
+![](images/0-whitebox.JPG)
+
+• It downloads data like:
+
+![](images/0-whitebox.JPG)
+
+• **parasite** rate (PR) survey data (*Plasmodium falciparum* and *P. vivax*)
+
+![](images/0-whitebox.JPG)
+
+• **mosquito** occurrence data
+
+![](images/0-whitebox.JPG)
+
+### Parasite Rate surveys {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• `getPR()` downloads PR points for a country:
+
+![](images/0-whitebox.JPG)
+
+```{r get-pr,message = FALSE,warning=FALSE}
+zimbabwe_malaria_pr <- getPR(country = "Zimbabwe", species = "BOTH")
+```
+
+![](images/0-whitebox.JPG)
+
+• It is of class `dataframe`
+
+```{r}
+......(zimbabwe_malaria_pr)
+```
+
+![](images/0-whitebox.JPG)
+
+::: side-note
+The `species` argument is a string specifying the Plasmodium species and can be `Pf` (*Plasmodium falciparum*), `Pv` (*Plasmodium vivax*) or `BOTH`.
+:::
+
+![](images/0-whitebox.JPG)
+
+• The `data.frame` contains `longitude` and `latitude` as variables:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+zimbabwe_malaria_pr 
+```
+
+![](images/0-whitebox.JPG)
+
+::: practice
+Download the publicly available Parasite Ratio (PR) points for *Plasmodium falciparum* in `Sierra Leone` using the `{malariaAtlas}` package.
+
+```{r,eval = FALSE}
+q3 <- ________(________ = "Sierra Leone",species = "Pf")
+q3
+```
+
+```{r,include = FALSE}
+.check_q3()
+.hint_q3()
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+• `autoplot()` can be used...
+
+```{r viz-PR, eval=FALSE, message=FALSE,warning=FALSE}
+autoplot(zimbabwe_malaria_pr)
+```
+
+![](images/0-whitebox.JPG)
+
+• However, to make a **custom plot** with complete control of the *aesthetics*,
+
+![](images/0-whitebox.JPG)
+
+• you will prefer `{ggplot2}` for the work!
+
+![](images/0-whitebox.JPG)
+
+### Convert foreign Point geometries to `sf` {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• Again, let's use `st_as_sf()` from `{sf}`.
+
+![](images/0-whitebox.JPG)
+
+• But, for **Point** data it requires *two* arguments:
+
+![](images/0-whitebox.JPG)
+
+• `coords` - names of the variables holding the **Coordinates**, and
+
+![](images/0-whitebox.JPG)
+
+• `crs` - a **Coordinate Reference System (CRS)** like WGS84 (\#`4326`).
+
+![](images/0-whitebox.JPG)
+
+```{r,eval=TRUE,echo=TRUE}
+zimbabwe_malaria_pr_sf <- 
+  
+  # data frame
+  zimbabwe_malaria_pr %>% 
+  
+  # convert to sf
+  sf::st_as_sf(     )  #👈👈👈👈👈👈
+```
+
+![](images/0-whitebox.JPG)
+
+• Pay attention to the **`coords` argument**:
+
+![](images/0-whitebox.JPG)
+
+• You need `"quotation_marks"` for column names,
+
+![](images/0-whitebox.JPG)
+
+• First `longitude`, then `latitude`.
+
+![](images/0-whitebox.JPG)
+
+• **Mission accomplished!**:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+zimbabwe_malaria_pr_sf %>% 
+  dplyr::select(site_name,pr)
+```
+
+![](images/0-whitebox.JPG)
+
+• Now, let's create a Thematic map!
+
+![](images/0-whitebox.JPG)
+
+• Let's plot the `pr` points with a `size` proportional to their value:
+
+![](images/0-whitebox.JPG)
+
+```{r,fig.height=3}
+ggplot(data = zimbabwe_malaria_pr_sf) +
+  
+```
+
+![](images/0-whitebox.JPG)
+
+• Or add a layer with administrative boundaries of `Zimbabwe`:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+zimbabwe_boundaries_adm1 <- geoboundaries(    )
+```
+
+![](images/0-whitebox.JPG)
+
+• In the same ggplot:
+
+![](images/0-whitebox.JPG)
+
+```{r,fig.height=3}
+ggplot() +
+  
+  # boundaries data
+  geom_sf(data =      ,
+          fill = "white") +
+  
+  # disease data
+  geom_sf(data =      ,
+          mapping =      ,
+          color = "red",
+          alpha=0.5)
+```
+
+![](images/0-whitebox.JPG)
+
+::: watch-out
+![](images/0-graybox.JPG)
+
+• `sf::st_as_sf()` does not allow **missing** values in coordinates!
+
+![](images/0-graybox.JPG)
+
+• So, use `{dplyr}` verbs like `filter()` to drop missing rows
+
+![](images/0-graybox.JPG)
+
+• for variable `x` use:`filter(!is.na(x))`
+:::
+
+![](images/0-whitebox.JPG)
+
+::: practice
+With the publicly available Parasite Ratio (PR) points of *Plasmodium falciparum* in Sierra Leone stored in `q3`:
+
+Convert its `data.frame` output to a `sf` object using the `st_as_sf()` function, with the code `4326` to set a `WGS84` CRS. (More on all these codes coming soon, don't be intimidated !)
+
+```{r,eval = FALSE}
+q4 <- 
+  q3 %>% 
+  filter(!is.na(longitude)) %>% 
+  sf::________(coords = c("________","________"),
+               crs = 4326)
+q4
+```
+
+```{r, include=FALSE}
+.check_q4()
+.hint_q4()
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+```{r include = F}
+.score_print()
+```
+
+```{r include = F}
+pacman::p_unload(raster) # avoid masking select(). Temporary investigation
+```
+
+![](images/0-whitebox.JPG)
+
+## Wrap up
+
+![](images/0-whitebox.JPG)
+
+• How to **convert foreign** *Polygon* and *Point* data to a `sf` class object
+
+![](images/0-whitebox.JPG)
+
+• from `SpatVector` and `data.frame` objects, respectively.
+
+![](images/0-whitebox.JPG)
+
+• About **Vector data**,
+
+![](images/0-whitebox.JPG)
+
+• How **Point data** needs a *Coordinate Reference Systems (CRS)* to get a `sf` object.
+
+![](images/0-whitebox.JPG)
+
+![Figure 2. Concept map](images/conceptmap-01-vector.png)
+
+![](images/0-whitebox.JPG)
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r tgc_contributors_list(ids = c("avallecam", "lolovanco"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   *Seimon, Dilinie. Administrative Boundaries.* (2021). Retrieved 15 April 2022, from <https://rspatialdata.github.io/admin_boundaries.html>
+
+-   *Varsha Ujjinni Vijay Kumar. Malaria.* (2021). Retrieved 15 April 2022, from <https://rspatialdata.github.io/malaria.html>
+
+-   *Batra, Neale, et al. The Epidemiologist R Handbook. Chapter 28: GIS Basics*. (2021). Retrieved 01 April 2022, from <https://epirhandbook.com/en/gis-basics.html>
+
+-   *Lovelace, R., Nowosad, J., & Muenchow, J. Geocomputation with R. Chapter 2: Geographic data in R*. (2019). Retrieved 01 April 2022, from <https://geocompr.robinlovelace.net/spatial-class.html>
+
+-   *Moraga, Paula. Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny. Chapter 2: Spatial data and R packages for mapping*. (2019). Retrieved 01 April 2022, from <https://www.paulamoraga.com/book-geospatial/sec-spatialdataandCRS.html>
+
+`r tgc_license()`

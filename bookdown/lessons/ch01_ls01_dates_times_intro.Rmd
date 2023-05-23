@@ -1,0 +1,226 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+  word_document:
+    toc: true
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: inline
+---
+
+```{r, echo = F, message = F, warning = F}
+# Load packages ----
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(clock,
+               knitr,
+               tidyverse, 
+               here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+## autograders
+suppressMessages(source(here::here("ch01_dates_times/lessons/ch01_ls01_dates_times_intro_autograder.R")))
+```
+
+------------------------------------------------------------------------
+
+# Date/time data: introduction
+
+## Learning Objectives
+
+1.  Learn about Build a date object by providing individual components (year, month, day) using `{clock}` and the `date_build()` function.
+2.  Create a date-time object by providing individual components (year, month, day, hour, minute, second) using `{clock}` and the `date_time_build()` function.
+
+## Overview
+
+As a data analyst, being able to work with temporal data (that is data associated with dates and times) is a key skill to have.
+
+Temporal data can be inputted in several ways.
+For example, when recording the date a patient visited the clinic, one nurse could input the date this way - Monday, 3rd January, 2022 while another nurse could record the same date as 03/01/2022.
+Thus, if our aim is to find out how many patients visited the hospital on a particular day, the data must be cleaned and the columns containing the date and/or time information must be reformatted.
+
+### Date and time classes in R
+
+Here are some fundamental things to know about working dates and times in R.
+
+R has special classes to deal with date and/or time data.
+We are going to discuss three of them.
+
+-   The `date` class for dates (which can be formatted into different configurations of year-month-day.
+
+-   The `time` class for times (hours, minutes and seconds)
+
+-   The `date-time` class also called POSIXct used to represent date plus time that is to pin point a distinct moment in time on a particular day in specified time zone.
+
+For example, to get the current date and time in your local time zone, R has two in-built functions.
+
+`Sys.Date()` for the current date and `Sys.time()` for the current date-time in the time zone on your computer.
+
+```{r now}
+Sys.time()
+
+Sys.Date()
+
+```
+
+## Creating date and times
+
+Clock, is an R package that has many functions that make working with dates and times easier.
+
+To install `{clock}`, run the following code in your R session.
+`install.packages("clock")`.
+
+Proceed to load the packages if you have already installed them.
+
+### The `date_build()` function
+
+We are going to use the function `date_build()` in the `{clock}` package to date objects with the birthdays given in the report above.
+
+`clock::date_build()` is a function used to create a date by providing the following arguments.
+
+-   The first argument provided is the year.
+    If only one argument is given, the date output is the first day of the first month of that year.
+
+    For example, run the code below, to quickly get the date- the first of January, 2022.
+
+```{r year_date_build}
+clock::date_build(2022)
+```
+
+You can specify the year, month and day by providing three integer values separated by commas.
+For example, the output of the following code is 15th March, 2022.
+
+```{r ides_of_March}
+clock::date_build(2022,3,15)
+```
+
+::: watch-out
+-   The second argument of the `clock::date_build()` function has a range of 1 to 12 to represent the 12 months (January to December).
+
+-   The third argument of this function has a range of 1 to 31 to represent the number of possible days in a month.
+:::
+
+Thus, providing values outside these ranges would be invalid.
+For example, the code below gives an error because there is no 14th month or 40th day of the year 2007.
+
+```{r month_error}
+try(clock::date_build(2007,14))
+try(clock::date_build(2007,12,40))
+```
+
+You can create a range of dates using the colon `:` operator between the range you want either in the year, month or day arguments.
+
+For example, to represent the first week of February 2002, in place of the third argument (day) in `clock::date_build(year, month, day)`,type `1:7` as shown below.
+
+```{r day_error}
+date_build(2002, 2, 1:7)
+```
+
+Also, to get the last day of each month the year 2015, you can type the following code in place of `clock::date_build(year,month, day)` .
+
+-   The month argument is replaced by the range `1:12`
+
+-   Then, the day argument is replaced by the string `"last"`
+
+```{r last_day }
+clock::date_build(2015,1:12,"last")
+```
+
+Supposing you are analyzing birth records from a hospital in Nairobi, Kenya in the report below.
+
+> A healthy infant male was born on 27th December 2021 at 6 am.
+> The next day, 3 baby girls were delivered.
+> They were born in 1 hour intervals from 3pm.
+
+::: practice
+1.  Create date objects from this information and write code to output the baby boy's correct birthday.
+
+    ```{r q-1, include = F}
+    q1 <- "YOUR ANSWER HERE"
+    .check_q1()
+    .hint_q1a()
+    .hint_q1b()
+    ```
+:::
+
+### The `date_time_build()` function
+
+To create a date-time object, a R object that contains both dates and times, we use the function `date_time_build()` with seven arguments `(year, month, day, hour, minute, second, zone)`.
+
+A key thing, to note is how to input the arguments of date_time_build().
+As discussed previously, month and day have specified ranges, so do hour, minute, second and zone.
+
+-   The hour argument ranges from 0-23
+
+-   The minute argument ranges from 0-59
+
+-   The second argument ranges from 0-59
+
+-   The zone is the local timezone written in the form "continent/city" eg.
+    "America/New York" or "Africa/Lagos".
+    You can check out the list of all time zones with associated cities by viewing this inbuilt R data set `OlsonNames()`
+
+```{r list_timezones}
+head(OlsonNames()) #Get first 6 rows of the timezones data set
+```
+
+For example, to create a date-time object of the boy born on 27th December, 2021 at 6 am in Nairobi, Kenya we should run the following code.
+
+```{r date_time_build}
+clock::date_time_build(2021,12,27,06,00,00, zone="Africa/Nairobi")
+```
+
+::: practice
+2.  Create a data object for the birthdays of the three baby girls born the following day after 27th December, 2021 at 3pm with one hour interval between them.
+
+    ```{r q-2,include = F}
+    q2 <- "YOUR ANSWER HERE"
+    .check_q2()
+    .hint_q2a()
+
+    .hint_q2b()
+    .hint_q2c()
+
+    .hint_q2d()
+    .hint_q2e()
+
+    .hint_q2f()
+
+    ```
+:::
+
+```{r echo = F}
+.score_print()
+```
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r tgc_contributors_list(ids = c("aowusuda"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   Wickham, Hadley, and Garrett Grolemund.
+    "R For Data Science." 16 Dates and times \| R for Data Science, 2017.
+    <https://r4ds.had.co.nz/dates-and-times.html#time-zones>.
+
+-   Vaughan, Davis.
+    "Building: Date-Time - date_time_build." - date_time_build • clock, February 12, 2021.
+    <https://clock.r-lib.org/reference/date_time_build.html>.
+
+`r tgc_license()`

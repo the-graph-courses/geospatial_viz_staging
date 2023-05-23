@@ -1,0 +1,185 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+#  word_document:
+#    toc: true
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+---
+
+```{r, echo = FALSE, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages ----
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, 
+               here)
+
+# Source functions ----
+source(here::here("global/functions/misc_functions.R"))
+
+# Set default render for dataframes ----
+registerS3method("reactable_5_rows", "data.frame", reactable_5_rows)
+
+# Set default chunk options ----
+knitr::opts_chunk$set(class.source = "tgc-code-block", error = TRUE,
+                      render = reactable_5_rows)
+
+# Set template labels for custom chunk options ----
+knitr::opts_template$set(
+  example = list(echo = TRUE, eval = TRUE),
+  practice = list(echo = FALSE, eval = FALSE),
+  image1 = list(echo = FALSE, out.width = "75%", fig.align = "center"),
+  image2 = list(echo=FALSE, out.width="75%", fig.align="center"),
+  justcode = list(echo = TRUE, eval = FALSE)
+)
+```
+
+# Learning objectives
+
+1.  <objective>
+
+2.  <objective>
+
+3.  <objective>
+
+4.  <objective>
+
+5.  <objective>
+
+
+# Examples for students to run
+```{r <chunk_name>, opt.label = example}
+
+```
+
+# Images
+
+## Method 1: print_image()
+```{r <chunk_name>, opt.label = image1, fig.cap = "<caption>"}
+print_image(here::here("CHAPTER_00_CHAPTER_NAME/images/FILE_NAME.png"))
+```
+
+## Method 2: include_graphics()
+```{r <chunk_name>, opt.label = image2, fig.cap = "<caption>"}
+knitr::include_graphics(path = "../images/FILE_NAME.EXT")
+```
+
+# Practice questions
+
+## Two-question block
+
+=======
+# Learning objectives
+
+1.  <objective>
+
+2.  <objective>
+
+3.  <objective>
+
+4.  <objective>
+
+5.  <objective>
+
+
+# Examples for students to run
+```{r <chunk_name>, opt.label = example}
+
+```
+
+# Images
+
+## Method 1: print_image()
+```{r <chunk_name>, opt.label = image1, fig.cap = "<caption>"}
+print_image(here::here("CHAPTER_00_CHAPTER_NAME/images/FILE_NAME.png"))
+```
+
+## Method 2: include_graphics()
+```{r <chunk_name>, opt.label = image2, fig.cap = "<caption>"}
+knitr::include_graphics(path = "../images/FILE_NAME.EXT")
+```
+
+# Practice questions
+
+## Two-question block
+
+>>>>>>> 5fe0add7e35b3e53b99a5793c037111ed55c1651
+::: practice
+- <question_text>
+```{r q_, opt.label = practice}
+q_ <- "YOUR_ANSWER_HERE" 
+.check_q_()
+.hint_q_()
+```
+
+- <question_text>
+```{r q_, opt.label = practice}
+q_ <- "YOUR_ANSWER_HERE" 
+.check_q_()
+.hint_q_()
+```
+:::
+
+## One-question block
+
+::: practice
+- <question_text>
+```{r q_, opt.label = practice}
+q_ <- "YOUR_ANSWER_HERE" 
+.check_q_()
+.hint_q_()
+```
+:::
+
+# Display code
+```{r <chunk_name>, opt.label = justcode}
+
+```
+
+# Build your own
+```{r <chunk_name>, <chunk_options>}
+
+```
+
+# Score print
+```{r grade_lesson, opt.label = practice}
+.score_print()
+```
+
+# Other
+
+## Key point block
+
+::: key-point
+-   <bullet point>
+-   <bullet_point>
+:::
+
+## Watch out block
+
+::: watch-out
+-   <bullet_point>
+-   <bullet_point>
+:::
+
+# Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r tgc_contributors_list(ids = c("name"))`
+
+# References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   <ref>
+
+-   <ref>
+
+`r tgc_license()`

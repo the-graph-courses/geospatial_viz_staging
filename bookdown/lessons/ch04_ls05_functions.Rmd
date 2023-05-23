@@ -1,0 +1,291 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+  word_document:
+    toc: true
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: console
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+# Source autograder script quietly 
+mute(here("ch04_functions/lessons/ch04_ls05_functions_autograder.R"))
+```
+
+# Functions: testing and checking values
+
+## Learning objectives
+
+1.  You will learn about using conditional checks to make your functions robust and more reliable.
+
+## Introduction to the dataset
+
+In this lesson, we will continue to to use the COVID-19 dataset containing the results from a serological survey conducted in Yaounde, Cameroon in late 2020.
+
+```{r render = reactable_10_rows, message = FALSE}
+
+yaounde <- read_csv(here("ch04_functions/data/yaounde_data.csv"))
+yaounde
+
+```
+
+## Testing and checking values
+
+As you start to become more confident and write more complex functions, you’ll eventually get to the point where you don’t remember exactly every detail of how your function works. When this happens, it’s easy to call your function with invalid inputs and provide wrong arguments. To avoid this problem, it’s often useful to make constraints explicit. 
+
+For example, let's recap a shorter version of our`BMI` function.
+
+```{r eval=FALSE}
+
+BMI <- function(weight, height) {
+  x <- weight / (height ^ 2)
+  return(x)
+}
+
+```
+
+What happens if the arguments `weight` and `height` are not the same length?
+
+```{r}
+
+u <- yaounde$weight_kg[1:6]
+
+v <- yaounde$height_cm[1:3] / 100
+
+BMI(u, v)
+
+```
+
+In this case, because of R’s vector recycling rules, we don’t get an error. This is specially problematic, since we can get undesired results that will mess all our work.
+
+::: recap
+- Remember that in R, vector recycling rules state that if two vectors are of unequal length, the shorter one will be recycled in order to match the longer vector. In our example, the `u` and the `v` vectors have different lengths, and their sum is computed by recycling values of the shorter vector `v`.
+- What this means? It means that the BMI of subjects 4, 5 and 6 were calculated using the repeated heights of subjects 1, 2 and 3!
+:::
+
+At a first glance, this could be dismissed as a very obvious error. But, sometimes when dealing with multiple data sets and objects, we can commit errors. In very complex functions (specially if we don't comment them enough), we could be inserting errors during the coding.
+
+Because of this, it’s considered good practice to always check important preconditions. If some of these conditions don't apply, we should throw an error (with the function `stop()`,type `?stop` or `help(stop)` in the console to learn more about it).
+
+```{r}
+
+BMI <- function(weight, height) {
+    if (length(weight) != length(height)) {
+    stop("`weight` and `height` must be the same length", call. = FALSE)
+  }
+x <- weight / (height ^ 2)
+  return(x)
+}
+
+```
+
+Notice that checks are done via conditional statement using the `if` function. In our example, our function will return an error if the length of `x` and `y` differ.
+
+```{r}
+
+u <- yaounde$weight_kg[1:6]
+
+v <- yaounde$height_cm[1:3] / 100
+
+BMI(u, v)
+
+```
+
+You should consider carefully what are the important steps in your function and add some conditional checks of your arguments. However, keep in mind that there’s a tradeoff between how much time you spend making your function robust, versus how long you spend writing it. Again, there aren't rules written in stone and you will have to use your judgement on this. For example, take another look at our `BMI` function. Imagine if we also added a `na.rm` argument to is.
+
+```{r}
+
+BMI <- function(weight, height, na.rm = FALSE) {
+    if (length(weight) != length(height)) {
+    stop("`weight` and `height` must be the same length", call. = FALSE)
+  }
+  if (!is.numeric(height)) {
+    stop("`weight` must be numerical", call. = FALSE)
+  }
+  if (!is.numeric(height)) {
+    stop("`weight` must be numerical", call. = FALSE)
+  }
+  if (!is.logical(na.rm)) {
+    stop("`na.rm` must be logical")
+  }
+  if (length(na.rm) != 1) {
+    stop("`na.rm` must be length 1")
+  }
+
+  if (na.rm) {
+    miss <- is.na(weight) | is.na(height)
+    weight <- weight[!miss]
+    height <- height[!miss]
+  }
+  
+  x <- weight / (height ^ 2)
+  
+  return(x)
+}
+
+```
+
+Although this is very comprehensive, it is just too much: **it is a lot of extra work for little additional gain**. A useful compromise is the built-in function `stopifnot()`. It checks that each argument is `TRUE`, and produces a generic error message if not.
+
+```{r}
+
+BMI <- function(weight, height, na.rm = FALSE) {
+  stopifnot(length(weight) == length(height))
+  stopifnot(is.numeric(weight), is.numeric(height))
+  stopifnot(is.logical(na.rm), length(na.rm) == 1)
+  
+  if (na.rm) {
+    miss <- is.na(weight) | is.na(height)
+    weight <- weight[!miss]
+    height <- height[!miss]
+  }
+  
+  x <- weight / (height ^ 2)
+  
+  return(x)
+}
+
+```
+
+::: watch-out 
+Note that when using `stopifnot()` you must assert what is supposed be `TRUE` rather than checking for what might be wrong. 
+::: 
+
+::: practice
+In the lesson 2, we create an function to categorize the value of an age column. One possible solution is: 
+
+```{r}
+
+cat_age <- function(data, age_column, age_range, age_name){
+  
+  age_groups <- cut(data %>% pull(age_column), 
+                    breaks = age_range, 
+                    labels = age_name, include.lowest = T, right = F)
+  
+  data['age_group'] = age_groups
+  
+  return (data)
+}
+
+
+```
+
+To ensure that the parameters are filled correctly before applying the `cut` function we can add in the function some verification `if` statements as shown above. Look at the four chunks of code below and select the letter referring to the right chunk that you think that should be used in the `cat_age` function to verify if the parameters passed in the function have the exact type and length. 
+
+* A
+```{r eval = F, include = T}
+stopifnot(is.data.frame(data))
+stopifnot(is.numeric(age_column))
+stopifnot(is.vector(age_range) && is.vector(age_name))
+  
+if (!age_column %in% colnames(data)) {
+  stop(sprintf("The ‘data’ data frame does not have a column called %s.", age_column), call. = FALSE) 
+  }
+  
+if (!length(age_name) == length(age_name)) {
+  stop("The length of age_name should be equals to the length of age_range.", call. = FALSE) 
+  }
+
+```
+
+* B
+```{r eval = F, include = T}
+stopifnot(is.vector(data))
+stopifnot(is.character(age_column))
+stopifnot(is.vector(age_range) && is.vector(age_name))
+  
+if (!age_column %in% colnames(data)) {
+  stop(sprintf("The ‘data’ data frame does not have a column called %s.", age_column), call. = FALSE) 
+  }
+  
+if (!length(age_name) == length(age_name) + 1 ) {
+  stop("The length of age_name should be equals to the length of age_range more 1.", call. = FALSE) 
+  }
+
+```
+
+* C
+```{r eval = F, include = T}
+stopifnot(is.data.frame(data))
+stopifnot(is.numeric(age_column))
+stopifnot(is.vector(age_range) && is.vector(age_name))
+  
+if (age_column %in% colnames(data)) {
+  stop(sprintf("The ‘data’ data frame does not have a column called %s.", age_column), call. = FALSE) 
+  }
+  
+if (!length(age_name) == length(age_name) - 1 ) {
+  stop("The length of age_name should be equals to the length of age_range minus 1.", call. = FALSE) 
+  }
+
+```
+
+* D
+```{r eval = F, include = T}
+stopifnot(is.data.frame(data))
+stopifnot(is.character(age_column))
+stopifnot(is.vector(age_range) && is.vector(age_name))
+  
+if (!age_column %in% colnames(data)) {
+  stop(sprintf("The ‘data’ data frame does not have a column called %s.", age_column), call. = FALSE) 
+  }
+  
+if (!length(age_name) == length(age_name) - 1 ) {
+  stop("The length of age_name should be equals to the length of age_range minus 1.", call. = FALSE) 
+  }
+
+```
+
+
+```{r include = F}
+q1 <- "D"
+
+.check_q1()
+
+.hint_q1()
+```
+
+```{r include = F}
+.score_print()
+```
+
+:::
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r tgc_contributors_list(ids = c("dcpcamara", "eduardo", "lolovanco", "kendavidn"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   Barnier, Julien. "Introduction à R et au tidyverse." Accessed May 23, 2022. <https://juba.github.io/tidyverse>
+
+-   Wickham, Hadley; Grolemund, Garrett. "R for Data Science." Accessed May 25, 2022. <https://r4ds.had.co.nz/>
+
+-   Wickham, Hadley; Grolemund, Garrett. "The tidyverse style guide." Accessed May 30, 2022. <https://style.tidyverse.org/>
+
+<!-- (Chicago format. You can use https://www.citationmachine.net) -->
+
+`r tgc_license()`

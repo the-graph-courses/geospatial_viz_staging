@@ -1,0 +1,164 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+  word_document:
+    toc: true
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+# Source autograder script quietly 
+mute(here("chxx_factors/lessons/ch99_ls01_factors_autograder.R"))
+
+```
+
+# Learning objectives {.unlisted .unnumbered}
+
+1.  Understand how to represent categorical data in R
+2.  Know the difference between ordered and unordered factors
+3.  Recoding factors.
+
+# Introduction to factors in R
+
+In statistics, data can very often be meaningfully grouped by some characteristic, such as gender, social status, stage of disease, sampling location, etc (these are called "categorical variables"). In R there is a special data type - factors, which are used to store the codes of the corresponding levels of nominal characteristics.
+
+While factors look (and often behave) like character vectors, they are actually integers, and care must be taken when treating them like strings.
+
+Once created, factors can only contain a predefined set of values - levels. Factors can be ordered or unordered. By default, R always sorts levels in alphabetical order.
+
+# Defining factors in R
+
+To create and modify factors in R we use the `factor()` command, which takes a vector of (possibly non-unique) values and represent each unique value as a distinct factor.
+
+Let's load the Abuja malaria dataset. There are many variables that looks like categorical (e.g. "Educationallevel", "Houseroof", "Housetype", "Microscopy result", and many other). Take, for example, variable `HealthFacilityCode`:
+
+```{r}
+library('readxl')
+mdataset <- read_excel('chxx_factors/data/llin.xls')
+HealthFacilityCode <- mdataset$HealthFacilityCode
+HealthFacilityCode
+```
+
+However, with this approach, the program will treat the column with health facility codes as a numeric vector, let's check it with the `class(HealthFacilityCode)` command:
+
+```{r}
+class(HealthFacilityCode)
+```
+
+So, it contains only numbers without any context (i.e. we could trivially add any other number to it, which wouldn't be meaningful unless previously agreed upon). To convert a numeric (or text) vector into factors in R, there is the `factor()` function of the same name:
+
+```{r}
+HealthFacilityCode <- factor(c(HealthFacilityCode)) 
+HealthFacilityCode
+```
+
+Now, when we display the contents of this variable, the program tells us that this object type is factors with the levels (`levels: 0 1 3 4 5 6 7 8 9 10 11 12`). We can additionally check this by using the same `class(HealthFasilityCode)` command:
+
+```{r}
+class(HealthFacilityCode)
+```
+
+A more reliable approach to avoid confusion when performing an analysis is to encode factor levels as text values instead of numbers. In our dataset, there is a gender column ('Sex') containing "male" and "female" text values:
+
+```{r}
+Sex <- factor(mdataset$Sex)
+Sex
+```
+
+Note that when the contents of the sex vector are output, the patient codes are not enclosed in quotes as text values normally are. This is one of the outward signs that this is a factor and not a text vector with six "male" and four "female" values. We can recode the levels of the already existing treatment factor using the levels() function (we need to be careful to keep the existing order of levels intact, which is alphabetical by default):
+
+```{r}
+levels(Sex) <- c("F", "M")
+Sex
+```
+
+We can use `recode` function from tidyverse (`dplyr` package) for a more robust recoding of categorical variable levels:
+
+```{r}
+Sex <- factor(mdataset$Sex)
+recode(Sex, "male"="M", "female"="F")
+```
+
+# Ordered factors
+
+Sometimes the order of factors does not matter; in other cases, however, we might want to specify the order of the factors because it makes natural sense or because it is required for a particular type of analysis. Let's look at the variable `Educational level`:
+
+```{r}
+Educationallevel <- factor(mdataset$Educationallevel)
+Educationallevel
+```
+
+As you can see from the example, the levels are arranged simply alphabetically, but if we need them to have a meaningful order, we need to encode it in a particular way. For example, we want to sort the educational level from high to low: "tertiary" comes first, the second will be "secondary", the third "primary" and "none" comes the last. In addition, we need to somehow tell R that before us not just categorical, but ordered categorical data. It is done like this:
+
+```{r}
+ELsorted <- ordered(Educationallevel, levels=c("tertiary", "secondary", "primary", "none"))
+ELsorted
+```
+
+Now R understands the order of the levels. This can play a critical role, for example, when calculating correlation coefficients.
+
+# Converting factors
+
+Any list (or vector) with categorical variables, or a categorical column in a dataframe could be converted to factors. While factor values can be created explicitly with `factor` or `ordered` constructor functions, there is also `as.factor` and `as.ordered` conversion functions:
+
+```{r}
+Housetype <- as.factor(c("bungalow", "duplex", "flat", "hut"))
+Housetype
+```
+
+Occasionally, we might want to convert factors to a numeric representation, with a distinct number corresponding to each factor. This is done with `as.numeric` function:
+
+```{r}
+as.numeric(Housetype)
+```
+
+For the same purpose, as well as for the reverse conversion from numerical to text level designations, we can use also the `levels()` function:
+
+```{r}
+levels(Housetype) <- c("1", "2", "3", "4")
+Housetype
+```
+
+Sometimes, there can be more levels encoded in the factor variable than it is currently available in the data (e.g. it is quite possible to have an empty factor variable with levels defined). Occasionally, this is useful and intended, but if you want to remove unused levels from a factor variable, there is a convenient function `fct_drop` available from `forcats` package:
+
+```{r}
+f <- factor(c("a", "b"), levels = c("a", "b", "c"))
+f
+#> [1] a b
+#> Levels: a b c
+fct_drop(f)
+#> [1] a b
+#> Levels: a b
+```
+
+:::practice Load the Abuja malaria dataset and convert the `Age_RECODED` variable to the ordered factor with different levels denoting the age groups: `<5`, `5-9`, `10-19`, `20-24`, `25-34`, `35>`. Order this factor levels correctly.
+
+```{r eval = F, include = F}
+Age <- mdataset$Age_RECODED
+Age <- # do your conversion here
+.check_q1()
+.hint_q1()
+```
+
+
+
+`r tgc_license()`

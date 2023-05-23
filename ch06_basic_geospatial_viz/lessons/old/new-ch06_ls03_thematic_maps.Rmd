@@ -1,0 +1,189 @@
+---
+title: '\ '
+output:
+  # word_document:
+  #   toc: true
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: console
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      class.source = "tgc-code-block", error = TRUE)
+
+# Source autograder script quietly 
+suppressMessages(source(here::here("ch06_basic_geospatial_viz/lessons/ch06_ls01_thematic_maps_autograder.R")))
+```
+
+```{r,echo=FALSE}
+ggplot2::theme_set(new = theme_bw())
+options(scipen=10000)
+```
+
+------------------------------------------------------------------------
+
+<!-- # Geospatial analysis: thematic maps -->
+
+## Introduction
+
+...So far we have focused on mapping just geometries themselves; we mapped, among other things:
+
+-   country borders (polygon geometries)
+
+-   world rivers (line geometries)
+
+-   the locations of ports (point geometries)
+
+All these maps, whose main purpose is to show the *locations* of features, are called "reference" maps.
+
+But when we build maps in epidemiology (and in most other fields) what we really care about is not the locations themselves, but how specific attributes vary across these locations. For example: we might make maps to show:
+
+-   the incidence of a disease across different countries;
+
+-   the concentration of a microbe/chemical in different rivers;
+
+-   how many travelers transit annually through different ports.
+
+Such maps, which aim to show the spatial variability of an attribute, are called *thematic* maps. These thematic maps usually use reference maps as their base, but they then add color or size variation to the base geometries in order to convey qualitative or quantiative information about specific themes or attributes.
+
+.....
+
+## Packages
+
+```{r}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(rnaturalearth, 
+               sf, 
+               here, 
+               tidyverse, 
+               ggspatial)
+```
+
+## Thematic maps with Point geometries
+
+### Qualitative
+
+```{r}
+airports <- ne_download(scale = 10,
+                        type = "airports", 
+                        returnclass = "sf")
+
+ggplot(data = airports) + 
+  geom_sf(aes(color = type), alpha = 0.5)
+```
+
+### Quantitative
+
+```{r}
+cholera_deaths <- read_rds(here("ch06_basic_geospatial_viz/data/cholera_deaths.rds"))
+
+ggplot(data = cholera_deaths) + 
+  geom_sf(mapping = aes(size = Count), alpha = 0.7)
+```
+
+::: reminder
+Remember that under the hood, ggplot is passing the "geometry" column to the `geometry` argument. You can make this explicit with `aes(geometry = geometry)` . For example:
+
+```{r eval = F}
+ggplot(data = cholera_deaths) + 
+  geom_sf(mapping = aes(size = Count, geometry = geometry), alpha = 0.7)
+```
+:::
+
+## Thematic maps with Line geometries
+
+
+
+## Thematic maps with Polygon geometries
+
+### Qualitative
+
+```{r}
+countries <- ne_countries(returnclass = "sf")
+
+ggplot(data = countries) + 
+  geom_sf(aes(fill = economy))
+```
+
+### Quantitative
+
+```{r}
+ggplot(data = countries) + 
+  geom_sf(aes(fill = pop_est))
+```
+
+## Multiple layers
+
+So far we have been plotting single geometries.
+
+....But for most maps, you will need to provide additional context.....
+
+This can be done by plotting multiple geometries:
+
+E.g. for the map with world airports:
+
+```{r}
+ggplot() + 
+  geom_sf(data = countries) + 
+  geom_sf(data = airports, aes(color = type))
+```
+
+For the map of south american roads:
+
+```{r}
+south_am_countries <- countries %>% filter(continent == "South America")
+
+ggplot() + 
+  geom_sf(data = south_am_countries) +
+  geom_sf(data = south_am_roads, aes(color = type)) 
+```
+
+------------------------------------------------------------------------
+
+You could also add a "Google Maps-like" base map with streets and buildings....using the \`annotation_map_tile()\` function from ggspatial. For example, for the cholera deaths plot:
+
+```{r}
+ggplot(data = cholera_deaths) + 
+  annotation_map_tile(zoomin = 0) +
+  geom_sf(mapping = aes(size = Count, geometry = geometry), alpha = 0.7)
+```
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r tgc_contributors_list(ids = c("kendavidn","avallecam", "lolovanco"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   *Batra, Neale, et al. (2021). The Epidemiologist R Handbook. Chapter 28: GIS Basics*. (2021). Retrieved 01 April 2022, from <https://epirhandbook.com/en/gis-basics.html>
+
+-   Moreno, Mel, and Mathieu Bastille. "Mel Moreno and Mathieu Basille." Drawing beautiful maps programmatically with R, sf and ggplot2 --- Part 1: Basics, October 25, 2018. <https://r-spatial.org/r/2018/10/25/ggplot2-sf.html.>
+
+-   *Lovelace, R., Nowosad, J., & Muenchow, J. Geocomputation with R. Chapter 2: Geographic data in R*. (2019). Retrieved 01 April 2022, from <https://geocompr.robinlovelace.net/spatial-class.html>
+
+-   *Moraga, Paula. Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny. Chapter 2: Spatial data and R packages for mapping*. (2019). Retrieved 01 April 2022, from <https://www.paulamoraga.com/book-geospatial/sec-spatialdataandCRS.html>
+
+-   *Baumer, Benjamin S., Kaplan, Daniel TRUE., and Horton, Nicholas J. Modern Data Science with R. Chapter 17: Working with geospatial data*. (2021). Retrieved 05 June 2022, from <https://mdsr-book.github.io/mdsr2e/ch-spatial.html>
+
+`r tgc_license()`

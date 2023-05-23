@@ -1,0 +1,479 @@
+---
+title: '\ '
+output:
+  # word_document:
+  #   toc: true
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: inline
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+# Source autograder script quietly 
+suppressMessages(source(here::here("ch06_basic_geospatial_viz/lessons/ch06_ls04_density_map_autograder.R")))
+```
+
+```{r,echo=FALSE}
+ggplot2::theme_set(new = theme_bw())
+options(scipen=10000)
+```
+
+------------------------------------------------------------------------
+
+<!-- # Geospatial analysis: density maps -->
+
+## Introduction
+
+![](images/0-whitebox.JPG)
+
+• Difficulty to visualize patterns.
+
+![](images/0-whitebox.JPG)
+
+• Dot maps can have **overlapped points**
+
+![](images/0-whitebox.JPG)
+
+• Lines may not be explicit enough in providing *geographic context*.
+
+![](images/0-whitebox.JPG)
+
+![Figure 1. (A) John Snow's Density map. (B) John Snow's Dot map complemented with the city street roads.](images/density_map_02.png){width="676"}
+
+![](images/0-whitebox.JPG)
+
+• Today, we are going to learn
+
+![](images/0-whitebox.JPG)
+
+• How to built *Density maps* to avoid overlaps, and
+
+![](images/0-whitebox.JPG)
+
+• How to add *Basemaps* for Google Maps-like backgrounds.
+
+![](images/0-whitebox.JPG)
+
+## Learning objectives
+
+1.  Identify one more type of Thematic map (**Density maps**) used by epidemiologist to visualize *overlapping* Geospatial data.
+
+2.  Complement *Thematic maps* with **Basemaps** for Google Maps-like backgrounds using the `annotation_map_tile()` function, from the `{ggspatial}` package.
+
+## Prerequisites
+
+This lesson requires the following packages:
+
+```{r,eval=TRUE,echo=TRUE,message=FALSE}
+if(!require('pacman')) install.packages('pacman')
+pacman::p_load_gh("afrimapr/afrilearndata")
+pacman::p_load_gh("avallecam/epihelper")
+pacman::p_load(ggspatial,
+               ggplot2,
+               tibble,
+               terra,
+               dplyr,
+               spData,
+               sf)
+```
+
+This lesson requires familiarity with `{ggplot2}`: if you need to brush up, have a look at our introductory course on data visualization.
+
+## Density map
+
+![](images/0-whitebox.JPG)
+
+### What is it? {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• Thematic map where colours represent the *intensity* of a value,
+
+![](images/0-whitebox.JPG)
+
+• It does not use defined regions or geopolitical boundaries to group data.
+
+![](images/0-whitebox.JPG)
+
+• It shows **'hot spots'**, or
+
+![](images/0-whitebox.JPG)
+
+• Areas with a high *density* or *concentration* of points.
+
+![](images/0-whitebox.JPG)
+
+![Figure 4. (A). John Snow's Dot distribution map with overlapping Point pattern data. (B) Density map from John Snow's Dot distribution map Point pattern data.](images/density_map_01.png)
+
+![](images/0-whitebox.JPG)
+
+### How to plot it? {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• Let's use `afriairports`, from `{afrilearndata}`,
+
+![](images/0-whitebox.JPG)
+
+• It contains the locations from African airports.
+
+![](images/0-whitebox.JPG)
+
+• With `geom_sf()` function we get *overlapping points*:
+
+![](images/0-whitebox.JPG)
+
+```{r,eval=TRUE,echo=TRUE}
+ggplot(data = afriairports) +
+  geom_sf()
+```
+
+![](images/0-whitebox.JPG)
+
+• A *Density map* require four main steps:
+
+![](images/0-whitebox.JPG)
+
+1.  `epihelper::st_coordinates_tidy()` to *retrieve* the point coordinates.
+
+![](images/0-whitebox.JPG)
+
+2.  `ggplot()` defining *new* coordinate column names `X` and `Y`,
+
+![](images/0-whitebox.JPG)
+
+3.  `geom_bin_2d()` to depict the *number of airports per area*,
+
+![](images/0-whitebox.JPG)
+
+4.  `coord_sf()` to *transform* axis aspect ratio and coordinate format.
+
+![](images/0-whitebox.JPG)
+
+```{r,eval=TRUE,echo=TRUE}
+afriairports %>% 
+  
+  # 👉 (1) extract coordinates
+   %>% 
+  
+  # 👉 (2) start ggplot
+  ggplot() +
+  
+  # 👉 (3) with a new geom function
+   +
+  
+  # 👉 (4) transform axis
+  coord_sf()
+```
+
+![](images/0-whitebox.JPG)
+
+::: rstudio-cloud
+Create a Density map with the `pcrime` data read from the `pcrime.rds` local file.
+
+```{r}
+pcrime <- read_rds(here("ch06_basic_geospatial_viz/data/pcrime.rds"))
+```
+
+```{r,eval=FALSE}
+pcrime
+```
+
+Use the `geom_bin_2d()`, to portrait the number of crimes per area, faceted by the two types of crime in the column `marks`.
+
+```{r,eval=FALSE}
+pcrime %>% 
+  st_coordinates_tidy() %>% 
+  ggplot(aes(x = X,y = Y)) +
+  ........() +
+  coord_sf() +
+  facet_wrap(~marks)
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+### How to use it? {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• Used with *Environmental data*,
+
+![](images/0-whitebox.JPG)
+
+• Altitude, air pollution or rainfall data.
+
+![](images/0-whitebox.JPG)
+
+![Figure 5. Altitude data from The Gambia.](images/pre-malaria-02.PNG){width="556"}
+
+![](images/0-whitebox.JPG)
+
+• Used for *spatially continuous disease prevalence surfaces*.
+
+![](images/0-whitebox.JPG)
+
+• Moraga et al. (2019) for malaria in children at 65 villages in The Gambia
+
+![](images/0-whitebox.JPG)
+
+![Figure 6. Predicted malaria prevalence in The Gambia.](images/pre-malaria-03.PNG){width="557"}
+
+![](images/0-whitebox.JPG)
+
+• They used a geostatistical model to predict the *disease prevalence* at *unobserved locations*.
+
+![](images/0-whitebox.JPG)
+
+### What alternative plots do we have? {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• Two `{ggplot2}` alternatives:
+
+![](images/0-whitebox.JPG)
+
+• Use `geom_density_2d_filled()` for a contoured density plot of `"count"` values:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+afriairports %>% 
+  
+  # (1) extract coordinates
+  st_coordinates_tidy() %>% 
+  
+  # (2) start ggplot
+  ggplot(aes(x = X, y = Y)) +
+  
+  # 👉 with an alternative geom function 👈
+  (contour_var = "") +
+  
+  # (4) transform axis
+  coord_sf()
+```
+
+![](images/0-whitebox.JPG)
+
+• Use `stat_density_2d()` to create a continuous surface of `count` values:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+afriairports %>% 
+  
+  # (1) extract coordinates
+  st_coordinates_tidy() %>% 
+  
+  # (2) start ggplot
+  ggplot(aes(x = X, y = Y)) +
+  
+  # 👉 with an alternative geom function 👈
+  stat_density_2d(
+    geom = "raster",
+    mapping = aes(fill = after_stat(count)),
+    contour = FALSE) + 
+  scale_fill_viridis_c() +
+  
+  # (4) transform axis
+  coord_sf()
+```
+
+![](images/0-whitebox.JPG)
+
+::: rstudio-cloud
+Use the `st_coordinates_tidy()` function to extract the X and Y coordinates from the `pcrime` dataset.
+
+This will be useful to built a Density map with `geom_density_2d_filled()` and portrait the number of crimes per area, faceted by the two types of crime in the column `marks`.
+
+```{r,eval=FALSE}
+pcrime %>% 
+  ........................ %>% 
+  ggplot(aes(x = X,y = Y)) +
+  geom_density_2d_filled() +
+  coord_sf() +
+  facet_wrap(~marks)
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+## Basemaps
+
+![](images/0-whitebox.JPG)
+
+• With lines for *Physical features* we get partial geographical context.
+
+![](images/0-whitebox.JPG)
+
+• We can overlay our map over *Google Maps-like* background.
+
+![](images/0-whitebox.JPG)
+
+### In a Dot map
+
+![](images/0-whitebox.JPG)
+
+• Let's use the London cholera outbreak Dot map,
+
+![](images/0-whitebox.JPG)
+
+![Figure 7. John Snow's Dot map.](images/cholera_dot_size.png){width="416"}
+
+![](images/0-whitebox.JPG)
+
+• We can overlay it on the London street map.
+
+![](images/0-whitebox.JPG)
+
+• `{ggspatial}` lets us do it.
+
+![](images/0-whitebox.JPG)
+
+• Let's use `annotation_map_tile()` to add a layer of **map tiles** from [Open Street Map](https://www.openstreetmap.org/).
+
+![](images/0-whitebox.JPG)
+
+```{r, results = "hide", warning = FALSE, message = FALSE}
+cholera_deaths <- 
+  read_rds(here("ch06_basic_geospatial_viz/data/cholera_deaths.rds"))
+
+ggplot(data = cholera_deaths) + 
+  
+  # 👉 add a basemap 👈
+  (zoomin = 0) + 
+  
+  # continue with ggplot
+  geom_sf(mapping = aes(size = Count), alpha = 0.5)
+```
+
+![](images/0-whitebox.JPG)
+
+• Number of deaths per location using `size`.
+
+![](images/0-whitebox.JPG)
+
+::: rstudio-cloud
+Add a Basemap to a Dot map using the `africapitals` object and the `annotation_map_tile()` function.
+
+```{r,eval=FALSE,echo=TRUE}
+ggplot(data = africapitals) +
+  .......() + 
+  geom_sf(mapping = aes(size = pop), alpha = 0.5)
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+### In a Density map
+
+![](images/0-whitebox.JPG)
+
+• Let's use the `pcrime` object and the `annotation_map_tile()` function.
+
+![](images/0-whitebox.JPG)
+
+```{r}
+pcrime %>% 
+  
+  # (1) extract coordinates
+  st_coordinates_tidy() %>% 
+  
+  # (2) start ggplot
+  ggplot(aes(x = X, y = Y)) +
+  
+  # 👉 add a basemap 👈
+  (zoomin = 0) + 
+  
+  # (3) with a new geom function
+  geom_bin_2d() +
+  
+  # (4) transform axis
+  coord_sf() +
+  
+  # facet
+  facet_wrap(~marks)
+```
+
+![](images/0-whitebox.JPG)
+
+::: watch-out
+![](images/0-graybox.JPG)
+
+• The basemap must be bellow the `geom_*` function!
+:::
+
+::: rstudio-cloud
+Use two functions, `annotation_map_tile()` and `geom_bin_2d()`, to add a Basemap to a Density map using the `afriairports` object.
+
+```{r,eval=FALSE,echo=TRUE}
+afriairports %>% 
+  st_coordinates_tidy() %>% 
+  ggplot(aes(x = X, y = Y)) +
+  ...........() + 
+  ...........() +
+  coord_sf()
+```
+:::
+
+## Wrap up
+
+![](images/0-whitebox.JPG)
+
+• We have learned about *Density maps* to avoid overlapping spatial points.
+
+![](images/0-whitebox.JPG)
+
+• How to add *Basemaps* for Google Maps-like backgrounds.
+
+![](images/0-whitebox.JPG)
+
+![Figure 8. (A) John Snow's Density map. (B) John Snow's Dot map complemented with the city street roads.](images/density_map_02.png)
+
+![](images/0-whitebox.JPG)
+
+• But, How can we use data from **external** GIS software?
+
+![](images/0-whitebox.JPG)
+
+• Follow along with the lessons to find how to train these skills!
+
+![](images/0-whitebox.JPG)
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r tgc_contributors_list(ids = c("avallecam", "lolovanco"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   *Batra, Neale, et al. (2021). The Epidemiologist R Handbook. Chapter 28: GIS Basics*. (2021). Retrieved 01 April 2022, from <https://epirhandbook.com/en/gis-basics.html>
+
+-   *Lovelace, R., Nowosad, J., & Muenchow, J. Geocomputation with R. Chapter 2: Geographic data in R*. (2019). Retrieved 01 April 2022, from <https://geocompr.robinlovelace.net/spatial-class.html>
+
+-   *Moraga, Paula. Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny. Chapter 2: Spatial data and R packages for mapping*. (2019). Retrieved 01 April 2022, from <https://www.paulamoraga.com/book-geospatial/sec-spatialdataandCRS.html>
+
+-   *Baumer, Benjamin S., Kaplan, Daniel T., and Horton, Nicholas J. Modern Data Science with R. Chapter 17: Working with geospatial data*. (2021). Retrieved 05 June 2022, from <https://mdsr-book.github.io/mdsr2e/ch-spatial.html>
+
+`r tgc_license()`

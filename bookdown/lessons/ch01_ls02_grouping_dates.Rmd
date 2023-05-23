@@ -1,0 +1,317 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+  word_document:
+    toc: true
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: inline
+---
+
+```{r, echo = F, message = F, warning = F}
+# Load packages ----
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(lubridate,
+               knitr,
+               tidyverse, 
+               here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+## autograders
+suppressMessages(source(here::here("ch01_dates_times/lessons/ch01_ls02_grouping_dates_autograder.R")))
+```
+
+------------------------------------------------------------------------
+
+# Date/time data: disaggregating dates
+
+## Learning Objectives
+
+1\.
+Group temporal data into different categories (days, weeks, months and years)
+
+When working with data is important for data analysts to understand that data aggregation can hide a lot of things.
+
+For example, when you rely on monthly case counts to tell you the entire story about the development of new disease cases, there is a lot granular data you are not taking advantage of.
+
+Disaggregating (separating) monthly data into weekly case counts and even daily counts might reveal more information about the progression of diseases, or trend of sales of a product.
+
+We are going to use the ebola_sierraleone_2014 data set from the `{outbreaks}` package to explore historical Ebola outbreak data and demonstrate this concept.
+
+Run the code chunk below to create an R object called ebola_data.
+With `head(ebola_data)` function, you can explore the initial rows of the data set.
+
+```{r ebola_data}
+#Create an R object named ebola_data 
+ebola_data <- outbreaks::ebola_sierraleone_2014
+head(ebola_data) #show the first 6 rows of the ebola_data
+```
+
+The `names(ebola_data)` function would show the names of the different columns.
+
+```{r columns}
+names(ebola_data)
+```
+
+It seems intuitive that `ebola_data$date_of_onset` and `ebola_data$date_of_sample` are columns containing date information.
+Let us confirm that by checking the class of the columns.
+
+```{r date columns}
+class(ebola_data$date_of_onset)
+class(ebola_data$date_of_sample)
+```
+
+Here is a monthly breakdown of a past epidemic of Ebola.
+We see that there is a peak in October-December.
+
+```{r month_image, out.width=c('100%', '100%'), echo=F}
+knitr::include_graphics(here::here("ch01_dates_times","images", "Ebola_monthly_case_totals.png"))
+```
+
+To create the bar chart of monthly totals of new Ebola cases above, we would use the `floor_date()` from the `{lubridate}` package.
+
+`lubridate::(floor_date)` takes a date-time object and rounds it down to the nearest boundary of the specified unit.
+
+::: key-point
+The `unit` argument of `lubridate::(floor_date)` can specify either one of the following as character strings.
+(Second, minute, hour, day, week, month, bimonth, quarter, season, halfyear and year.)
+:::
+
+For example, let's apply `floor_date()` to today's date.
+`floor_date()` takes the current date provided by the function `lubridate::today()` and rounds it down to the first day of the particular month as shown below.
+
+```{r today}
+lubridate::today() #gives the current date in yyyy-mm-dd format
+
+lubridate::floor_date(lubridate::today(), unit = "months")
+
+```
+
+::: practice
+What would be the result if the function `lubridate::floor_date(x, unit= "months")` is applied to Valentine's day 2022?
+In other words, round 2022-02-14 down to the first day of the particular month in the year 2022.
+
+```{r q1}
+q1 <- "YOUR ANSWER HERE"
+.check_q1()
+.hint_q1()
+```
+
+A.  
+
+```{r q1_option1, echo=FALSE, message=FALSE, warning=FALSE}
+lubridate::floor_date(ymd("2021-02-14"), unit= "months")
+```
+
+B.  
+
+```{r q1_option2, echo=FALSE, message=FALSE, warning=FALSE}
+lubridate::floor_date(ymd("2022-02-14"), unit= "months")
+```
+
+C.  
+
+```{r q1_option3, echo=FALSE, message=FALSE, warning=FALSE}
+lubridate::floor_date(ymd("2022-03-14"), unit= "months")
+```
+:::
+
+### Monthly cases
+
+Let us get the number of total Ebola cases per month.
+
+**Assumptions**
+
+To answer this question, we assume that each individual `date_of_onset` entry represents a unique case of Ebola.
+
+Thus, to get the total unique cases per month, we would use the `{dplyr}` function `mutate()` and the `lubridate::floor_date()` to modify the `date of onset` column and separate the data by months.
+
+That is what this section of code does.
+
+``` r
+dplyr::mutate(date_of_onset = lubridate::floor_date(date_of_onset, unit = "months")) 
+```
+
+Then, the following section of code `count(date_of_onset)` counts the number of unique instances of `date_of_onset` grouped by months.
+
+To ensure that, all possible dates are included in the new column month_onset, use the `complete()` function from the `{tidyr}` package to create a sequence of dates and the argument `fill=list(n=0)`sets to zero (0) any dates that did not have corresponding inputs (cases).
+Run `?complete` for more details.
+
+Without this step, any graph or table you create may not display time units (that is months) with zero reported cases.
+
+The code below follows the sequence described to get the total monthly cases
+
+```{r total_monthly_cases}
+total_monthly_cases <- ebola_data%>%
+  mutate(month_onset = lubridate::floor_date(date_of_onset, unit = "months"))%>% 
+  # new column, 1st of month of onset
+  count(month_onset) %>% # count cases by month
+  tidyr::complete(
+    month_onset = seq.Date(
+      min(month_onset, na.rm=T),# include all months with no cases reported
+      max(month_onset, na.rm=T),
+      by="month"),
+    fill = list(n = 0))
+```
+
+::: reminder
+We are using mutate, group_by, count and filter functions from the `{dpylr}` package (part of the tidyverse packages) for data wrangling and the `{ggplot2}` package for plotting graphs.
+:::
+
+#### Plotting Monthly case totals
+
+Run the following code to plot the monthly Ebola case totals
+
+```{r monthly_plot}
+total_monthly_cases%>%
+  ggplot(aes(x=month_onset,y=n,fill= month_onset))+geom_col()+
+  scale_x_date(date_breaks= "2 month",date_labels = "%B %Y")+
+  guides(x = guide_axis(angle = 45))+ 
+  labs(title= "A Bar chart showing the counts of Ebola cases per month")+
+  ylab("Monthly Case count")+xlab("Month in which cases occurred")+
+  geom_text(aes(label=n),angle=30,check_overlap= T)# to display case counts as labels
+```
+
+::: pro-tip
+`guides( x = guide_axis(angle = 45)` is a `{ggplot2}` function that can be used to change the direction of the axis labels on a graph.
+In the code above we use it to create diagonal axis labels by indicating `angle= 45`.
+:::
+
+::: practice
+Refer to the graph above and find the average number of Ebola cases (mean) for the 3 month period from May 2014 to July 2014.
+Select the correct answer from the options below.
+
+```{r eval = F}
+q1 <- "YOUR ANSWER HERE"
+.check_q2()
+.hint_q2()
+```
+
+A.  
+
+```{r q2_option1, echo=FALSE, message=FALSE, warning=FALSE}
+mean(total_monthly_cases$n[1:3])
+```
+
+B.  
+
+```{r q2_option2, echo=FALSE, message=FALSE, warning=FALSE}
+mean(total_monthly_cases$n[2:4])
+```
+
+C.  
+
+```{r q2_option3, echo=FALSE, message=FALSE, warning=FALSE}
+mean(total_monthly_cases$n[3:5])
+```
+:::
+
+### Daily Cases
+
+Now imagine we were monitoring the cases real-time in 2014 at the very beginning of the epidemic, a case of Ebola has been declared and we need to start looking day by day if we have a growing epidemic on our hands.
+
+Let's follow the code below to plot the daily case rate over May 2014 to see the progression of the spread of Ebola.
+
+```{r daily_cases}
+daily_cases <- ebola_data %>% 
+  
+  count(date_of_onset) %>%      # count number of rows per unique date
+  complete(                      # ensure all days appear even if no cases
+    date_of_onset = seq.Date(    # re-define date column as daily sequence of dates
+      from = min(date_of_onset, na.rm=T), 
+      to = max(date_of_onset, na.rm=T),
+      by = "day"),
+    fill = list(n = 0)) 
+
+daily_cases
+```
+
+The table above shows a sequence of dates from May 2014 to September 2015 and their associated record of new cases of Ebola.
+To plot the trend of cases in the first month of the epidemic, we would have to isolate the cases that occurred in May 2014.
+
+Thus, we would use the `lubridate::month()` function to create a new column containing only the month component of the date_of_onset.
+Also, the `lubridate::year()` will be used to extract the year column.
+
+#### Plotting daily case totals
+
+```{r plot_daily}
+daily_cases%>%
+  mutate(month_onset=lubridate::month(date_of_onset, label = TRUE, abbr = FALSE),
+         year_onset= lubridate::year(date_of_onset))%>%
+  filter(month_onset=="May" & year_onset== 2014)%>%
+  ggplot(aes(x=date_of_onset,y=n,fill= date_of_onset))+geom_col()+
+  scale_x_date(date_breaks= "1 day",date_labels = "%d %b %Y")+
+  guides(x = guide_axis(angle = 45))+ 
+  labs(title= "A Bar chart showing the daily counts of Ebola cases in May 2014")+
+  ylab("Daily Case count")+
+  geom_text(aes(label=n),check_overlap= T, vjust= -0.2)
+```
+
+### Weekly Case counts
+
+The plot above shows the trend of the first days of the Ebola outbreak in May 2014.
+
+If we wanted to get weekly totals of cases in May and June 2014, we would use the code below.
+
+```{r weekly}
+weekly_counts <- 
+  ebola_data%>%# remove cases missing date_onset
+  mutate(week_onset = lubridate::floor_date(date_of_onset, unit = "week")) %>%  # new column of week of onset
+  count(week_onset) %>%  # group data by week and count rows per group
+  tidyr::complete(    # ensure all days appear even if no cases
+    week_onset = seq.Date(# re-define date column as daily sequence of dates
+      from = min(week_onset, na.rm=T), 
+      to = max(week_onset, na.rm=T),
+      by = "week"),
+    fill = list(n = 0))   
+
+weekly_counts%>%
+           mutate(year_onset=lubridate::year(week_onset),
+                 month_onset=lubridate::month(week_onset, label= TRUE,
+                                              abbr= FALSE))%>%
+    filter(month_onset %in% c("May","June","July")&
+             year_onset==2014)%>%
+    ggplot(aes(x=week_onset, y= n, fill= month_onset)) +geom_col()+
+  scale_x_date(date_breaks = "1 week", date_labels = "%d %b %Y")+
+  labs(title="Ebola cases counts over time (May, June , July 2014)")+
+  ylab("Weekly Case_count")+
+  geom_text(aes(label=n),check_overlap= T, vjust= -0.2)
+```
+
+We can see that generally there is an increase in case counts with a sharp increase in cases in the week of 9th June, 2014.
+
+```{r eval = F, echo = F}
+.score_print()
+```
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r tgc_contributors_list(ids = c("aowusuda"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   *Batra, Neale, et al. (2021). The Epidemiologist R Handbook. Chapter 28: GIS Basics*.
+    (2021).
+    Retrieved 01 April 2022, from <https://epirhandbook.com/en/gis-basics.html>
+
+-   *Wickham, Hadley, and Garrett Grolemund."R For Data Science."* 16 Dates and times \| R for Data Science, 2017.
+    Accessed May 10, 2022 <https://r4ds.had.co.nz/dates-and-times.html#time-zones>.
+
+`r tgc_license()`

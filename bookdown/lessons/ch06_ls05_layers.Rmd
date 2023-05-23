@@ -1,0 +1,551 @@
+---
+title: '\ '
+output:
+  # word_document:
+  #   toc: true
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: inline
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+# Source autograder script quietly 
+mute(here("ch06_basic_geospatial_viz/lessons/ch06_ls05_layers_autograder.R"))
+```
+
+```{r,echo=FALSE}
+ggplot2::theme_set(new = theme_bw())
+```
+
+# Geospatial analysis: additional layers
+
+## Learning objectives
+
+1.  Add **external** data coordinates within the scripts using the `tribble()` function.
+
+2.  Add text and **labels** to ggplot maps using the `{ggsflabel}` package.
+
+3.  Add color **palettes** to spatial data using the `{colorspace}` package.
+
+4.  Add arrow and scale **annotations** in ggplot maps using the `{ggspatial}` package.
+
+## Prerequisites
+
+This lesson requires the following packages:
+
+```{r,eval=TRUE,echo=TRUE,message=FALSE}
+if(!require('pacman')) install.packages('pacman')
+
+pacman::p_load(tidyverse,
+               colorspace,
+               ggspatial,
+               janitor,
+               ggplot2,
+               spData,
+               units,
+               sf)
+
+pacman::p_load_gh("yutannihilation/ggsflabel",
+                  "afrimapr/afrihealthsites",
+                  "afrimapr/afrilearndata",
+                  "wmgeolab/rgeoboundaries")
+```
+
+## Introduction
+
+Until now, we have learnt general concepts about geospatial visualization in independent lessons.
+
+The **modular** approach of `ggplot2` allows to successively add all of them in different **layers**. For instance, study sites or administrative delineations, and a visual representation of their characteristics in a single map, using useful **color palettes**.
+
+These enriched thematic maps also require to contain **text** and **labels** referring to specific places or regions, and important map elements like **scale bars** and a **north arrow**, as will be illustrated in this part.
+
+![Figure 1. Ggplot map with multiple layers.](../images/multilayer_map_01.png)
+
+## Build an informative map
+
+We will create a map to figure out how are Hospitals distributed in the Western Province of Sierra Leone. For this, we are going to simulate the location of two Hospital manually collected in the field, and also retrieve real Hospital information from a public repository.
+
+### Add field sites with `tribble()` {.unnumbered}
+
+We start by defining two Hospital sites (point data), according to their longitude and latitude, collected by GPS devices in the field, using the `tribble()` function from the `{tibble}` package:
+
+```{r sites-sites}
+sites <- tribble(~gps_name, ~gps_longitude, ~gps_latitude,
+                 "site A", -13.1491617, 8.1920813,
+                 "site B", -13.1066807, 8.2180983
+                 )
+
+sites
+```
+
+::: practice
+Create a tibble object with three columns (`gps_name`, `gps_longitude`, `gps_latitude`) with the GPS location of one `"household"` with longitude `-13.1856942` and latitude `8.2851963`. Use the `tribble()` function.
+
+```{r,eval = FALSE,echo=FALSE}
+q1 <- "YOUR ANSWER HERE"
+.check_q1()
+.hint_q1()
+```
+:::
+
+::: watch-out
+`tribble` is better used for a minimum amount of observations. For **larger amounts** you may prefer to read your data from a *csv* or *excel* file.
+:::
+
+These sites belong to Sierra Leone:
+
+```{r}
+sierra_leone <- geoboundaries(country = "Sierra Leone", adm_lvl = 1)
+```
+
+To add these geographic coordinates to a country map, we need to use the power of `sf`.
+
+::: recap
+Converting the data frame to a `sf` object allows to rely on `sf` to handle on the fly the **coordinate system** (both *projection* and *extent*), which can be very useful if the two objects (here `sierra_leone`, and `sites`) are not in the same projection.
+:::
+
+To achieve this, the **projection** (here WGS84, which is the CRS code \#`4326`) has to be a priori defined in the `sf` object with the `st_as_sf()` function (*for more information: see previous lessons*) :
+
+```{r}
+sites_sf <- sites %>% 
+  st_as_sf(coords = c("gps_longitude","gps_latitude"),
+           crs = 4326)
+```
+
+Now we can make a map with `sierra_leone` and `sites_sf` objects, and add the type of data (`gps_name`) in the legend:
+
+```{r}
+ggplot() +
+  geom_sf(data = sierra_leone) +
+  geom_sf(data = sites_sf, mapping = aes(color = gps_name))
+```
+
+We can use `coord_sf()` after all `geom_sf()` calls, to **zoom in** to our area of interest inside Sierra Leone:
+
+```{r}
+ggplot() +
+  # geometries
+  geom_sf(data = sierra_leone) +
+  geom_sf(data = sites_sf, mapping = aes(color = gps_name)) +
+  # map extent
+  coord_sf(xlim = c(-13.5,-12.7), ylim = c(8.0,8.7))
+```
+
+As such, we can adjust all characteristics of **points** (e.g. color of the outline and the filling, shape, size, etc.), for each `geom_sf()` layer. In this example, we set the two points as filled diamonds (`shape = 18`) with a bigger size (`size = 2`):
+
+```{r sites-sf-plot}
+ggplot() +
+  # geometries
+  geom_sf(data = sierra_leone) +
+  geom_sf(data = sites_sf, mapping = aes(color = gps_name),
+          shape = 18, size = 4) +
+  # map extent
+  coord_sf(xlim = c(-13.5,-12.7), ylim = c(8.0,8.7))
+```
+
+### Add province labels with `geom_sf_label_repel()`
+
+It would be informative to add finer administrative information on top of the previous map, starting with administrative borders (`sf` object: polygon data) and their names. The package `ggsflabel` provides functions to add labels to `sf` objects (points and polygons) in maps.
+
+Province names are part of this data, as the `shapeName` variable.
+
+```{r states}
+sierra_leone %>% 
+  ggplot() +
+  geom_sf() +
+  geom_sf_label_repel(aes(label=shapeName))
+```
+
+::: practice
+The `zimbabwe_adm1` object contains the boundaries of all the provinces in Zimbabwe.
+
+```{r,eval=TRUE,echo=TRUE}
+zimbabwe_adm1 <- geoboundaries(country = "Zimbabwe", adm_lvl = 1)
+```
+
+Create a map of Zimbabwe with labels for the name of each of its provinces.
+
+```{r,eval = FALSE,echo=FALSE}
+q2 <- "YOUR ANSWER HERE"
+.check_q2()
+.hint_q2()
+```
+:::
+
+To continue building the complex map introduced at the beginning of the lesson, province data is directly plotted as an additional `sf` layer using `geom_sf()`. In addition, province names will be added using `geom_sf_label_repel()`, as well as the label (from `shapeName`), and a relatively big font size.
+
+```{r states-plot}
+ggplot() +
+  # geometries
+  geom_sf(data = sierra_leone) +
+  geom_sf(data = sites_sf, mapping = aes(color = gps_name),
+          shape = 18, size = 2) +
+  # labels
+  geom_sf_label_repel(data = sierra_leone, mapping = aes(label=shapeName)) +
+  # map extent
+  coord_sf(xlim = c(-13.5,-12.7), ylim = c(8.0,8.7))
+```
+
+We can drop the province name of "Eastern". For this, we can use `filter()` from the `{dplyr}` package:
+
+```{r states-nudge}
+ggplot() +
+  # geometries
+  geom_sf(data = sierra_leone) +
+  geom_sf(data = sites_sf, mapping = aes(color = gps_name),
+          shape = 18, size = 2) +
+  # label
+  geom_sf_label_repel(data = sierra_leone %>% filter(shapeName!="Eastern"),
+                      mapping = aes(label=shapeName)) +
+  # map extent
+  coord_sf(xlim = c(-13.5,-12.7), ylim = c(8.0,8.7))
+```
+
+### Fill district data with `{colorspace}` {.unnumbered}
+
+Districts (polygon data) can be retrieved from local **shapefile** data. This time, only districts from Western province are retained:
+
+```{r counties}
+sierra_leone_west <- 
+  sf::read_sf(dsn = here::here("ch06_basic_geospatial_viz",
+                               "data","gis","shp",
+                               "sle_adm3.shp"),
+              quiet = TRUE) %>% 
+  filter(admin1Name=="Western")
+
+ggplot(data = sierra_leone_west) +
+  geom_sf()
+```
+
+This time, for all the districts from the province retained, we compute their area using `st_area()` from the package `sf`:
+
+```{r}
+sierra_leone_shp <- sierra_leone_west %>% 
+  # calculate area of each polygon
+  mutate(area_m2 = st_area(.)) %>%
+  # convert m2 to km2 
+  mutate(area_km2 = units::set_units(.$area_m2,km^2)) %>% 
+  # transform the variable to numeric
+  mutate(area_km2 = as.numeric(area_km2))
+  
+sierra_leone_shp %>% 
+  select(area_km2)
+```
+
+We can now fill in the districts using their **area** to visually identify the largest counties. For this, we use the [`{colorspace}` package](https://colorspace.r-forge.r-project.org/articles/ggplot2_color_scales.html) with some transparency. In this case, `area_km2` is a *continuous* variable, with a *sequential* scale type:
+
+```{r counties-plot}
+sierra_leone_shp %>% 
+  ggplot() +
+  # geometry
+  geom_sf(aes(fill = area_km2)) +
+  # aesthetic
+  colorspace::scale_fill_continuous_sequential(palette="Reds 3", alpha = 0.8)
+```
+
+::: vocab
+The **scales** are called via the scheme
+
+    scale_<aesthetic>_<datatype>_<colorscale>()
+
+where:
+
+-   `<aesthetic>` is the name of the *aesthetic* (fill, color, colour).
+-   `<datatype>` is the type of the *variable* plotted (discrete, continuous, binned).
+-   `<colorscale>` sets the type of the color *scale* used (qualitative, sequential, diverging, divergingx).
+:::
+
+::: practice
+This is a ggplot map with the `afriairports` object:
+
+```{r,eval=FALSE,echo=TRUE}
+afriairports %>% 
+  ggplot() +
+  geom_sf(aes(color = elevation_ft))
+```
+
+Paste this code to your answer and:
+
+Update the *color* aesthetic of the *continuous* variable `elevation_ft` of this map to a *diverging* scale, with a midpoint (`mid`) in `5000`.
+
+```{r,eval = FALSE,echo=FALSE}
+q3 <- "YOUR ANSWER HERE"
+.check_q3()
+.hint_q3()
+```
+:::
+
+::: pro-tip
+A **Sequential** colors scale indicate:
+
+-   Which values are *larger* or *smaller than* which other ones, and
+-   How *distant two specific values are from each other*. This implies that the color scale needs to be perceived to vary uniformly across its entire range.
+
+A **Diverging** color scale allows to:
+
+-   visualize the *deviation of data values* in one of two directions relative to a *neutral midpoint*, usually is represented by a light color,
+-   For example, a dataset containing both *positive* and *negative* numbers, and show how far in either direction it *deviates from zero*.
+:::
+
+::: side-note
+You can use `{colorspace}` package to:
+
+-   emulate [color vision deficiency](https://colorspace.r-forge.r-project.org/articles/color_vision_deficiency.html) heatmaps with palettes, and
+-   access [colorblind-friendly palettes](https://colorspace.r-forge.r-project.org/articles/ggplot2_color_scales.html#available-palettes) like Viridis and others.
+:::
+
+### Add a Scale bar and North arrow with `{ggspatial}` {.unnumbered}
+
+We introduce here the package `{ggspatial}`, which provides easy-to-use functions to create a scale bar and north arrow on a `ggplot` map:
+
+-   `annotation_north_arrow()` allows to add the north symbol and
+-   `annotation_scale()` a scale bar.
+
+```{r world-scale-north, message = TRUE}
+sierra_leone_shp %>% 
+  ggplot() +
+  # geometry
+  geom_sf(aes(fill = area_km2)) +
+  # aesthetic
+  colorspace::scale_fill_continuous_sequential(palette="Reds 3", alpha = 0.8) +
+  annotation_north_arrow(location="tr") +
+  annotation_scale(location="br")
+```
+
+The **location** of the scale bar and north arrow are by default in the bottom left (`"bl"`) side of the map. They can be specified using the `location` argument with `"tr"` for top right, `"bl"` for bottom left, etc.
+
+::: practice
+This is a ggplot map with the `zimbabwe_adm1` object:
+
+```{r,eval=FALSE,echo=TRUE}
+zimbabwe_adm1 %>% 
+  ggplot() + 
+  geom_sf()
+```
+
+Paste this code to your answer and:
+
+Add a Scale bar located in the `bottom right` of the map, and a North arrow in the `top left`.
+
+```{r,eval = FALSE,echo=FALSE}
+q4 <- "YOUR ANSWER HERE"
+.check_q4()
+.hint_q4()
+```
+:::
+
+::: side-note
+-   The [North arrow style](https://paleolimbot.github.io/ggspatial/reference/north_arrow_orienteering.html) in `annotation_north_arrow()` can also be adjusted using the `style` argument.
+
+-   Note that [scale distance](https://paleolimbot.github.io/ggspatial/reference/annotation_scale.html) is set to `"km"` by default in `annotation_scale()`; you can set it in "m", "cm", "mi", "ft", or "in".
+:::
+
+### Add Health site names with `geom_sf_text_repel()` {.unnumbered}
+
+To make a more complete map of the Western province of Sierra Leona, Health facilities (`sf` object: point data) will be added to the map.
+
+Instead of looking up coordinates manually, the [package `{afrihealthsites}`](https://github.com/afrimapr/afrihealthsites) provides a function `afrihealthsites()`, which allows to retrieve geographic coordinates of African health facilities from different sources:
+
+You can run the following code to retrieve geographic coordinates of all the health facilities in Sierra Leone available in the `who` database:
+
+```{r cities-fl}
+sle_healthsites_all <- afrihealthsites(country = "Sierra Leone", 
+                                       datasource='who',
+                                       plot = FALSE, 
+                                       returnclass = "dataframe") %>% 
+  janitor::clean_names()
+
+sle_healthsites_all
+```
+
+::: rstudio-cloud
+Access to all the health facilities of `Zimbabwe` from the `healthsites` data source using the `afrihealthsites()` function.
+
+```{r,eval=FALSE,echo=FALSE}
+afrihealthsites(country = "_______", 
+                datasource="_______",
+                plot = FALSE, 
+                returnclass = "dataframe")
+```
+:::
+
+::: side-note
+According to the three-tier health delivery classification, the highest tier (Tier 3) includes county hospitals in rural regions and city hospitals in urban regions, which are responsible for most inpatient services as well as teaching and research missions ([Wang, 2021](https://equityhealthj.biomedcentral.com/articles/10.1186/s12939-021-01401-w)).}
+:::
+
+We can now keep the Tier 3 health facilities inside the Western province, and convert the data frame with coordinates to `sf` format:
+
+```{r}
+sle_healthsites_set <- sle_healthsites_all %>%
+  filter(admin1=="Western Area") %>% 
+  filter(tier==3) %>% 
+  st_as_sf(coords = c("long","lat"),
+           crs = 4326)
+```
+
+We add hospital locations and names as text on the map with `geom_sf_text()`:
+
+```{r cities-plot}
+sle_healthsites_set %>% 
+  ggplot() +
+  # geometry
+  geom_sf() +
+  # label
+  geom_sf_text(mapping = aes(label= facility_name))
+```
+
+This is not really satisfactory, as the names overlap on the points, and they are not easy to read on the grey background. The [package `{ggsflabel}`](https://yutannihilation.github.io/ggsflabel/index.html) offers a very flexible approach (inspired in `{ggrepel}`) to deal with label placement in `ggplot` maps with `sf` objects (with `geom_sf_text_repel` and `geom_sf_label_repel`), including automated movement of labels in case of overlap.
+
+We use it here to "nudge" the labels away, and connect them to the city locations:
+
+```{r cities-plot-nudge}
+sle_healthsites_set %>% 
+  ggplot() +
+  # geometry
+  geom_sf() +
+  # label
+  geom_sf_text_repel(mapping = aes(label= facility_name))
+```
+
+::: practice
+This is a ggplot map of all the `hospital` facilities of `Zimbabwe`:
+
+```{r,eval=FALSE,echo=TRUE}
+afrihealthsites(country = 'Zimbabwe', 
+                      datasource='healthsites',
+                      plot = FALSE, 
+                      returnclass = 'dataframe') %>% 
+  filter(amenity == 'hospital') %>% 
+  ggplot() +
+  geom_sf()
+```
+
+Paste this code to your answer and:
+
+Add their names as text without overlaps to a `ggplot` map.
+
+```{r,eval = FALSE,echo=FALSE}
+q5 <- "YOUR ANSWER HERE"
+.check_q5()
+.hint_q5()
+```
+:::
+
+Additionally, we can manually set [`{ggrepel}` arguments](https://ggrepel.slowkow.com/articles/examples.html) to improve its output:
+
+-   The size (argument `size`);
+-   The type of font of the text (`fontface`);
+-   The force of repulsion between overlapping text labels (`force`);
+-   The additional padding around the each text label (`box.padding`).
+
+```{r}
+sle_healthsites_set %>% 
+  ggplot() +
+  # geometry
+  geom_sf() +
+  # label
+  geom_sf_text_repel(mapping = aes(label= facility_name),
+                     size = 3,
+                     fontface = "bold",
+                     force = 40, 
+                     box.padding = 0.6)
+```
+
+## Final map
+
+For the final map, we put everything together, having a general background map based on the Sierra Leona map, with district delineations, province labels, main hospital names and locations, custom GPS collected field sites, as well as a theme adjusted with axis labels, and a north arrow and scale bar:
+
+```{r,fig.width=8,fig.height=7}
+ggplot() +
+  ## geometries
+  # background map
+  geom_sf(data = sierra_leone) +
+  # district polygons filled by area
+  geom_sf(data = sierra_leone_shp, 
+          mapping = aes(fill = area_km2)) +
+  # hospital points 
+  geom_sf(data = sle_healthsites_set) +
+  # field site points 
+  geom_sf(data = sites_sf, 
+          mapping = aes(color = gps_name),
+          shape = 18, 
+          size = 4) +
+  ## labels
+  # hospital names with repelled text 
+  geom_sf_text_repel(data = sle_healthsites_set,
+                     mapping = aes(label = facility_name),
+                     size         = 2,
+                     fontface     = "bold",
+                     box.padding  = 0.6,
+                     force        = 0.5,
+                     nudge_x      = -0.25,
+                     direction    = "y",
+                     hjust        = 1,
+                     segment.size = 0.2) +
+  # province names with repelled labels
+  geom_sf_label_repel(data = sierra_leone %>% 
+                        filter(shapeName!="Eastern"),
+                      mapping = aes(label=shapeName)) +
+  ## aesthetics
+  # alternative color scale for fill
+  colorspace::scale_fill_continuous_sequential(palette="Reds 3", 
+                                               alpha = 0.8) +
+  # map annotation
+  annotation_north_arrow(location="tl") +
+  annotation_scale(location="bl") +
+  # map extent
+  coord_sf(xlim = c(-13.5,-12.7), 
+           ylim = c(8.0,8.7)) +
+  # ggplot labels
+  labs(x = "Longitude",
+       y = "Latitude",
+       fill = expression(Area~km^2),
+       color = "GPS data",
+       title = "How are Hospitals distributed in the Western Province of Sierra Leone?")
+```
+
+```{r include = F}
+.score_print()
+```
+
+```{r include = F}
+pacman::p_unload(raster) # avoid masking select(). Temporary investigation
+```
+
+## Wrap up
+
+This example fully demonstrates that adding **layers** on `ggplot2` is relatively straightforward, as long as the data is properly stored in an `sf` object. Adding additional layers like **external** data, color **palettes**, point or polygon **labels** and **map annotations** would simply follow the same logic, with additional calls *after* `geom_sf()` and at the *right place* in the `ggplot2` sequence.
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson: `r tgc_contributors_list(ids = c("avallecam", "lolovanco"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   *Moreno, M., Basille, M. Drawing beautiful maps programmatically with R, sf and ggplot2 --- Part 1: Basics*. (2018). Retrieved 01 June 2022, from <https://r-spatial.org/r/2018/10/25/ggplot2-sf.html>
+
+-   *Moreno, M., Basille, M. Drawing beautiful maps programmatically with R, sf and ggplot2 --- Part 2: Layers*. (2018). Retrieved 01 June 2022, from <https://r-spatial.org/r/2018/10/25/ggplot2-sf-2.html>
+
+-   *Wilke, Claus O. Fundamentals of Data Visualization. Chapter 4: Color scales*. (2020). Retrieved 01 June 2022, from <https://clauswilke.com/dataviz/color-basics.html#color-to-represent-data-values>
+
+`r tgc_license()`

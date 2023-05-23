@@ -1,0 +1,83 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+  word_document:
+    toc: true
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+# Source autograder script quietly 
+here("ch99_template/lessons/ch99_ls02_practice_q_examples_autograder.R")
+```
+
+# Introduction
+
+This document proposes some examples of autograders for the chapters on functions, conditionals and loops.
+
+::: practice
+-   Write a function that adds the number two to a vector.
+
+```{r eval = F, include = F}
+q1 <- function(){
+}
+.check_q1()
+.hint_q1()
+```
+
+-   Let x equal the measure of the body temperature of patients that arrived at the emergency of your hospital. Write a function that returns the string "Fever" if the temperature, x, is equal to or above 38 degrees Celsius. (Note that the function does not need to work on more number at a time; doesn't need to work on a vector of length above 1.)
+
+```{r eval = F, include = F}
+q2 <- function(x){
+  if(CONDITION_HERE) "OUTPUT_STRING_HERE"
+}
+
+.check_q2()
+.hint_q2()
+```
+
+-   Using the `df2` data set below, create a loop that calculates the mean of each variable. Store it in a vector called `df2_means`, while defining its correct type and dimension.
+
+```{r eval = F, include = F}
+set.seed(1)
+df2 <- tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rpois(10, 10),
+  d = rnorm(10),
+  e = rpois(10, 3),
+  f = rnorm(10),
+)
+
+df2_means <- vector()
+for (i in 1:ncol(df2)) {
+  # Here, write code to populate the vector `df2_means` 
+  # with the mean values of each column in `df2`
+}
+q3 <- df2_means
+
+.check_q3()
+```
+:::
+
+
+

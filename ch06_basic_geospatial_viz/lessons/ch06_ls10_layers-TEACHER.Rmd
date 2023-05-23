@@ -1,0 +1,678 @@
+---
+title: '\ '
+output:
+  # word_document:
+  #   toc: true
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: inline
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+# Source autograder script quietly 
+mute(here("ch06_basic_geospatial_viz/lessons/ch06_ls10_layers_autograder.R"))
+```
+
+```{r,echo=FALSE}
+ggplot2::theme_set(new = theme_bw())
+```
+
+<!-- # Geospatial analysis: additional layers -->
+
+## Introduction
+
+Until now, we have learnt general concepts about geospatial visualization in independent lessons. The **modular** approach of `{ggplot2}` allows to successively add all of them in different **layers**.
+
+However, these enriched thematic maps also require to contain **text** and **labels** referring to specific places or regions, and important map elements like **scale bars** and a **north arrow**, as will be illustrated in this part.
+
+![Figure 1. Ggplot map with multiple layers.](images/multilayer_map_01.png){width="408"}
+
+In this lesson, we will learn to use functions from the `{ggspatial}` and `{ggsflabel}` packages to add all of these additional elements to our maps!
+
+![](images/0-whitebox.JPG)
+
+## Learning objectives
+
+1.  Access **hospital** data coordinates using the `{afrihealthsites}` package.
+
+2.  Add text and **labels** to ggplot maps using the `{ggsflabel}` package.
+
+3.  Add arrow and scale **annotations** in ggplot maps using the `{ggspatial}` package.
+
+![](images/0-whitebox.JPG)
+
+## Prerequisites
+
+This lesson requires the following packages:
+
+```{r,eval=TRUE,echo=TRUE,message=FALSE}
+if(!require('pacman')) install.packages('pacman')
+
+pacman::p_load(tidyverse,
+               colorspace,
+               ggspatial,
+               janitor,
+               ggplot2,
+               readxl,
+               spData,
+               units,
+               here,
+               sf)
+
+pacman::p_load_gh("yutannihilation/ggsflabel",
+                  "afrimapr/afrihealthsites",
+                  "afrimapr/afrilearndata",
+                  "wmgeolab/rgeoboundaries")
+```
+
+![](images/0-whitebox.JPG)
+
+## Build an informative map
+
+![](images/0-whitebox.JPG)
+
+• How are Tier 3 Hospitals distributed in the Western Province of Sierra Leone?
+
+![](images/0-whitebox.JPG)
+
+• Retrieve real Hospital information from a public repository.
+
+![](images/0-whitebox.JPG)
+
+### Access hospital sites with `{afrihealthsites}` {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• `afrihealthsites()` from [`{afrihealthsites}`](https://github.com/afrimapr/afrihealthsites) 
+![](images/0-whitebox.JPG)
+
+• Coordinates of African health facilities from different sources.
+
+![](images/0-whitebox.JPG)
+
+• Health facilities in `Sierra Leone` available in the `who` database:
+
+![](images/0-whitebox.JPG)
+
+```{r cities-fl}
+sle_healthsites_all <- 
+  afrihealthsites(country =        , 
+                  datasource =     ,
+                  plot = FALSE) %>% 
+  janitor::clean_names()
+
+sle_healthsites_all
+```
+
+![](images/0-whitebox.JPG)
+
+::: rstudio-cloud
+Access to all the health facilities of `Zimbabwe` from the `healthsites` data source using the `afrihealthsites()` function.
+
+```{r,eval=FALSE,echo=FALSE}
+afrihealthsites(country = "_______", 
+                datasource = "_______",
+                plot = FALSE) %>% print()
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+::: side-note
+
+![](images/0-graybox.JPG)
+
+• *Three-tier* health delivery classification
+
+![](images/0-graybox.JPG)
+
+• the highest tier (Tier 3) are responsible for most inpatient services as well as teaching and research missions ([Wang, 2021](https://equityhealthj.biomedcentral.com/articles/10.1186/s12939-021-01401-w)).}
+:::
+
+![](images/0-whitebox.JPG)
+
+• Let's keep Tier 3 health facilities inside the Western province:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+sle_healthsites_set <- 
+  
+  sle_healthsites_all %>%
+  
+  filter(         ) %>% # 👈👈👈👈👈👈👈👈👈👈👈👈👈👈👈
+  filter(         )
+```
+
+![](images/0-whitebox.JPG)
+
+• These sites belong to `Sierra Leone`,
+
+![](images/0-whitebox.JPG)
+
+• Let's get their province boundaries with `{rgeoboundaries}`:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+sierra_leone <- 
+```
+
+![](images/0-whitebox.JPG)
+
+• Let's map `sierra_leone` and `sle_healthsites_set`:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+ggplot() +
+  
+  # country map
+  
+  
+  # hospital points
+  
+```
+
+![](images/0-whitebox.JPG)
+
+• Let's use `coord_sf()` to **zoom in** in area of interest:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+ggplot() +
+  
+  # country map
+  geom_sf(       ) +
+  
+  # hospital points
+  geom_sf(       ) +
+  
+  # map extent
+         (xlim = c(-13.5,-12.7), ylim = c(8.0,8.7)) # 👈👈👈👈👈👈👈
+```
+
+![](images/0-whitebox.JPG)
+
+::: recap
+`sf` objects can handle on the fly the **coordinate system** (both *projection* and *extent*), which can be very useful if more than one spatial objects are not in the same projection.
+:::
+
+![](images/0-whitebox.JPG)
+
+### Add a Scale bar and North arrow with `{ggspatial}` {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• Let's use `{ggspatial}` with a `{ggplot}` map:
+
+![](images/0-whitebox.JPG)
+
+• `annotation_north_arrow()` adds a north symbol, and
+
+![](images/0-whitebox.JPG)
+
+• `annotation_scale()` a scale bar.
+
+![](images/0-whitebox.JPG)
+
+```{r world-scale-north, message = TRUE}
+ggplot() +
+  
+  # country map
+  geom_sf(data = sierra_leone) +
+  
+  # hospital points
+  geom_sf(data = sle_healthsites_set) +
+  
+  # map annotations
+         (       ) + # 👈👈👈👈👈👈👈👈👈👈👈👈
+         (       ) +
+  
+  # map extent
+  coord_sf(xlim = c(-13.5,-12.7), ylim = c(8.0,8.7))
+```
+
+![](images/0-whitebox.JPG)
+
+• **location** are by default in the bottom left (`"bl"`)
+
+![](images/0-whitebox.JPG)
+
+• `location` uses `"tr"` for top right, `"bl"` for bottom left, etc.
+
+![](images/0-whitebox.JPG)
+
+::: practice
+To this `ggplot` map with the `zimbabwe_adm1` object:
+
+Add a Scale bar located in the `bottom right` of the map, and a North arrow in the `top left`.
+
+```{r,eval = FALSE}
+q4 <- 
+  zimbabwe_adm1 %>% 
+  ggplot() + 
+  geom_sf() +
+  _________ +
+  _________
+q4
+```
+
+```{r,include=FALSE}
+.check_q4()
+.hint_q4()
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+::: side-note
+
+![](images/0-graybox.JPG)
+
+• The [North arrow style](https://paleolimbot.github.io/ggspatial/reference/north_arrow_orienteering.html) can be adjusted with `style`.
+
+![](images/0-graybox.JPG)
+
+• [scale distance](https://paleolimbot.github.io/ggspatial/reference/annotation_scale.html) is set to `"km"` by default, also in "m", "cm", "mi", "ft", or "in".
+:::
+
+![](images/0-whitebox.JPG)
+
+### Add hospital names with `geom_sf_text_repel()` {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• `geom_sf_text()` to add hospital locations and names as text:
+
+![](images/0-whitebox.JPG)
+
+```{r cities-plot}
+sle_healthsites_set %>% 
+  ggplot() +
+  # geometry
+  geom_sf() +
+  # label
+  geom_sf_text(mapping = aes(label= facility_name)) # 👈👈👈👈👈👈👈
+```
+
+![](images/0-whitebox.JPG)
+
+• This is not really satisfactory, 
+
+![](images/0-whitebox.JPG)
+
+• names overlap on the points, 
+
+![](images/0-whitebox.JPG)
+
+• not easy to read on the background. 
+
+![](images/0-whitebox.JPG)
+
+• [`{ggsflabel}`](https://yutannihilation.github.io/ggsflabel/index.html) inspired in `{ggrepel}` 
+
+![](images/0-whitebox.JPG)
+
+• deal with label placement in `ggplot` maps with `sf` objects 
+
+![](images/0-whitebox.JPG)
+
+• including automated movement of labels in case of overlap.
+
+![](images/0-whitebox.JPG)
+
+• `geom_sf_text_repel` and `geom_sf_label_repel`
+
+![](images/0-whitebox.JPG)
+
+• We "nudge" `facility_name` away, and connect them to the city locations:
+
+![](images/0-whitebox.JPG)
+
+```{r cities-plot-nudge}
+sle_healthsites_set %>% 
+  ggplot() +
+  # geometry
+  geom_sf() +
+  # label
+           (         ) # 👈👈👈👈
+```
+
+![](images/0-whitebox.JPG)
+
+::: practice
+`zimbabwe_hospitals` contains all the `hospital` facilities of `Zimbabwe`:
+
+```{r,eval=FALSE}
+zimbabwe_hospitals <- 
+  afrihealthsites(country = 'Zimbabwe', 
+                  datasource='healthsites',
+                  plot = FALSE) %>% 
+  filter(amenity == 'hospital')
+
+zimbabwe_hospitals
+```
+
+Add the name of these facilities as text without overlaps using the `geom_sf_text_repel()` function.
+
+```{r,eval = FALSE}
+q5 <- 
+  zimbabwe_hospitals %>% 
+  ggplot() +
+  geom_sf() +
+  ____________
+q5
+```
+
+```{r,include=FALSE}
+.check_q5()
+.hint_q5()
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+• We can use [`{ggrepel}` arguments](https://ggrepel.slowkow.com/articles/examples.html) to improve its output:
+
+![](images/0-whitebox.JPG)
+
+• The size (argument `size`);
+
+![](images/0-whitebox.JPG)
+
+• The type of font (`fontface`);
+
+![](images/0-whitebox.JPG)
+
+• The force of repulsion between overlapping text labels (`force`);
+
+![](images/0-whitebox.JPG)
+
+• The additional padding around the each text label (`box.padding`).
+
+![](images/0-whitebox.JPG)
+
+```{r}
+sle_healthsites_set %>% 
+  ggplot() +
+  # geometry
+  geom_sf() +
+  # label
+  geom_sf_text_repel(mapping = aes(label= facility_name),
+                     size = 2,         # 👈👈👈👈👈👈👈👈👈👈👈👈👈👈
+                     fontface = "bold",
+                     force = 40, 
+                     box.padding = 0.6)
+```
+
+![](images/0-whitebox.JPG)
+
+• Adding this layer to the current map, we obtain:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+ggplot() +
+  
+  # country map
+  geom_sf(data = sierra_leone) +
+  
+  # hospital points 
+  geom_sf(data = sle_healthsites_set) +         
+  # hospital names with repelled text 
+  geom_sf_text_repel(data = sle_healthsites_set,         # 👈👈👈👈👈
+                     mapping = aes(label = facility_name),
+                     size         = 2,
+                     fontface     = "bold",
+                     force        = 0.5,
+                     box.padding  = 0.6,
+                     nudge_x      = -0.25,
+                     direction    = "y",
+                     hjust        = 1,
+                     segment.size = 0.2) +
+  
+  # map annotation
+  annotation_north_arrow(location="tl") +
+  annotation_scale(location="bl") +
+  
+  # map extent
+  coord_sf(xlim = c(-13.5,-12.7), 
+           ylim = c(8.0,8.7))
+```
+
+![](images/0-whitebox.JPG)
+
+### Add province labels with `geom_sf_label_repel()` {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• Let's add names of administrative borders, available in `shapeName`:
+
+![](images/0-whitebox.JPG)
+
+```{r states}
+sierra_leone %>% 
+  ggplot() +
+  
+  # country map
+  geom_sf() +
+  
+  # province labels
+           (         ) # 👈👈👈👈👈👈👈👈👈👈👈
+```
+
+![](images/0-whitebox.JPG)
+
+::: practice
+The `zimbabwe_adm1` object contains the boundaries of all the provinces in Zimbabwe.
+
+```{r,eval=TRUE,echo=TRUE}
+zimbabwe_adm1 <- geoboundaries(country = "Zimbabwe", adm_lvl = 1)
+```
+
+Create a `ggplot` map of Zimbabwe with labels for the name of each of its provinces.
+
+```{r,eval = FALSE}
+q2 <- 
+  zimbabwe_adm1 %>% 
+  ggplot() + 
+  
+  # country map
+  geom_sf() + 
+  
+  # province labels
+  geom_sf_....._.....(aes(label = .....))
+q2
+```
+
+```{r,include=FALSE}
+.check_q2()
+.hint_q2()
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+• Let's drop Eastern label using `filter()` from `{dplyr}`:
+
+![](images/0-whitebox.JPG)
+
+```{r states-nudge}
+
+ggplot() +
+  
+  # country map
+  geom_sf(data = sierra_leone) +
+  
+  # province labels
+         (       ) +         # 👈👈👈👈👈👈
+  
+  # hospital points 
+  geom_sf(data = sle_healthsites_set) +         
+  # hospital names with repelled text 
+  geom_sf_text_repel(data = sle_healthsites_set,
+                     mapping = aes(label = facility_name),
+                     size         = 2,
+                     fontface     = "bold",
+                     force        = 0.5,
+                     box.padding  = 0.6,
+                     nudge_x      = -0.25,
+                     direction    = "y",
+                     hjust        = 1,
+                     segment.size = 0.2) +
+  
+  # map annotation
+  annotation_north_arrow(location="tl") +
+  annotation_scale(location="bl") +
+  
+  # map extent
+  coord_sf(xlim = c(-13.5,-12.7), ylim = c(8.0,8.7))
+```
+
+![](images/0-whitebox.JPG)
+
+## Final map
+
+![](images/0-whitebox.JPG)
+
+• Let's put everything together:
+
+![](images/0-whitebox.JPG)
+
+• Adding district boundaries filled by area, and field sited recorded by a GPS device:
+
+![](images/0-whitebox.JPG)
+
+```{r, message=FALSE,warning=FALSE}
+# districts
+sierra_leone_shp <- 
+  sf::read_sf(here("ch06_basic_geospatial_viz/data/boundaries/sle_adm3.shp")) %>% 
+  filter(admin1Name=="Western")
+
+# field site points
+sites_sf <- readr::read_csv(
+  here("ch06_basic_geospatial_viz/data/gps_healthsites.csv")) %>% 
+  st_as_sf(coords = c("gps_longitude","gps_latitude"), crs = 4326)
+```
+
+![](images/0-whitebox.JPG)
+
+```{r,fig.width=8,fig.height=7}
+ggplot() +
+  
+  # country map
+  geom_sf(data = sierra_leone) +
+  
+  # districts filled by area
+  geom_sf(data = sierra_leone_shp, # 👈👈👈👈👈👈👈👈👈👈👈👈👈👈👈
+          mapping = aes(fill = area_km2)) +
+  # color scale for fill
+  scale_fill_continuous_sequential(palette="Reds 3", 
+                                   alpha = 0.8) +
+  # field site points
+  geom_sf(data = sites_sf,              # 👈👈👈👈👈👈👈👈👈👈👈👈👈
+          mapping = aes(color = gps_name),
+          shape = 18, size = 4) +
+  
+  # province names with repelled labels
+  geom_sf_label_repel(data = sierra_leone %>% 
+                        filter(shapeName!="Eastern"),
+                      mapping = aes(label=shapeName)) +
+  
+  # hospital points 
+  geom_sf(data = sle_healthsites_set) +         
+  # hospital names with repelled text 
+  geom_sf_text_repel(data = sle_healthsites_set,
+                     mapping = aes(label = facility_name),
+                     size         = 2,
+                     fontface     = "bold",
+                     force        = 0.5,
+                     box.padding  = 0.6,
+                     nudge_x      = -0.25,
+                     direction    = "y",
+                     hjust        = 1,
+                     segment.size = 0.2) +
+  
+  # map annotation
+  annotation_north_arrow(location="tl") +
+  annotation_scale(location="bl") +
+  
+  # map extent
+  coord_sf(xlim = c(-13.5,-12.7), 
+           ylim = c(8.0,8.7)) +
+  
+  # ggplot labels
+  labs(x = "Longitude",
+       y = "Latitude",
+       fill = expression(Area~km^2),
+       color = "GPS data",
+       title = "How are Tier 3 Hospitals distributed in the Western Province of Sierra Leone?")
+```
+
+![](images/0-whitebox.JPG)
+
+```{r include = F}
+.score_print()
+```
+
+```{r include = F}
+pacman::p_unload(raster) # avoid masking select(). Temporary investigation
+```
+
+![](images/0-whitebox.JPG)
+
+## Wrap up
+
+![](images/0-whitebox.JPG)
+
+• Adding **layers** on `ggplot2` is relatively straightforward, 
+
+![](images/0-whitebox.JPG)
+
+• as long as the data is properly stored in an `sf` object. 
+
+![](images/0-whitebox.JPG)
+
+• Adding additional layers like point or polygon **labels** and **map annotations** would simply follow the same logic, 
+
+![](images/0-whitebox.JPG)
+
+• with additional calls *after* `geom_sf()` and at the *right place* in the `ggplot2` sequence.
+
+![](images/0-whitebox.JPG)
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson: `r tgc_contributors_list(ids = c("avallecam", "lolovanco"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   *Moreno, M., Basille, M. Drawing beautiful maps programmatically with R, sf and ggplot2 --- Part 1: Basics*. (2018). Retrieved 01 June 2022, from <https://r-spatial.org/r/2018/10/25/ggplot2-sf.html>
+
+-   *Moreno, M., Basille, M. Drawing beautiful maps programmatically with R, sf and ggplot2 --- Part 2: Layers*. (2018). Retrieved 01 June 2022, from <https://r-spatial.org/r/2018/10/25/ggplot2-sf-2.html>
+
+-   *Wilke, Claus O. Fundamentals of Data Visualization. Chapter 4: Color scales*. (2020). Retrieved 01 June 2022, from <https://clauswilke.com/dataviz/color-basics.html#color-to-represent-data-values>
+
+`r tgc_license()`

@@ -1,0 +1,107 @@
+---
+title: '\ '
+output:
+  # word_document:
+  #   toc: true
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: inline
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+## autograders
+suppressMessages(source(here::here("ch06_basic_geospatial_viz/lessons/ch06_ls03_vector_data_autograder.R")))
+```
+
+```{r,echo=FALSE}
+ggplot2::theme_set(new = theme_bw())
+```
+
+------------------------------------------------------------------------
+
+<!-- # Geospatial analysis: read external data -->
+
+## Introduction
+
+In the previous lesson we learned how to create *Thematic maps* using `{ggplot2}` and the `geom_sf()` function.
+
+![Figure 1. (A) Estimated population of each country in the African continent.; (B) Number of inhabitants in each capital city of the African continent. (C) African trans-continental highway network lines.](images/spatial_data_01.png)
+
+For all of our previous examples we used *Spatial data* recorded inside the `{afrilearndata}` package, like `africapitals`, `africountries`, and `afrihighway`. But, How can we create more *Thematic maps* from **external** Spatial data?
+
+In this lesson we are going to learn how to **read external Spatial data** from *online* repositories.
+
+## Learning objectives
+
+1.  Read Spatial data from **online databases** using `{rgeoboundaries}` and `{malariaAtlas}`.
+
+2.  Convert foreign objects to **`sf` class** using the `st_as_sf()` function from the `{sf}` package.
+
+3.  Relate each Thematic map with a **Vector data** type.
+
+## Prerequisites
+
+This lesson requires the following packages:
+
+```{r,eval=TRUE,echo=TRUE,message=FALSE}
+if(!require('pacman')) install.packages('pacman')
+
+pacman::p_load(malariaAtlas,
+               ggplot2,
+               cholera,
+               here,
+               sf)
+
+pacman::p_load_gh("afrimapr/afrilearndata",
+                  "wmgeolab/rgeoboundaries")
+```
+
+
+
+## Wrap up
+
+In this lesson, we have learned how to **read** Vector data like *Polygon geometries* from *Online databases* from the `{rgeoboundaries}` package and `GADM` repository, how to **convert** foreign *Point geometries* to `sf` from the `{malariaAtlas}` package, and why they need a *Coordinate Reference Systems (CRS)*.
+
+![Figure 5. Concept map](images/conceptmap-01-vector.png)
+
+In the next lesson we are going dive into **Vector data** components and how to read it from **local files**!
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r tgc_contributors_list(ids = c("avallecam", "lolovanco"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   *Seimon, Dilinie. Administrative Boundaries.* (2021). Retrieved 15 April 2022, from <https://rspatialdata.github.io/admin_boundaries.html>
+
+-   *Varsha Ujjinni Vijay Kumar. Malaria.* (2021). Retrieved 15 April 2022, from <https://rspatialdata.github.io/malaria.html>
+
+-   *Batra, Neale, et al. The Epidemiologist R Handbook. Chapter 28: GIS Basics*. (2021). Retrieved 01 April 2022, from <https://epirhandbook.com/en/gis-basics.html>
+
+-   *Lovelace, R., Nowosad, J., & Muenchow, J. Geocomputation with R. Chapter 2: Geographic data in R*. (2019). Retrieved 01 April 2022, from <https://geocompr.robinlovelace.net/spatial-class.html>
+
+-   *Moraga, Paula. Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny. Chapter 2: Spatial data and R packages for mapping*. (2019). Retrieved 01 April 2022, from <https://www.paulamoraga.com/book-geospatial/sec-spatialdataandCRS.html>
+
+`r tgc_license()`

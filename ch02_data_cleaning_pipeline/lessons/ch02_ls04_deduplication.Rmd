@@ -1,0 +1,321 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: yes
+    toc: yes
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+  word_document:
+    toc: yes
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, echo = F, message = F, warning = F}
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load("tidyverse",
+               "knitr",
+               "janitor",
+               "here",
+               "skimr",
+               "inspectdf",
+               update=F)
+
+
+# Source functions 
+source(here::here("global/functions/misc_functions.R"))
+
+# default render
+registerS3method("reactable_5_rows", c("data.frame","matrix"), reactable_5_rows)
+knitr::opts_chunk$set(class.source = "tgc-code-block")
+
+## autograders
+suppressMessages(source(here::here(("ch02_data_cleaning_pipeline/lessons/ch02_ls04_deduplication_autograder.R"))))
+
+# #Limit the number of lines to display
+# hook_output <- knit_hooks$get("output")
+# knit_hooks$set(output = function(x, options) {
+#   lines <- options$output.lines
+#   if (is.null(lines)) {
+#     return(hook_output(x, options))  # pass to default hook
+#   }
+#   x <- unlist(strsplit(x, "\n"))
+#   more <- "..."
+#   if (length(lines)==1) {        # first n lines
+#     if (length(x) > lines) {
+#       # truncate the output, but add ....
+#       x <- c(head(x, lines), more)
+#     }
+#   } else {
+#     x <- c(more, x[lines], more)
+#   }
+#   # paste these lines together
+#   x <- paste(c(x, ""), collapse = "\n")
+#   hook_output(x, options)
+# })
+```
+
+------------------------------------------------------------------------
+
+<!-- # Data cleaning: deduplication -->
+
+## Learning objectives
+
+1.  *Exploring duplicates* with `duplicated()` and `get_dupes()` from the {`janitor`} package, to identify rows which values appear more than once.
+2.  *Removing duplicates* using `unique()` and `distinct()` from the {`dplyr`} package, to remove duplicate rows from a dataset.
+
+## Intro to the lesson
+
+Very often in your datasets there are situations where you have duplicated values of data, when one row has the same values as some other row. This often occurs when you combine data from multiple sources, or have received multiple survey responses.
+
+::: watch-out
+Duplicated values can lead you to make incorrect conclusions by leading you to believe that some observations are more common than they really are.
+:::
+
+As such, it is therefore necessary to identify and remove any duplicate values from your data in order to have well-balanced results. In this lesson, we will explore how to identify and remove duplicated values in R.
+
+## Our data
+
+::: recap
+The data we are cleaning is the data from the COVID-19 serological survey conducted in Yaounde, Cameroon.
+
+We will use the version of the dataset with:
+
+-   standardized column names
+
+-   with no empty columns and rows.
+:::
+
+For this lesson, we will also make use of some vectors to illustrate the concepts.
+
+```{r, message = F, include=T, warning=FALSE}
+
+#Data frame
+yaounde <- read.csv(here::here('ch02_data_cleaning_pipeline/data/yaounde_data_clean_structure.csv'))
+
+# Vectors
+ages <- c(11, 21, 46, 21, 19, 18, 19)
+
+```
+
+## Exploring duplicates
+
+### `duplicated()`
+
+The `duplicated()` function from base R defines which items of a vector or data frame are duplicates.
+
+::: vocab
+The output specifies the position of duplicate elements (rows) in the vector(data frame). If the element(row) is duplicated, the function returns `TRUE`. The first time a value appears, it will return `FALSE` (not a duplicate), and subsequent times that value appears it will return `TRUE`.
+
+The syntax is `duplicated(x)`, where x can be a vector or a data frame.
+:::
+
+We will apply the function on the `ages` vector
+
+```{r,output.lines=8, message = F,warning=FALSE, render=knitr::knit_print}
+duplicated(ages)
+```
+
+We can see that the fourth and seventh elements of the `ages` vector are both duplicates.
+
+::: watch-out
+The output above only returns the positions of the duplicates and does not specify which elements are being duplicated.
+:::
+
+We will now apply the same function on the `yaounde` dataset.
+
+```{r ,output.lines=8, message = F,warning=FALSE, render=knitr::knit_print}
+#Let's look at the first 100 rows
+duplicated(yaounde) %>% head(100)
+```
+
+From the output, we can tell that the 13th and the 28th row are both duplicates: an identical row has been found beforehand in the dataset.
+
+::: practice
+1.  Identify the elements that are duplicates from the `typhoid` dataset. Display only the first 50 entries.
+
+```{r,eval = FALSE,echo=FALSE}
+q1 <- "YOUR ANSWER HERE"
+.check_q1()
+.hint_q1()
+```
+:::
+
+It is, however, quite clear that applying the `duplicated()` function on larger vectors or data frames does not provide easily discernible output. A more useful way of using the `duplicated()` function is **extracting the duplicated elements**.
+
+```{r,output.lines=8, message = F,warning=FALSE, render=knitr::knit_print}
+ages[duplicated(ages)]
+```
+
+The output shows that the ages 19 and 21 are duplicates.
+
+Using the same syntax, we can also extract the duplicate rows from the yaounde dataset.
+
+```{r,output.lines=10, message = F,warning=FALSE}
+yaounde[duplicated(yaounde),]
+```
+
+The output shows that there are 8 rows that are duplicates.
+
+::: key-point
+Note the slight difference in syntax for the data frame (there is an additional comma in the square brackets). This is necessary because the dimensions of the dataset are `rows x columns` and the `duplicate()` function is intended for the rows. In this manner we select duplicate rows and all columns.
+:::
+
+### `get_dupes()`
+
+An alternative to the `duplicated()` function from base R to quickly review rows that have duplicates is the `get_dupes()` function from the {janitor} package.
+
+::: vocab
+The syntax is `get_dupes(x)`, where x is **a dataframe**.
+:::
+
+```{r,output.lines=8, message = T,warning=FALSE}
+yaounde %>%
+  get_dupes()
+```
+
+The output is made up of 16 rows: there are 2 rows for each pair of duplicates. You can easily see they are duplicates based on this `id_in`. 
+
+::: pro-tip
+There is also an additional variable, `dupe_count`, showing the number of rows sharing that combination of duplicated values. 
+
+So if there were 5 copies of the same row (i.e. datapoint) then `dupe_count` would be equal to 5. 
+
+Careful that if there are many duplicates in a dataset, you should question the rigor of the data collection.
+:::
+
+::: practice
+2.  Extract the duplicate rows from the `typhoid` dataset.
+
+```{r,eval = FALSE,echo=FALSE}
+q2 <- "YOUR ANSWER HERE"
+.check_q2()
+.hint_q2()
+```
+:::
+
+## Extracting unique elements (Removing duplicates)
+
+### `unique()`
+
+The `unique()` base function in R is used to eliminate the duplicate values or the rows present in the vector or data frame.
+
+::: key-point
+The `unique()` function works in opposite way of `duplicated()` function in that it returns a vector or data frame with duplicate elements and rows deleted.
+:::
+
+::: vocab
+The syntax is `unique(x)`, where x can be a vector or a data frame.
+:::
+
+Applying the `unique()` function to the ages vector removes the duplicate elements from the vector and returns a vector of unique elements.
+
+```{r,output.lines=8, message = F,warning=FALSE, render=knitr::knit_print}
+unique(ages)
+```
+
+It's also possible to apply `unique()` on a data frame, for removing duplicated rows as follows,
+
+```{r,output.lines=8, message = F,warning=FALSE, render=knitr::knit_print}
+
+dim(yaounde) # to get the dimensions of the dataframe
+yaounde_unique <- unique(yaounde)
+
+dim(yaounde_unique) # to get the dimensions of the dataframe without duplicates
+
+```
+
+Initially, this dataset had 979 rows and 35 columns. Applying the `unique()` function reduces the dimensions of the dataset to 971 rows and 35 columns.
+
+### `distinct()`
+
+The `distinct()` is a function of the {`dplyr`} package that can keep unique/distinct rows from **a data frame**. If there are duplicate rows, only the first row is preserved.
+
+To get the unique rows from the data frame, use the following code.
+
+```{r,output.lines=8, message = F,warning=FALSE, render=knitr::knit_print}
+yaounde_distinct <- yaounde %>% distinct()
+
+dim(yaounde_distinct)
+```
+
+The output is exactly the same as would be obtained after applying the `unique()` function.
+
+::: practice
+3.  Remove the duplicate rows from the `typhoid` dataset. Ensure only unique rows remain in the dataset
+
+```{r,eval = FALSE,echo=FALSE}
+q3 <- "YOUR ANSWER HERE"
+.check_q3()
+.hint_q3()
+```
+:::
+
+So far we have only looked at cases where rows are exactly the same. There are, however, instances when there is a need to remove duplicate rows based on specific columns of a data frame. The `distinct()` function allows for the removal of rows in a data frame based on unique column values or unique combination of columns values. For this reason, `distinct()` is **better for dataframes**.
+
+::: key-point
+When finding distinct column values or combination of values, the `.keep_all = TRUE` attribute is used to retain all other variables in the output data frame.
+:::
+
+For study designs, it might be useful to keep only unique combinations within a dataset. As an illustration, if we want to get the unique rows for the `sex` and `age` combination
+
+```{r,output.lines=10, message = F,warning=FALSE, render=knitr::knit_print}
+yaounde %>% 
+  distinct(age,sex,.keep_all = TRUE) %>% 
+  nrow()
+```
+
+We now have 134 unique rows based on age and sex.
+
+::: watch-out
+Only the first row of each combination of age and sex is shown in the output
+:::
+
+::: practice
+4.  Based on `age` and `county`, find the number unique rows in the `typhoid` dataset.
+
+```{r,eval = FALSE,echo=FALSE}
+q4 <- "YOUR ANSWER HERE"
+.check_q4()
+.hint_q4()
+```
+:::
+
+Let's now save our deduplicated dataset using `distinct()` to keep unique patient IDs (this is good practice because all patients should have different patient IDs). 
+
+```{r,output.lines=10, message = T,warning=FALSE}
+yaounde_no_duplicates <- yaounde %>% distinct(id_ind,.keep_all = TRUE)
+
+write_csv(yaounde_no_duplicates,
+          here::here('ch02_data_cleaning_pipeline/data/yaounde_data_deduped.csv'))
+
+```
+
+## Wrapping up
+In this lesson, we learnt how to identify and remove duplicated values from datasets. The next step in the data cleaning pipeline would be fixing inconsistencies and structural errors in the variables.
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson: `r tgc_contributors_list(ids = c("eem", "lolovanco"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   Batra, Neale, et al. The Epidemiologist R Handbook. 2021.*Cleaning data and core functions*. <https://epirhandbook.com/en/cleaning-data-and-core-functions.html#cleaning-data-and-core-functions>
+
+-   Sam Firke, Bill Denney , Chris Haid , Ryan Knight, Malte Grosser , Jonathan Zadra  (2021). janitor: Simple Tools for Examining and Cleaning Dirty Data. R package version  2.1.0. <https://cran.r-project.org/web/packages/janitor/vignettes/janitor.html>
+  
+  
+Artwork was adapted from:
+
+-   Horst, A. (2021). *R & stats illustrations by Allison Horst*. <https://github.com/allisonhorst/stats-illustrations> (Original work published 2018)
+
+```{r, include = F}
+ # knitr::purl(input = here::here("chapter_04_data_wrangling/lessons/01_select_rename.Rmd"),
+ #             output = here::here("chapter_04_data_wrangling/lessons/01_select_rename.R"),
+ #             documentation = 2)
+```

@@ -1,0 +1,424 @@
+---
+title: '\ '
+output:
+  # word_document:
+  #   toc: true
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: inline
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+# Source autograder script quietly 
+suppressMessages(source(here::here("ch06_basic_geospatial_viz/lessons/ch06_ls03_physical_features_autograder.R")))
+```
+
+```{r,echo=FALSE}
+ggplot2::theme_set(new = theme_bw())
+options(scipen=10000)
+```
+
+------------------------------------------------------------------------
+
+<!-- # Geospatial analysis: density maps -->
+
+## Introduction
+
+![](images/0-whitebox.JPG)
+
+• Spatial data may require **geographic context**
+
+![](images/0-whitebox.JPG)
+
+• Aids to locate events with *environmental features* like streets.
+
+![](images/0-whitebox.JPG)
+
+![Figure 1. (A) John Snow's Dot map. (B) John Snow's Dot map complemented with the city street roads.](images/physical_feature_01.png)
+
+![](images/0-whitebox.JPG)
+
+• Today, we are going to learn:
+
+![](images/0-whitebox.JPG)
+
+• How to add **Physical features** to our maps, and
+
+![](images/0-whitebox.JPG)
+
+• How to plot them in **multiple layers** to complement Thematic maps!
+
+## Learning objectives
+
+1.  Create **Physical feature maps** to visualize roads or rivers.
+
+2.  Complement **Thematic maps** with Physical features as background.
+
+3.  Relate Physical features with a **Geometry** type.
+
+## Prerequisites
+
+This lesson requires the following packages:
+
+```{r,eval=TRUE,echo=TRUE,message=FALSE}
+if(!require('pacman')) install.packages('pacman')
+pacman::p_load_gh("afrimapr/afrilearndata")
+pacman::p_load(ggspatial,
+               ggplot2,
+               tibble,
+               mdsr,
+               terra,
+               spData,
+               sf)
+```
+
+This lesson requires familiarity with `{ggplot2}`: if you need to brush up, have a look at our introductory course on data visualization.
+
+## Physical features
+
+![](images/0-whitebox.JPG)
+
+### What are they? {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• *Physical features* include roads, buildings and rivers.
+
+![](images/0-whitebox.JPG)
+
+### How to plot them? {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• Using `{ggplot2}`, `geom_sf()`, and the `color` argument.
+
+![](images/0-whitebox.JPG)
+
+#### With Categorical data {.unlisted .unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• Let's map the Road network in South America and `color` them according to their type:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+south_am_roads <- 
+  read_rds(here("ch06_basic_geospatial_viz/data/south_am_roads.rds"))
+
+south_am_roads
+```
+
+![](images/0-whitebox.JPG)
+
+::: rstudio-cloud
+Let's create a map of the Sacramento basin in California US (`sacramento_rivers`), colored by their feature type (`FTYPE`).
+
+```{r,eval=FALSE}
+ggplot(data = sacramento_rivers) + 
+    geom_sf(aes(_____ = FTYPE), size = 1)
+```
+
+Data from here: <https://zenodo.org/record/4985219>
+:::
+
+![](images/0-whitebox.JPG)
+
+#### With Quantitative data {.unlisted .unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• We can use it in Environmental Epidemiology,
+
+![](images/0-whitebox.JPG)
+
+• The concentration of chemicals or pollutants in wastewater surveillance.
+
+![](images/0-whitebox.JPG)
+
+• In Ecology, richness estimations from rivers.
+
+![](images/0-whitebox.JPG)
+
+• Let's map a *classification* of rivers in the Sacramento basin in California US.
+
+![](images/0-whitebox.JPG)
+
+```{r}
+sacramento_rivers <- 
+  read_rds(here("ch06_basic_geospatial_viz/data/sacramento_rivers.rds"))
+
+ggplot(data = sacramento_rivers) + 
+  
+```
+
+![](images/0-whitebox.JPG)
+
+• "Richness" is the estimated number of fish species in each segment of the river.
+
+![](images/0-whitebox.JPG)
+
+::: rstudio-cloud
+Create a Thematic map of the road network in South America, using the `south_am_roads` dataset, colored by the length in Km (`length_km`) of each road.
+
+```{r,eval=FALSE}
+ggplot(data = south_am_roads) + 
+    ______(aes(______ = length_km), size = 1)
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+### How to use it? {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• *Trajectory data* and *Road network data*
+
+![](images/0-whitebox.JPG)
+
+• Evaluate the effects of human movement patterns in infectious disease transmission like [Dengue](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0172313) or [Malaria](https://malariajournal.biomedcentral.com/articles/10.1186/1475-2875-11-205).
+
+![](images/0-whitebox.JPG)
+
+![Figure 2. (A) Human mobility by follow-up GPS tracks (Falcón-Lezama et al. 2017). (B) Road network map of Kenia with traffic data (Pindolia et al. 2012).](images/lines-malaria.JPG){width="540"}
+
+![](images/0-whitebox.JPG)
+
+• Both of them are depicted in a map using **Lines**.
+
+![](images/0-whitebox.JPG)
+
+::: recap
+![](images/0-graybox.JPG)
+
+• Each **Thematic map** has its respective type of *Geometry*.
+
+![](images/0-graybox.JPG)
+
+• There are three main geometry types: *points*, *lines* and *polygons*.
+
+![](images/0-graybox.JPG)
+
+![Figure 2. Geometry types and example maps for each. Points, lines (or linestrings) and polygons are the most common geometries you will encounter.](images/geometry_types.png){width="555"}
+:::
+
+![](images/0-whitebox.JPG)
+
+## Multiple layer maps
+
+![](images/0-whitebox.JPG)
+
+• Most maps need additional geographic context.
+
+![](images/0-whitebox.JPG)
+
+• Plotting multiple geometries in overlapped layers.
+
+![](images/0-whitebox.JPG)
+
+• Complement Thematic maps with *Physical features*.
+
+![](images/0-whitebox.JPG)
+
+### How to plot them? {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• Let's complement:
+
+![](images/0-whitebox.JPG)
+
+• a Choropleth map from `africountries` by population (`pop_est`) with
+
+![](images/0-whitebox.JPG)
+
+• the African trans-continental highway network lines (`afrihighway`).
+
+![](images/0-whitebox.JPG)
+
+```{r,eval=TRUE}
+ggplot() +
+  geom_sf(data = ,mapping = ) +
+  geom_sf(data = )
+```
+
+![](images/0-whitebox.JPG)
+
+• Here, the physical feature `afrihighway` is **above** all the other layers.
+
+![](images/0-whitebox.JPG)
+
+• But it can also be **below**.
+
+![](images/0-whitebox.JPG)
+
+• We can complement a Dot map from `africapitals`,
+
+![](images/0-whitebox.JPG)
+
+• with the same `afrihighway` layer:
+
+![](images/0-whitebox.JPG)
+
+```{r,eval=TRUE}
+ggplot() +
+  geom_sf(data = ) +
+  geom_sf(data = , mapping = aes(size = pop, color = pop))
+```
+
+![](images/0-whitebox.JPG)
+
+• This is how you plot another map layer on top of another map.
+
+![](images/0-whitebox.JPG)
+
+::: recap
+![](images/0-graybox.JPG)
+
+• `{ggplot2}` allows to **overlap multiple layers (of maps)**
+
+![](images/0-graybox.JPG)
+
+• To complement Thematic maps.
+
+![](images/0-graybox.JPG)
+
+• For this, You need a **local** specification of data:
+
+``` r
+# instead of:
+ggplot(data = data_global) +
+  geom_sf()
+
+# we use:
+ggplot() +
+  geom_sf(data = data_local_layer_1) +
+  geom_sf(data = data_local_layer_2)
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+• *Order* of layers (below or above) depend on the aim.
+
+![](images/0-whitebox.JPG)
+
+::: practice
+Create a multiple layer Thematic map with:
+
+-   the `world` dataset (from the `{spData}` package).
+
+-   Then, overlap it with the African trans-continental highway network lines from the `afrihighway` dataset.
+
+Use the `geom_sf()` function for each layer:
+
+```{r,eval = FALSE}
+q1 <- 
+  ggplot() + 
+    ________(data = ________) + 
+    ________(data = ________)
+q1
+```
+
+```{r,include = FALSE}
+.check_q1()
+.hint_q1()
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+### How to use it? {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• In scenarios similar to John Snow's *Dot map*
+
+![](images/0-whitebox.JPG)
+
+• Locations of deaths of the 1854 London cholera outbreak.
+
+![](images/0-whitebox.JPG)
+
+• Complemented with a *physical feature* like the *street roads* of the city:
+
+![](images/0-whitebox.JPG)
+
+![Figure 3. (A) John Snow's Dot map. (B) John Snow's Dot map complemented with the city street roads.](images/physical_feature_01.png)
+
+![](images/0-whitebox.JPG)
+
+• In Figure 3B, the *physical feature* is below the Dot map.
+
+![](images/0-whitebox.JPG)
+
+• This is why it looks much more readable.
+
+![](images/0-whitebox.JPG)
+
+## Wrap up
+
+![](images/0-whitebox.JPG)
+
+• How to represent *Physical features* and
+
+![](images/0-whitebox.JPG)
+
+• How to use them to *complement* Thematic maps in *multiple layers*.
+
+![](images/0-whitebox.JPG)
+
+![Figure 4. Concept map #2.](images/conceptmap-00-thematic-v3.png)
+
+![](images/0-whitebox.JPG)
+
+• However, you may require a *more explicit* background!
+
+![](images/0-whitebox.JPG)
+
+• For example, *Basemaps* for Google Maps-like backgrounds.
+
+![](images/0-whitebox.JPG)
+
+• See yo in the next lesson!
+
+![](images/0-whitebox.JPG)
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r tgc_contributors_list(ids = c("avallecam", "lolovanco", "kendavidn"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   *Batra, Neale, et al. (2021). The Epidemiologist R Handbook. Chapter 28: GIS Basics*. (2021). Retrieved 01 April 2022, from <https://epirhandbook.com/en/gis-basics.html>
+
+-   *Lovelace, R., Nowosad, J., & Muenchow, J. Geocomputation with R. Chapter 2: Geographic data in R*. (2019). Retrieved 01 April 2022, from <https://geocompr.robinlovelace.net/spatial-class.html>
+
+-   *Moraga, Paula. Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny. Chapter 2: Spatial data and R packages for mapping*. (2019). Retrieved 01 April 2022, from <https://www.paulamoraga.com/book-geospatial/sec-spatialdataandCRS.html>
+
+-   *Baumer, Benjamin S., Kaplan, Daniel T., and Horton, Nicholas J. Modern Data Science with R. Chapter 17: Working with geospatial data*. (2021). Retrieved 05 June 2022, from <https://mdsr-book.github.io/mdsr2e/ch-spatial.html>
+
+`r tgc_license()`

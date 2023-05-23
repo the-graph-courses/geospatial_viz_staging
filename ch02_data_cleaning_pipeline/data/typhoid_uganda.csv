@@ -1,0 +1,216 @@
+UniqueKey,CaseorControl,Age,Sex,Levelofeducation,Householdmembers,Below10years,N1119years,N2035years,N3644years,N4565years,Above65years,Positioninthehousehold,Watersourcedwithinhousehold,Borehole,River,Tap,Rainwatertank,Unprotectedspring,Protectedspring,Pond,Shallowwell,Stream,Jerrycan,Bucket,County,Subcounty,Parish,Village,NA,NAN
+1,0,29,0,2,01-May,1,0,2,0,0,0,Household head,No,No,No,No,No,Yes,No,No,No,No,Yes,No,Busongora South,Lake Katwe,Kahokya,Kinyateke,NA,NA
+2,0,31,1,1,9,4,2,3,0,0,0,Housewife,No,Yes,No,No,No,No,Yes,No,No,No,Yes,No,Busongora South,Lake Katwe,Kahokya,Kinyateke,NA,NA
+3,1,21,0,1,12,4,3,2,2,0,0,Son (victim),No,No,Yes,No,No,No,Yes,No,No,No,Yes,No,Busongora South,Lake Katwe,Kahokya,Kinyateke,NA,NA
+4,0,47,1,0,7,3,2,0,0,2,0,Housewife,No,Yes,No,No,Yes,No,No,No,No,No,Yes,No,Busongora South,Muhokya,Kahokya,Kinyateke,NA,NA
+5,0,39,1,1,7,2,3,0,2,0,0,Housewife,No,Yes,No,No,Yes,No,No,No,No,No,Yes,No,Busongora South,Muhokya,Kahokya,Kinyateke,NA,NA
+6,1,46,1,0,9,3,4,0,0,2,0,Housewife victim,No,Yes,No,No,Yes,No,No,No,No,No,Yes,No,Busongora South,Lake Katwe,Kahokya,Kinyateke,NA,NA
+7,0,58,0,1,01-May,0,0,0,0,1,0,Household head,No,No,No,Yes,Yes,No,No,No,No,No,Yes,No,Busongora South,Muhokya,Nyamirami,Nyamirami 1,NA,NA
+8,0,48,0,1,7,3,2,0,0,2,0,Household head,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Muhokya,Nyamirami,Nyamirami 1,NA,NA
+9,1,21,1,3,10,3,4,1,0,2,0,Daughter (sister to victim),No,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Muhokya,Nyamirami,Nyamirami 1,NA,NA
+10,0,38,1,0,7,3,1,1,2,0,0,Housewife,No,No,Yes,Yes,No,Yes,No,No,No,No,Yes,No,Bukonzo West,Kitholhu,Kanyatsi,Kanyatsi,NA,NA
+11,0,30,1,1,9,5,3,1,0,0,0,Housewife,No,No,Yes,No,No,Yes,No,No,No,No,Yes,No,Bukonzo West,Kitholhu,Kanyatsi,Kanyatsi,NA,NA
+12,1,38,1,0,9,1,5,3,0,0,1,Housewife,No,No,Yes,No,No,Yes,No,No,No,No,Yes,No,Bukonzo West,Kitholhu,Kanyatsi,Kanyatsi,NA,NA
+13,0,65,1,0,10,5,3,0,0,0,2,Housewife,No,No,Yes,No,Yes,No,Yes,No,No,No,Yes,No,Bukonzo West,Kitholhu,Kanyatsi,Kanyatsi 1,NA,NA
+14,0,32,1,1,9,3,4,2,0,0,0,Housewife,No,No,Yes,No,Yes,No,Yes,No,No,No,Yes,No,Bukonzo West,Kitholhu,Kanyatsi,Kanyatsi,NA,NA
+15,1,28,1,1,10,4,3,3,0,0,0,Daughter (sister to the victim),No,No,Yes,No,No,No,Yes,No,No,No,Yes,No,Bukonzo West,Kitholhu,Kanyatsi,Kanyatsi 1,NA,NA
+16,0,56,1,0,01-May,0,1,0,0,1,1,Housewife,No,No,Yes,No,No,No,No,No,No,No,Yes,No,Bukonzo West,Kitholhu,Kyabikere,Kyabikere,NA,NA
+17,0,28,1,1,6,1,4,1,0,0,0,Son,No,No,Yes,No,No,Yes,No,No,No,No,Yes,No,Bukonzo West,Kitholhu,Kyabikere,Kyabikere,NA,NA
+18,1,43,0,1,12,3,3,2,4,0,0,Household head,No,No,Yes,No,Yes,No,No,No,No,No,Yes,No,Bukonzo West,Kitholhu,Kyabikere,Kyabikere,NA,NA
+19,0,33,1,2,8,3,3,1,0,1,0,Housewife,Yes,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,MLTC,Nyakahya,Sesele,NA,NA
+20,0,50,1,0,10,8,0,0,0,2,0,Household head,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,MLTC,Mpondwe,Sesele,NA,NA
+21,1,27,1,0,01-May,2,0,1,0,0,2,In-law (aunt to the victim),No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,MLTC,Nyakahya,Sesele,NA,NA
+22,0,48,1,1,01-May,4,0,0,0,1,0,Household head,No,No,No,Yes,Yes,No,No,No,No,No,Yes,No,Bukonzo West,MLTC,Customs,Upper Customs,NA,NA
+23,0,23,1,1,01-May,0,0,3,0,0,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,MLTC,Customs,Upper Customs,NA,NA
+23,0,23,1,1,01-May,0,0,3,0,0,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,MLTC,Customs,Upper Customs,NA,NA
+23,0,23,1,1,01-May,0,0,3,0,0,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,MLTC,Customs,Upper Customs,NA,NA
+23,0,23,1,1,01-May,0,0,3,0,0,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,MLTC,Customs,Upper Customs,NA,NA
+24,1,50,0,2,01-May,1,0,2,0,1,0,Household head,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,MLTC,Kambukamabwe,Upper Customs,NA,NA
+25,0,65,1,0,01-May,1,2,0,0,2,0,Household head,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Karambi,Karambi,Bubuna 2,NA,NA
+26,0,53,0,2,10,2,5,0,0,3,0,Household head,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Karambi,Buhuna,Buhuna 2,NA,NA
+27,1,35,1,1,10,2,3,4,1,0,0,Housewife (mother to the victim),No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Karambi,Buhuna,Buhuna 2,NA,NA
+28,0,19,1,2,6,0,3,1,0,2,0,Daughter,Yes,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Karambi,Buhuna,Buhuna,NA,NA
+29,0,40,1,2,18,5,11,0,0,2,0,Household head,Yes,No,No,Yes,Yes,No,No,No,No,No,Yes,No,Bukonzo West,Karambi,Buhuna,Buhuna 2,NA,NA
+30,1,44,1,0,10,2,6,0,2,0,0,Housewife (victim),Yes,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Karambi,Buhuna,Buhuna 2,NA,NA
+31,0,18,1,2,01-May,3,1,0,1,0,0,Daughter,No,No,No,Yes,Yes,No,No,No,No,No,Yes,No,Bukonzo West,Karambi,Kituti,Karughe,NA,NA
+32,0,29,1,1,7,3,2,1,0,1,0,Housewife,No,No,No,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo West,Karambi,Kituti,Karughe,NA,NA
+33,1,34,1,3,12,3,3,5,1,1,0,"Daughter inlaw, in-law to the victim",Yes,No,No,Yes,No,Yes,No,No,No,No,Yes,No,Bukonzo West,Karambi,Karughe,Karughe,NA,NA
+34,0,49,1,1,6,3,NA,2,0,1,0,Housewife,No,No,No,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo West,Karambi,Kituti,Kituti 1,NA,NA
+35,0,81,0,1,10,1,4,2,0,3,0,Household head,No,No,Yes,Yes,Yes,No,No,No,No,No,Yes,No,Bukonzo West,Karambi,Kituti,Kituti,NA,NA
+36,1,49,1,2,9,4,3,1,0,1,0,Housewife,No,No,No,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo West,Karambi,Kituti,Kituti 1,NA,NA
+37,0,43,1,1,12,3,7,0,2,0,0,Housewife,Yes,No,No,Yes,Yes,No,No,No,No,No,Yes,No,Bukonzo West,Karambi,Nyakahye,Karughe,NA,NA
+38,0,70,0,0,12,6,5,0,0,0,1,Housewife,Yes,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Karambi,Nyakahya,Kituti 1,NA,NA
+39,1,23,0,2,01-May,1,1,2,1,0,0,Son (victim),No,No,No,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo West,Karambi,Kituti,Kituti 1,NA,NA
+40,0,62,1,1,01-May,1,2,0,0,1,0,Household head,No,No,No,Yes,Yes,No,No,No,No,No,Yes,No,Bukonzo West,Karambi,Buhuna,Kituti,NA,NA
+41,0,40,1,0,12,1,3,4,0,2,2,Daughter,Yes,No,No,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo West,Karambi,Karambi,Kituti 1,NA,NA
+42,1,22,1,3,16,5,4,5,2,0,0,Daughter (to the victim),No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Karambi,Kituti,Kituti 1,NA,NA
+43,0,18,0,0,8,4,3,0,0,1,0,Household head,Yes,No,Yes,Yes,No,Yes,No,No,No,No,Yes,No,Bukonzo West,Karambi,Karughe,Karughe,NA,NA
+44,0,63,1,0,6,0,1,3,0,2,0,Housewife,Yes,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Karambi,Karughe,Karughe,NA,NA
+45,1,42,1,0,8,3,3,0,2,0,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Karambi,Karambi,Karughe,NA,NA
+46,0,28,0,3,01-May,3,0,2,0,0,0,Household head,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Karambi,Kituti,Kituti,NA,NA
+47,0,19,1,3,12,5,5,0,2,0,0,Daughter,Yes,No,No,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo West,Karambi,Kituti,Kituti 1,NA,NA
+48,1,39,1,1,8,2,4,0,2,0,0,Housewife (mother to the victim),No,No,No,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo West,Karambi,Kituti,Kituti 1,NA,NA
+49,0,50,1,0,10,4,3,1,0,2,0,Housewife,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Nyakiyumbu,Kaghorwe,Musisyo,NA,NA
+50,0,24,1,1,8,5,1,2,0,0,0,Daughter,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Nyakiyumbu,Nyakiyumbu,Nyakiyumbu,NA,NA
+51,1,33,1,3,7,3,2,1,1,0,0,Housewife,Yes,No,No,Yes,Yes,No,No,No,No,No,Yes,No,Bukonzo West,Nyakiyumbu,Nyakiyumbu,Nyakiyumbu 1,NA,NA
+52,0,30,0,3,01-May,1,0,2,0,0,0,Household head,No,No,Yes,No,No,No,Yes,No,No,No,Yes,No,Bukonzo West,Nyakiyumbu,Kaghorwe,Mushenene 2,NA,NA
+53,0,31,1,0,6,0,3,3,0,0,0,Housewife,No,No,Yes,No,Yes,No,No,No,No,No,Yes,No,Bukonzo West,Nyakiyumbu,Mushenene,Mushenene,NA,NA
+54,1,28,0,1,01-May,1,2,2,0,0,0,Son (victim),Yes,No,Yes,No,Yes,No,No,No,No,No,Yes,No,Bukonzo West,Nyakiyumbu,Kaghorwe,Mushenene,NA,NA
+55,0,65,0,0,11,3,2,4,0,2,0,Household head,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Munkunyu,Kitsutsu,Kitsutsu,NA,NA
+56,0,24,1,0,01-May,1,0,2,0,0,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Munkunyu,Kitsutsu,Kitsutsu 1,NA,NA
+56,0,24,1,0,01-May,1,0,2,0,0,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Munkunyu,Kitsutsu,Kitsutsu 1,NA,NA
+56,0,24,1,0,01-May,1,0,2,0,0,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Munkunyu,Kitsutsu,Kitsutsu 1,NA,NA
+56,0,24,1,0,01-May,1,0,2,0,0,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Munkunyu,Kitsutsu,Kitsutsu 1,NA,NA
+57,1,19,0,2,01-May,2,1,0,2,0,0,Son (victim),No,No,Yes,No,No,No,No,No,No,No,Yes,No,Bukonzo West,Nyakiyumbu,Lyakirema,Kyabisoro,NA,NA
+58,0,40,0,1,11,6,2,2,0,1,0,Household head,No,No,No,Yes,No,Yes,Yes,No,No,No,Yes,No,Bukonzo West,Nyakiyumbu,Nyakiyumbu,Nyakabale 1,NA,NA
+59,0,67,0,1,6,0,4,0,0,0,2,Household head,No,No,No,No,No,No,Yes,No,No,No,Yes,No,Bukonzo West,Nyakiyumbu,Nyakiyumbu,Nyakabale,NA,NA
+60,1,67,0,2,8,1,1,4,1,0,1,Household head,No,No,No,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo West,Nyakiyumbu,Nyakiyumbu,Nyakabale,NA,NA
+61,0,25,1,1,01-May,3,0,2,0,0,0,Housewife,No,No,No,No,No,Yes,Yes,No,No,No,Yes,No,Bukonzo East,Nyakiyumbu,Lyakirema,Nyamighera,NA,NA
+62,0,20,1,1,01-May,2,0,2,0,0,0,Housewife,No,No,No,No,No,Yes,No,No,Yes,No,Yes,No,Bukonzo West,Nyakiyumbu,Lyakirema,Nyamighera,NA,NA
+63,1,65,0,3,8,3,1,2,1,1,0,Household head,No,No,No,No,No,No,Yes,No,No,No,Yes,No,Bukonzo West,Nyakiyumbu,Lyakirema,Nyakighera,NA,NA
+64,0,45,0,1,01-May,2,1,1,0,1,0,Household head,Yes,Yes,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Bwera,Bunyiswa,Kakone 1,NA,NA
+65,0,45,1,0,8,2,3,2,0,1,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Bwera,Bunyiswa,Kakone 1,NA,NA
+66,1,18,1,2,11,3,4,3,0,1,0,Daughter (sister to victim),Yes,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Bwera,Bunyiswa,Kakone 1,NA,NA
+67,0,43,1,1,9,2,3,3,0,1,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Bwera,Rwenguba,Rwenguba,NA,NA
+68,0,45,0,3,01-May,3,0,1,0,1,0,Household head,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Bwera,Rwenguna,Rwenguba,NA,NA
+69,1,18,0,2,9,3,4,2,0,0,0,Son,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo West,Bwera,Rwenguba,Rwenguba,NA,NA
+70,0,20,1,1,20,5,12,1,0,2,0,Daughter,No,No,No,No,No,No,Yes,No,No,No,Yes,No,Bukonzo East,Munkunyu,Kinyamaseke,Kinyamaseke,NA,NA
+71,0,45,1,0,01-May,3,1,0,0,1,0,Housewife,No,No,No,Yes,No,Yes,No,No,No,No,Yes,No,Bukonzo East,Munkunyu,Kinyamaseke,Kinyamaseke,NA,NA
+72,1,25,1,1,7,5,0,2,0,0,0,Housewife,No,Yes,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Munkunyu,Kinyamaseke,Kitsutsu 1,NA,NA
+73,0,70,0,1,7,3,2,1,0,0,1,Household head,No,No,Yes,No,No,Yes,No,No,No,No,Yes,No,Bukonzo East,Munkunyu,Kabingo,Kithambayiro,NA,NA
+74,0,54,0,1,9,6,1,0,0,2,0,Househiold head,No,No,No,No,No,Yes,No,No,Yes,No,Yes,No,Bukonzo East,Munkunyu,Kabingo,Kithambayiro,NA,NA
+75,1,41,0,1,12,4,4,3,1,0,0,Housewhold head,No,No,No,No,No,No,Yes,No,No,No,Yes,No,Bukonzo East,Munkunyu,Kabingo,Kithambayiro,NA,NA
+76,0,18,1,2,10,1,2,3,1,1,2,Daughter,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Nyabirongo,Kamahanga,NA,NA
+77,0,39,1,0,7,1,3,2,1,0,0,Housewife,Yes,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Nyabirongo,Kamahanga,NA,NA
+78,1,36,1,1,7,2,4,0,1,0,0,Household head,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Nyabirongo,Kamahanga,NA,NA
+78,1,36,1,1,7,2,4,0,1,0,0,Household head,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Nyabirongo,Kamahanga,NA,NA
+78,1,36,1,1,7,2,4,0,1,0,0,Household head,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Nyabirongo,Kamahanga,NA,NA
+78,1,36,1,1,7,2,4,0,1,0,0,Household head,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Nyabirongo,Kamahanga,NA,NA
+79,0,20,1,0,01-May,1,0,1,0,1,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Kajwenge,Kisebere,NA,NA
+80,0,84,0,0,6,3,0,1,0,0,2,Household head,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Kajwenge,Ihuhwahwa 2,NA,NA
+81,1,46,1,1,01-May,1,2,0,0,2,0,Housewife,Yes,No,Yes,Yes,No,No,No,No,No,No,No,Yes,Bukonzo East,Kisinga,Kajwenge,Ihuhwahwa 2,NA,NA
+82,0,50,1,0,01-May,0,0,2,0,0,2,Housewife,No,No,No,Yes,No,No,No,No,No,No,No,No,Bukonzo East,Kisinga,Kajwenge,Ihuhwahwa 2,NA,NA
+83,0,32,1,1,9,2,5,1,0,1,0,Houswewife,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Kajwenge,Ihuhwahwa 2,NA,NA
+84,1,55,0,0,01-May,0,0,1,0,2,0,Household head,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Kajwenge,Lhuhwahwa 2,NA,NA
+85,0,50,1,0,01-May,0,0,0,0,1,4,Daughter,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Rwenguhya,Rwenguhya 2,NA,NA
+86,0,36,0,3,01-May,0,1,1,0,2,1,Son,Yes,No,No,Yes,No,Yes,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Rwanguhya,Rwanguhya 2,NA,NA
+87,1,18,1,1,01-May,0,1,1,0,0,0,Sister,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Rwanguhya,Mukwenge,NA,NA
+88,0,23,1,1,9,7,0,2,0,0,0,Daughter,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Kajwenge,Lhuhwahwa,NA,NA
+89,0,25,1,2,8,4,0,2,0,2,0,Daughter in law,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Rwanguhya,Kinyankoko 1,NA,NA
+90,1,76,0,3,20,5,3,7,3,1,1,Household head,Yes,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Rwanguhya,Kinyankoko,NA,NA
+91,0,46,1,0,9,1,5,1,0,2,0,Housewfe,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Rwenguhya,Rwenguhya 2,NA,NA
+92,0,29,1,1,7,0,2,2,1,2,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Rwanguhya,Rwanguhya 2,NA,NA
+93,1,42,1,1,11,4,6,0,1,0,0,Household head,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Rwenguhya,Rwenguhya 2,NA,NA
+94,0,53,1,0,14,1,2,7,0,2,0,Housewife,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Rwenguhya,Rwenguhya,NA,NA
+95,0,33,0,1,8,5,1,2,0,0,0,Household head,No,No,No,Yes,No,Yes,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Rwenguhya,Rwenguhya,NA,NA
+96,1,53,1,1,01-May,1,1,2,0,1,0,Household head,No,No,No,Yes,No,Yes,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Rwenguhya,Rwenguhya,NA,NA
+97,0,27,1,2,7,5,0,0,2,0,0,Housewife,Yes,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Kagando,Kagando 1,NA,NA
+98,0,33,0,0,6,2,3,1,0,0,0,Household head,Yes,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Kagando,Kagando 1,NA,NA
+99,1,59,0,1,6,2,1,1,0,1,0,Son,Yes,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kisinga,Kagando,Kagando,NA,NA
+100,0,50,0,1,7,3,0,2,0,2,0,Household head,No,No,Yes,No,No,No,No,No,No,No,Yes,No,Bukonzo East,Kyondo,Kanyatsi,Kanyatsi,NA,NA
+100,0,50,0,1,7,3,0,2,0,2,0,Household head,No,No,Yes,No,No,No,No,No,No,No,Yes,No,Bukonzo East,Kyondo,Kanyatsi,Kanyatsi,NA,NA
+100,0,50,0,1,7,3,0,2,0,2,0,Household head,No,No,Yes,No,No,No,No,No,No,No,Yes,No,Bukonzo East,Kyondo,Kanyatsi,Kanyatsi,NA,NA
+100,0,50,0,1,7,3,0,2,0,2,0,Household head,No,No,Yes,No,No,No,No,No,No,No,Yes,No,Bukonzo East,Kyondo,Kanyatsi,Kanyatsi,NA,NA
+101,0,29,1,1,01-May,1,0,2,0,0,0,Housewife,No,No,Yes,No,No,No,No,No,No,No,Yes,No,Bukonzo East,Kyondo,Kanyatsi,Kasithu,NA,NA
+102,1,32,1,1,8,5,1,1,1,0,0,Housewife,No,No,Yes,No,No,No,No,No,No,No,Yes,No,Bukonzo East,Kyondo,Kanyatsi,Kasithu,NA,NA
+103,0,18,1,1,8,1,1,4,0,2,0,Daughter,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kyondo,Kanyatsi,Kaghorwe,NA,NA
+104,0,59,0,1,01-May,0,1,2,0,2,NA,Household head,No,No,No,Yes,Yes,No,No,No,No,No,Yes,No,Bukonzo East,Kyondo,Kanyatsi,Kaghorwe,NA,NA
+105,1,50,1,2,15,5,2,6,0,2,0,Housewife,Yes,No,Yes,Yes,Yes,No,No,No,No,No,No,No,Bukonzo East,Kyondo,Kanyatsi,Kaghorwe,NA,NA
+106,0,38,1,1,9,5,3,0,1,0,NA,Housewife,No,No,No,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo East,Kyondo,Ibimbo,Kisanga,NA,NA
+107,0,50,0,1,10,2,6,0,0,20,0,Household head,No,No,No,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo East,Kyondo,Ibimbo,Kisanga,NA,NA
+108,1,45,1,1,10,2,4,2,0,2,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kyondo,Ibimbo,Kisanga,NA,NA
+109,0,37,1,0,6,2,2,0,2,0,0,Housewife,No,No,No,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo East,Kyondo,Ibimbo,Kisanga,NA,NA
+110,0,32,1,1,8,3,3,2,0,0,0,Housewife,No,No,No,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo East,Kyondo,Ibimbo,Kisanga,NA,NA
+111,1,30,1,1,7,4,1,1,0,1,0,Housewife,No,No,Yes,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo East,Kyondo,Ibimbo,Kisanga,NA,NA
+112,0,28,0,1,01-May,2,0,2,0,0,0,Household head,No,No,No,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo East,Kyondo,Ibimbo,Kisanga,NA,NA
+113,0,18,1,1,13,2,4,2,2,NA,NA,Daughter,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kyondo,Ibimbo,Kisanga,NA,NA
+114,1,30,1,1,7,4,1,1,0,1,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kyondo,Ibimbo,Kisanga,NA,NA
+115,0,56,1,0,01-May,1,2,0,0,2,0,Housewife,No,No,Yes,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo East,Kyondo,Ibimbo,Kisanga,NA,NA
+116,0,45,0,1,8,2,3,1,1,1,0,Household head,No,No,Yes,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo East,Kyondo,Ibimbo,Kisanga,NA,NA
+117,1,55,0,2,10,1,4,3,0,2,0,Household head,No,No,Yes,Yes,No,No,Yes,No,No,No,Yes,No,Bukonzo East,Kyondo,Ibimbo,Kisanga,NA,NA
+118,0,67,1,0,01-May,0,0,2,0,1,0,Housewife,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kyarumba,Kihungu,Nyakeya 2,NA,NA
+119,0,45,1,1,8,0,1,5,2,0,0,Housewife,No,No,No,Yes,No,No,No,No,No,No,No,No,Bukonzo East,Kyarumba,Kihungu,Nyakeya 1,NA,NA
+120,1,28,0,2,7,1,2,1,3,0,0,Son,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Bukonzo East,Kyarumba,Kihungu,Nyakeya 2,NA,NA
+121,0,48,1,0,9,3,0,3,1,2,0,Housewife,No,No,No,No,No,Yes,No,No,No,No,Yes,No,Busongora South,Lake Katwe,Kabirizi,Rwentutu,NA,NA
+122,0,44,1,3,7,2,1,4,0,0,0,Household head,No,No,No,No,No,No,Yes,No,No,No,Yes,No,Busongora South,Lake Katwe,Kabirizi,Rwentutu,NA,NA
+123,1,32,1,1,12,4,4,3,1,NA,NA,Daughter in law,No,No,No,No,No,No,Yes,No,No,No,Yes,No,Busongora South,Lake Katwe,Kabirizi,Rwentutu,NA,NA
+124,0,26,1,1,10,4,3,2,0,0,1,Daughter,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Kasese Municipality,Nyamwamba Division,Nyakasanga,Umoja,NA,NA
+125,0,45,0,1,7,1,3,0,0,2,0,Household head,Yes,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Kasese Municipality,Nyamwamba Division,Nyakasanga,Umoja,NA,NA
+126,1,40,1,1,7,2,2,2,1,0,0,Housewife,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Kasese Municipality,Nyamwamba Division,Nyakasanga,Umoja,NA,NA
+127,0,36,0,2,01-May,3,0,1,1,0,0,Household head,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Kasese Municipality,Nyamwamba Division,Rukooki,Rukooki Ward,NA,NA
+128,0,33,1,3,01-May,2,1,1,0,0,0,Housewife,Yes,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Kasese Municipality,Nyamwamba Division,Rukooki Ward,Rukooki A,NA,NA
+129,1,18,1,2,10,5,3,3,0,1,0,Daughter,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Rukooki,Rukooki,NA,NA
+130,0,29,1,2,13,4,3,5,1,0,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Kigoro,Kigoro 2,NA,NA
+131,0,22,1,2,01-May,2,0,2,0,0,0,Housewife,No,No,Yes,No,No,No,No,No,No,No,Yes,No,Busongora South,Nyamwamba Division,Kigoro 2,Kigoro T. C,NA,NA
+132,1,30,1,1,01-May,0,2,3,0,0,0,Housewife,Yes,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Nyamwamba Division,Kigoro 2,Kigoro TC,NA,NA
+133,0,31,1,1,01-May,2,1,1,0,0,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Kigoro,Kigoro,NA,NA
+134,0,25,1,1,01-May,0,0,1,0,0,0,Household head,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Kigoro,Kigoro,NA,NA
+135,1,35,1,1,01-May,1,1,2,0,1,0,Housewife,Yes,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Nyamwamba Division,Kigoro 2,Kigoro TC,NA,NA
+136,0,75,0,0,01-May,0,0,0,0,0,2,Household head,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Kigoro 1,Kabughabugha,NA,NA
+137,0,40,1,1,9,2,6,0,1,0,0,Housewife,Yes,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Kigoro 1,Kabughabugha,NA,NA
+138,1,47,0,1,13,5,4,3,0,1,0,Household head,Yes,No,No,Yes,No,No,No,No,No,Yes,Yes,No,Busongora South,Rukooki,Kigoro 1,Kabughabugha,NA,NA
+139,0,30,1,2,6,4,0,2,0,0,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Kigoro 1,Kabughabugha,NA,NA
+140,0,30,1,1,7,5,0,2,0,0,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Kigoro,Kabughabugha,NA,NA
+141,1,45,1,1,7,2,3,0,0,2,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Kigoro 1,Kabughabugha,NA,NA
+142,0,29,1,1,01-May,2,0,1,0,0,0,Housewife,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Kigoro 1,Kabughabugha 1,NA,NA
+143,0,25,1,1,7,5,0,2,0,0,0,Housewife,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Kigoro,Kabughabugha,NA,NA
+144,1,19,1,2,8,4,2,0,1,1,0,Daughter,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Kigoro 1,Kabughabugha,NA,NA
+145,0,43,1,1,10,3,3,2,2,0,0,Housewife,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Buhaghura,Kathoma,NA,NA
+146,0,50,0,1,9,3,4,0,1,1,0,Household head,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Buhaghura,Katoma,NA,NA
+147,1,52,0,1,7,4,1,1,0,1,0,Household head,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Buhaghura,Kathoma,NA,NA
+148,0,55,1,0,8,1,0,5,0,2,0,Housewife,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Buhaghura,Karongo,NA,NA
+149,0,30,1,2,11,6,1,2,0,0,0,Housewife,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora South,Rukooki,Buhaghura,Karongo,NA,NA
+150,1,25,0,2,01-May,3,0,2,0,0,0,Household head,No,No,No,Yes,No,No,Yes,No,No,No,Yes,No,Busongora South,Rukooki,Buhaghura,Karongo,NA,NA
+151,0,30,1,3,7,1,2,2,2,0,0,Daughter,Yes,Yes,Yes,Yes,Yes,No,No,No,No,No,Yes,Yes,Busongora North,Kilembe,Katiri,Namuhuga,NA,NA
+152,0,27,1,2,01-May,3,1,1,0,0,0,Housewife,Yes,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Bulembia,Namuhuga,Namuhuga,NA,NA
+153,1,18,0,2,9,2,4,0,2,0,0,Son,Yes,Yes,No,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Bulembia,Namuhuga,Namuhuga NW,NA,NA
+154,0,40,0,1,6,1,3,1,1,0,0,Household head,No,Yes,No,No,No,No,No,No,No,No,Yes,No,Busongora South,Karusandara,Karusandara,Kabuga,NA,NA
+155,0,37,1,1,7,3,2,0,2,0,0,Housewife,No,Yes,Yes,No,No,No,No,No,No,No,Yes,No,Busongora South,Karusandara,Karusandara,Kabuga,NA,NA
+156,1,33,1,1,9,4,3,0,2,0,0,Housewife,No,Yes,No,No,No,No,No,No,No,No,Yes,No,Busongora South,Karusandara,Karusandara,Kabuga,NA,NA
+157,0,70,1,0,01-May,0,0,1,0,0,1,Housewife,No,Yes,No,No,No,No,No,No,No,No,Yes,No,Busongora South,Karusandara,Kyaranga,Kinayobya,NA,NA
+158,0,27,1,1,7,5,0,1,0,1,0,Housewife,No,Yes,No,No,No,No,No,No,No,No,Yes,No,Busongora South,Karusandara,Kyalanga,Kinyayobyo,NA,NA
+159,1,30,1,1,10,5,3,2,0,0,0,Housewife,No,Yes,Yes,No,No,No,No,No,No,No,Yes,No,Busongora South,Karusandara,Kyalanga,Kinyayobyo,NA,NA
+160,0,40,0,1,8,3,3,0,2,0,0,Household head,No,Yes,No,No,No,No,No,Yes,No,No,Yes,Yes,Busongora South,Karusandara,Karusandara,Karusandara,NA,NA
+161,0,21,0,1,01-May,1,0,2,0,0,0,Household head,No,Yes,No,No,No,No,No,Yes,No,No,Yes,No,Busongora South,Karusandara,Karusandara,Karusandara,NA,NA
+162,1,34,0,1,6,3,1,2,0,0,0,Household head,No,Yes,No,No,No,No,No,Yes,No,No,Yes,Yes,Busongora South,Karusandara,Karusandara,Karusandara,NA,NA
+163,0,34,0,0,01-May,2,0,2,1,0,0,Employee,No,Yes,No,No,No,No,No,No,No,No,Yes,No,Busongora South,Karusandara,Karusandara,Kabaka,NA,NA
+164,0,24,1,1,01-May,2,0,2,0,0,0,Housewife,No,Yes,No,No,No,No,No,No,No,No,Yes,No,Busongora South,Karusandara,Karusandara,Kabaka,NA,NA
+165,1,18,0,2,01-May,0,1,2,0,0,0,Son,No,Yes,No,No,No,No,No,No,No,No,Yes,No,Busongora South,Karusandara,Karusandara,Kabaka,NA,NA
+166,0,32,1,1,01-May,2,0,22,0,0,0,Housewife,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Kitswamba,Rugendabala,Rugendabala,NA,NA
+167,0,37,1,1,01-May,2,0,1,1,0,0,Housewife,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Kitswamba,Rugendabala,Rugendabala,NA,NA
+168,1,18,1,2,8,4,2,2,0,0,0,Daughter,Yes,Yes,Yes,Yes,Yes,No,No,No,No,No,Yes,No,Busongora North,Kitswamba,Kitswamba,Rugendabara,NA,NA
+169,0,20,0,2,10,3,2,3,2,0,0,Son,No,No,Yes,No,Yes,No,No,No,No,No,Yes,No,Busongora North,Kitswamba,Kitswamba,Nyakabale,NA,NA
+170,0,34,0,1,14,2,7,3,0,1,1,Son,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Kitswamba,Kitswamba,Nyakabale,NA,NA
+171,1,18,0,2,01-May,0,2,1,0,1,0,Son,No,No,Yes,No,No,No,No,No,No,No,Yes,No,Busongora North,Kitswamba,Kitswamba,Nyakabale,NA,NA
+172,0,32,0,3,01-May,0,0,0,0,1,1,Son,Yes,No,Yes,No,No,No,No,No,No,No,Yes,No,Busongora North,Kitswamba,Kitswamba,Nyakabale,NA,NA
+173,0,36,1,0,7,2,2,1,2,0,0,Housewife,No,No,Yes,No,No,No,No,No,No,No,Yes,No,Busongora North,Kitswamba,Kitswamba,Nyakabale,NA,NA
+174,1,44,1,1,11,2,4,3,0,2,0,Housewife,No,No,Yes,No,No,No,No,No,No,No,Yes,No,Busongora North,Kitswamba,Kitswamba,Nyakabale,NA,NA
+175,0,20,1,2,01-May,0,0,2,0,0,0,Housewife,No,Yes,Yes,No,No,No,No,No,No,No,Yes,No,Busongora North,Kitswamba,Kitswamba,Kihoko,NA,NA
+176,0,20,1,0,9,3,2,3,0,0,1,Housewife,No,Yes,No,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Kitswamba,Kitswamba,Kihoko,NA,NA
+177,1,27,0,0,01-May,3,0,2,0,0,0,Household head,No,Yes,No,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Kitswamba,Kitswamba,Kihoko,NA,NA
+178,0,51,1,0,01-May,1,2,0,0,1,0,Housewife,No,Yes,No,Yes,No,Yes,No,No,No,No,Yes,No,Busongora North,Kitswamba,Kitswamba,Kitswamba,NA,NA
+179,0,26,1,0,01-May,4,0,1,0,0,0,Housewife,No,Yes,No,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Kitswamba,Kitswamba,Kitswamba,NA,NA
+180,1,24,1,2,6,4,0,2,0,0,0,Housewife,No,No,No,No,No,Yes,No,No,No,No,Yes,No,Busongora North,Kitswamba,Kitswamba,Kitswamba,NA,NA
+181,0,27,0,1,01-May,1,0,1,0,0,0,Household head,No,Yes,No,No,No,Yes,No,No,No,No,Yes,No,Busongora North,Kyabarungira,Kabatunda,Kyanzanga,NA,NA
+182,0,18,1,1,01-May,1,1,1,0,0,0,Housewife,No,No,No,No,No,No,Yes,No,No,No,Yes,No,Busongora North,Kyabarungira,Kabatunda,Kyanzanga,NA,NA
+183,1,55,1,1,01-May,3,0,0,0,2,0,Housewife,No,Yes,No,No,No,No,No,No,Yes,No,Yes,No,Busongora North,Kyabarungira,Kabatunda,Kyanzanga,NA,NA
+184,0,60,1,0,12,2,0,9,0,1,0,Household head,No,No,No,No,No,No,Yes,No,No,No,Yes,No,Busongora North,Kyabarungira,Karambi,Karambi,NA,NA
+185,0,58,0,NA,10,6,3,0,0,2,0,Household head,No,No,No,No,No,No,Yes,No,No,No,Yes,No,Busongora North,Kyabarungira,Kabatunda,Kyanzanga,NA,NA
+186,1,18,0,1,14,9,4,1,0,0,0,Son,No,No,No,No,No,No,Yes,No,No,No,Yes,No,Busongora North,Kyabarungira,Kabatunda,Kyanzanga,NA,NA
+187,0,55,1,1,16,5,4,3,0,3,1,Housewife,Yes,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Maliba,Bikone,Kakindo,NA,NA
+188,0,42,1,0,01-May,0,0,0,1,0,0,Sister to the household head,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Maliba,Bikone,Kakindo,NA,NA
+189,1,20,0,3,6,4,0,2,0,0,0,Son,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Maliba,Bikone,Kakindo,NA,NA
+190,0,43,1,2,12,2,4,2,2,0,0,Housewife,No,No,Yes,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Bugoye,Bugoye,Bugoye,NA,NA
+191,0,19,0,2,8,3,3,1,0,1,0,Son,No,No,Yes,Yes,Yes,No,No,No,No,No,Yes,No,Busongora North,Bugoye,Bugoye,Bugoye,NA,NA
+192,1,62,1,0,01-May,0,3,0,0,1,0,Widow,No,No,Yes,No,No,No,No,No,No,No,Yes,No,Busongora North,Bugoye,Ibanda,Bugoye,NA,NA
+193,0,70,1,0,10,4,0,5,0,0,1,Widow,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Bugoye,Ibanda,Ibanda,NA,NA
+194,0,35,0,3,7,4,1,2,0,0,0,Household head,No,No,Yes,Yes,No,No,No,No,No,Yes,Yes,No,Busongora North,Bugoye,Ibanda,Ibanda 1,NA,NA
+195,1,36,1,1,6,3,1,2,0,0,0,Household head,No,No,No,Yes,No,No,No,No,No,Yes,Yes,No,Busongora North,Bugoye,Ibanda,Ibanda,NA,NA
+196,0,40,1,3,7,2,3,0,2,0,0,Housewife,Yes,No,No,Yes,No,No,No,No,No,Yes,Yes,No,Busongora North,Bugoye,Ibanda,Ibanda 2,NA,NA
+197,0,42,0,1,9,3,3,2,1,0,0,Household head,Yes,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Bugoye,Ibanda,Ibanda 2,NA,NA
+198,1,40,1,1,10,3,3,2,2,0,0,Housewife,Yes,No,Yes,Yes,No,No,No,Yes,No,No,Yes,No,Busongora North,Bugoye,Ibanda,Ibanda,NA,NA
+199,0,44,1,1,10,2,2,4,2,0,0,Housewife,Yes,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Bugoye,Ibanda,Ibanda,NA,NA
+200,0,38,1,0,8,5,0,5,1,0,0,Housewife,No,No,Yes,No,Yes,No,No,Yes,No,No,Yes,No,Busongora North,Bugoye,Ibanda,Ibanda 2,NA,NA
+201,1,26,1,2,01-May,2,0,2,0,0,0,Housewife,No,No,No,Yes,No,No,No,No,No,No,Yes,No,Busongora North,Bugoye,Ibanda,Ibanda 2,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA

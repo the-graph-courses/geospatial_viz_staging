@@ -1,0 +1,127 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+  word_document:
+    toc: true
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages ----
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, 
+               here, 
+               outbreaks)
+
+# Source functions ----
+source(here("global/functions/misc_functions.R"))
+
+# Set default render for dataframes ----
+registerS3method("reactable_5_rows", "data.frame", reactable_5_rows)
+
+# Set default chunk options ----
+default_opts <- list(class.source = "tgc-code-block", 
+                     error = TRUE,
+                     render = reactable_5_rows)
+
+knitr::opts_chunk$set(default_opts)
+# Set template labels for custom chunk options ----
+knitr::opts_template$set(
+  example = list(echo = TRUE, eval = TRUE, default_opts),
+  practice = list(echo = FALSE, eval = FALSE, default_opts),
+  image = list(echo = FALSE, out.width = "75%", fig.align = "center", default_opts),
+  justcode = list(echo = TRUE, eval = FALSE, default_opts)
+)
+```
+
+# Learning objectives
+
+1.    You can include or exclude columns from a dataframe using the `select()` function from the {dplyr} package.
+
+# Introduction to the dataset
+
+In this lesson, we analyze a dataset of confirmed and suspected cases of Ebola hemorrhagic fever in Sierra Leone.
+
+
+```{r, render = reactable_5_rows, message = F}
+outbreaks::ebola_sierraleone_2014
+```
+
+# Introducing `select()`
+
+```{r image-demo, opt.label = image}
+#| fig.cap : "This is a figure caption"
+knitr::include_graphics(here("chapter_04_data_wrangling/images/admin.png"))
+```
+
+`dplyr::select()` lets us pick which columns (variables) to keep or exclude.
+
+We can select a column *by name*:
+
+```{r}
+yaounde %>% select(age) 
+```
+
+# Practice questions
+
+::: practice
+- <question_1_text>
+```{r q-1, opt.label = practice}
+q_ <- "YOUR_ANSWER_HERE" 
+.check_q_()
+.hint_q_()
+```
+
+- <question_2_text>
+```{r q-2, opt.label = practice}
+q_ <- "YOUR_ANSWER_HERE" 
+.check_q_()
+.hint_q_()
+```
+:::
+
+# Just display code
+```{r <chunk_name>, opt.label = justcode}
+
+```
+
+# Score print
+```{r grade_lesson, opt.label = practice}
+.score_print()
+```
+
+# Other divs
+
+::: key-point
+-   <bullet point>
+-   <bullet_point>
+:::
+
+::: watch-out
+-   <bullet_point>
+-   <bullet_point>
+:::
+
+# Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r tgc_contributors_list(ids = c("name"))`
+
+# References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   <ref>
+
+-   <ref>
+
+`r tgc_license()`

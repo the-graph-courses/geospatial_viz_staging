@@ -1,0 +1,478 @@
+---
+title: '\ '
+output:
+  # word_document:
+  #   toc: true
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: inline
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+```
+
+```{r,echo=FALSE}
+ggplot2::theme_set(new = theme_bw())
+options(scipen=10000)
+```
+
+------------------------------------------------------------------------
+
+<!-- # Geospatial analysis: R for GIS -->
+
+![](images/0-whitebox.JPG)
+
+## Introduction
+
+![](images/0-whitebox.JPG)
+
+• Spatial data provide insights 
+
+![](images/0-whitebox.JPG)
+
+• *Spread* of a disease, or
+
+![](images/0-whitebox.JPG)
+
+• *Situation* of an outbreak
+
+![](images/0-whitebox.JPG)
+
+• **Where** are the current disease hotspots?
+
+![](images/0-whitebox.JPG)
+
+• How have the hotspots **changed over time**?
+
+![](images/0-whitebox.JPG)
+
+• How is the **access** to health facilities?
+
+![](images/0-whitebox.JPG)
+
+![](images/gis_head_image.png)
+
+![](images/0-whitebox.JPG)
+
+• Today, **why to use R** to address these tasks.
+
+![](images/0-whitebox.JPG)
+
+## Learning objectives
+
+1.  Define what is a **geospatial analysis**.
+
+2.  Identify the main analytical task that a **GIS software** need to solve.
+
+3.  Identify the **advantages** of R as a GIS software.
+
+## Prerequisites
+
+This lesson requires familiarity with basic R and `{ggplot2}`: if you need to brush up, have a look at our introductory course on R and data visualization.
+
+```{r,eval=TRUE,echo=TRUE,message=FALSE}
+if(!require('pacman')) install.packages('pacman')
+pacman::p_load_gh("wmgeolab/rgeoboundaries")
+pacman::p_load(tidyverse, 
+               ggspatial, 
+               leaflet, 
+               mapview,
+               raster,
+               spData,
+               stars, 
+               tmap, 
+               here,
+               sf)
+```
+
+![](images/0-whitebox.JPG)
+
+## What is Geospatial analysis?
+
+![](images/0-whitebox.JPG)
+
+• Data with *geographic* locations or coordinates
+
+![](images/0-whitebox.JPG)
+
+• Related to positions on the Earth's surface.
+
+![](images/0-whitebox.JPG)
+
+• Essential to epidemiology.
+
+![](images/0-whitebox.JPG)
+
+• Identify **hot-spots** and potential **high-risk areas** for communicable disease spread;
+
+![](images/0-whitebox.JPG)
+
+• Map of malaria prevalence predictions in The Gambia (Moraga, 2019)
+
+![](images/0-whitebox.JPG)
+
+![](images/malaria_gambia_01.png)
+
+![](images/0-whitebox.JPG)
+
+• Let's see how the code looks like!
+
+![](images/0-whitebox.JPG)
+
+```{r,message=FALSE,warning=FALSE}
+# 👉 first, get packages:
+
+if(!require('pacman')) install.packages('pacman')
+pacman::p_load_gh("wmgeolab/rgeoboundaries")
+pacman::p_load(tidyverse, ggspatial, leaflet, 
+               raster, stars, here)
+```
+
+![](images/0-whitebox.JPG)
+
+```{r}
+# 👉 second, get data:
+
+# country boundaries
+gambia_boundaries <- geoboundaries(country = "Gambia", adm_lvl = 1)
+# malaria prevalence
+gambia_prevalence <- read_rds(here("ch06_basic_geospatial_viz",
+                                   "data", "gambia_prevalence.rds"))
+```
+
+![](images/0-whitebox.JPG)
+
+```{r}
+# 👉 third, plot data:
+
+ggplot() +
+  # with a background
+  annotation_map_tile(data = gambia_boundaries, zoomin = 0) +
+  # plus a prevalence surface
+  geom_stars(data = st_as_stars(gambia_prevalence)) +
+  # with a color scale
+  scale_fill_viridis_c(na.value = "transparent", alpha = 0.75) +
+  # and a coordinate system
+  coord_sf()
+```
+
+![](images/0-whitebox.JPG)
+
+• Here, skills for **geospatial visualization**,
+
+![](images/0-whitebox.JPG)
+
+• To make *accurate*, *elegant* and *informative* maps.
+
+![](images/0-whitebox.JPG)
+
+## R as a GIS
+
+![](images/0-whitebox.JPG)
+
+• Geospatial analysis needs a **geographic information system (GIS)**.
+
+![](images/0-whitebox.JPG)
+
+• *Manage*, *analyze*, and *visualize* spatial data. 
+
+![](images/0-whitebox.JPG)
+
+• Popular platforms, **ArcGIS** and **QGIS**, are *graphic-user-interface (GUI)*.
+
+![](images/0-whitebox.JPG)
+
+• So **why use R for geospatial work?** 
+
+![](images/0-whitebox.JPG)
+
+• Here five of its merits:
+
+![](images/0-whitebox.JPG)
+
+### (1/5) Reproducibility:
+
+![](images/0-whitebox.JPG)
+
+• Code is straightforward for anyone to re-run, 
+
+![](images/0-whitebox.JPG)
+
+• Easily build on other people's work
+
+![](images/0-whitebox.JPG)
+
+• Facilitates collaboration
+
+![](images/0-whitebox.JPG)
+
+• Paste this code and reproduce in your computer:
+
+![](images/0-whitebox.JPG)
+
+```{r,message=FALSE}
+# 👉 packages
+if(!require('pacman')) install.packages('pacman')
+pacman::p_load(sf, ggplot2)
+
+# 👉 data 
+nc <- st_read(system.file("shape/nc.shp", package = "sf"),
+              quiet = TRUE)
+# 👉 plot
+ggplot(data = nc) + 
+  geom_sf(aes(fill = SID74)) +
+  scale_fill_viridis_c()
+```
+
+![](images/0-whitebox.JPG)
+
+### (2/5)Reporting:
+
+![](images/0-whitebox.JPG)
+
+• `{Rmarkdown}`, `{flexdashboard}` and `{shiny}` to generate reports and *dashboards*.
+
+![](images/0-whitebox.JPG)
+
+• *Interactive* maps with `{leaflet}` instead of `{ggplot2}`:
+
+![](images/0-whitebox.JPG)
+
+```{r,message=FALSE}
+# 👉 packages
+if(!require('pacman')) install.packages('pacman')
+pacman::p_load(sf, leaflet)
+
+# 👉 data
+nc <- st_read(system.file("shape/nc.shp", package = "sf"),
+              quiet = TRUE)
+
+# 👉 plot
+pal <- colorNumeric("YlOrRd", domain = nc$SID74)
+leaflet(nc) %>%
+  addTiles() %>%
+  addPolygons(color = "white", fillColor = ~ pal(SID74),
+              fillOpacity = 1) %>%
+  addLegend(pal = pal, values = ~SID74, opacity = 1)
+```
+
+![](images/0-whitebox.JPG)
+
+### (3/5) Rich ecosystem:
+
+![](images/0-whitebox.JPG)
+
+• R with rapidly *growing libraries* 
+
+![](images/0-whitebox.JPG)
+
+• highly-active open-source community, 
+
+![](images/0-whitebox.JPG)
+
+• ready-to-use packages or tutorials.
+
+![](images/0-whitebox.JPG)
+
+• *interactive* map with one line of code!
+
+![](images/0-whitebox.JPG)
+
+• `{mapview}` instead of `{leaflet}`:
+
+![](images/0-whitebox.JPG)
+
+```{r,message=FALSE}
+# 👉 packages
+if(!require('pacman')) install.packages('pacman')
+pacman::p_load(sf, mapview)
+
+# 👉 data
+nc <- st_read(system.file("shape/nc.shp", package = "sf"),
+              quiet = TRUE)
+
+# 👉 plot
+mapview(nc, zcol = "SID74")
+```
+
+![](images/0-whitebox.JPG)
+
+### (4/5) Convenience:
+
+![](images/0-whitebox.JPG)
+
+• You already know R! 
+
+![](images/0-whitebox.JPG)
+
+• Explore new pieces of code.
+
+![](images/0-whitebox.JPG)
+
+::: rstudio-cloud
+
+![](images/0-graybox.JPG)
+
+As an example, we will use the `{tmap}` package and make minor modifications to it!
+
+![](images/0-graybox.JPG)
+
+First, run this chunk:
+
+```{r,warning=FALSE,message=FALSE}
+# 👉 packages
+if(!require('pacman')) install.packages('pacman')
+pacman::p_load(tmap, spData)
+
+# 👉 data
+load(here("ch06_basic_geospatial_viz/data/nz_elev.rda"))
+
+# 👉 plot
+tm_shape(nz_elev)  +
+  tm_raster(title = "elev", 
+            style = "cont",
+            palette = "-RdYlGn") +
+  tm_shape(nz) +
+  tm_borders(col = "red", 
+             lwd = 3) +
+  tm_scale_bar(breaks = c(0, 100, 200),
+               text.size = 1) +
+  tm_compass(position = c("LEFT", "center"),
+             type = "rose", 
+             size = 2) +
+  tm_credits(text = "J. Nowosad, 2019") +
+  tm_layout(main.title = "My map",
+            bg.color = "lightblue",
+            inner.margins = c(0, 0, 0, 0))
+```
+
+![](images/0-graybox.JPG)
+
+Now, apply any of the following suggestions to get used to how this package works:
+
+1.  Change the **map title** from "My map" to "New Zealand".
+2.  Update the **map credits** with your own name and today's date.
+3.  Change the **color palette** to "BuGn".
+4.  Try **other palettes** from <http://colorbrewer2.org/>
+5.  Put the **north arrow** in the top right corner of the map.
+6.  Improve the **legend title** by adding the legend units.
+7.  Increase the number of breaks in the **scale bar**.
+8.  Change the **borders' color** of the New Zealand's regions to black.
+9.  Decrease the line width.
+10. Change the **background color** to any color of your choice.
+:::
+
+![](images/0-whitebox.JPG)
+
+### (5/5) Integrated workflow:
+
+![](images/0-whitebox.JPG)
+
+• Combine geospatial visualization and statistical analyses, 
+
+![](images/0-whitebox.JPG)
+
+• all within a single script.
+
+![](images/0-whitebox.JPG)
+
+• For example, built 3D maps of the Monterey Bay using `{rayshader}`
+
+• Tutorial available: <https://www.tylermw.com/3d-maps-with-rayshader/>
+
+![](images/montbayabove.gif)
+
+![](images/0-whitebox.JPG)
+
+• Bivariate maps of unequal distribution of the income. 
+
+![](images/0-whitebox.JPG)
+
+• Tutorial available: <https://timogrossenbacher.ch/2019/04/bivariate-maps-with-ggplot2-and-sf/>
+
+![](images/0-whitebox.JPG)
+
+![](images/bivariate-map-sw.png){width="499"}
+
+![](images/0-whitebox.JPG)
+
+```{r}
+
+```
+
+![](images/0-whitebox.JPG)
+
+## Wrap up
+
+![](images/0-whitebox.JPG)
+
+• We learned why to use R as a GIS software,
+
+![](images/0-whitebox.JPG)
+
+• take advantage of its coding environment.
+
+![](images/0-whitebox.JPG)
+
+• But, which maps are we going to built?
+
+![](images/0-whitebox.JPG)
+
+![Figure 1. Thematic maps: (A) Choropleth map, (B) Dot map, (C) Density map, and (D) Basemap for a dot map.](images/intro_thematic_map_06.png){width="484"}
+
+![](images/0-whitebox.JPG)
+
+• How to built -step by step- different types of **Thematic maps** using the `{ggplot2}` package, 
+
+![](images/0-whitebox.JPG)
+
+• different data sources and illustrative annotations.
+
+![](images/0-whitebox.JPG)
+
+![Figure 2. {ggplot2} map with text annotations, a scale bar and north arrow.](images/multilayer_map_01.png){width="409"}
+
+![](images/0-whitebox.JPG)
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r tgc_contributors_list(ids = c("avallecam", "kendavidn"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   *Batra, Neale, et al. (2021). The Epidemiologist R Handbook. Chapter 28: GIS Basics*. (2021). Retrieved 01 April 2022, from <https://epirhandbook.com/en/gis-basics.html>
+
+-   *Baumer, Benjamin S., Kaplan, Daniel T., and Horton, Nicholas J. Modern Data Science with R. Chapter 17: Working with geospatial data*. (2021). Retrieved 05 June 2022, from <https://mdsr-book.github.io/mdsr2e/ch-spatial.html>
+
+-   *Lovelace, R., Nowosad, J., & Muenchow, J. Geocomputation with R. Chapter 2: Geographic data in R.* (2019). Retrieved 01 April 2022, from <https://geocompr.robinlovelace.net/spatial-class.html>
+
+-   *Moraga, Paula. Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny. Chapter 12: Building a dashboard to visualize spatial data with flexdashboard*. (2019). Retrieved 13 September 2022, from <https://www.paulamoraga.com/book-geospatial/sec-flexdashboard.html>
+
+-   *Moreno, M., and Bastille, M. Drawing beautiful maps programmatically with R, sf and ggplot2 --- Part 1: Basics.* (2018). Retrieved 13 September 2022, from <https://r-spatial.org/r/2018/10/25/ggplot2-sf.html.>
+
+-   *Nowosad, J. Basics of Spatial Data Analysis Workshop.* (2019). Retrieved 13 September 2022, from <https://github.com/Nowosad/whyr_19w/blob/master/code/spatial_vis.R>
+
+-   *Nowosad, J. The Landscape of Spatial Data Analysis in R.* (2019). Retrieved 13 September 2022, from <https://jakubnowosad.com/whyr_19/#1>
+
+`r tgc_license()`

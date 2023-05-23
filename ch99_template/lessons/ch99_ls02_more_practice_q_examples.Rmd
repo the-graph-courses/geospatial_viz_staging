@@ -1,0 +1,126 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+  word_document:
+    toc: true
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: console
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+pacman::p_load_gh("afrimapr/afrilearndata")
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(class.source = "tgc-code-block")
+
+# Source autograder script quietly 
+mute(here("ch99_template/lessons/ch99_ls02_more_practice_q_examples_autograder.R"))
+```
+
+# Introduction
+
+This document proposes gives some additional examples of autograders.
+
+## Functions, conditionals and loops
+
+::: practice
+◘ Write a function that adds the number two to a vector.
+
+```{r eval = FALSE}
+# Write and view your answer:
+Q_add_two <- function() {
+  # function body here
+}
+Q_add_two
+```
+
+```{r eval = FALSE,include = FALSE}
+# Check your answer:
+.CHECK_Q_add_two()
+.HINT_Q_add_two()
+```
+
+------------------------------------------------------------------------
+
+◘ Let x equal the measure of the body temperature of patients that arrived at the emergency of your hospital. Write a function that returns the string "Fever" if the temperature, x, is equal to or above 38 degrees Celsius. (Note that the function does not need to work on more number at a time; doesn't need to work on a vector of length above 1.)
+
+```{r eval = F}
+# Write and view your answer:
+Q_fever_function <- function(x){
+  if(CONDITION_HERE) "OUTPUT_STRING_HERE"
+}
+Q_fever_function
+```
+
+```{r eval = FALSE, include = FALSE}
+# Check your answer:
+.CHECK_Q_fever_function()
+.HINT_Q_fever_function()
+```
+
+------------------------------------------------------------------------
+
+◘ Using the `df2` data set below, create a loop that calculates the mean of each variable. Store it in a vector called `df2_means`, while defining its correct type and dimension.
+
+```{r eval = FALSE}
+# Write and view your answer:
+set.seed(1)
+df2 <- tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rpois(10, 10),
+  d = rnorm(10),
+  e = rpois(10, 3),
+  f = rnorm(10),
+)
+
+df2_means <- vector()
+for (i in 1:ncol(df2)) {
+  # Here, write code to populate the vector `df2_means` 
+  # with the mean values of each column in `df2`
+}
+
+Q_loop_mean <- df2_means
+Q_loop_mean
+```
+
+```{r eval = FALSE,include = FALSE}
+# Check your answer:
+.CHECK_Q_loop_mean()
+.HINT_Q_loop_mean()
+```
+:::
+
+## ggplot
+
+::: practice
+◘ Create a choropleth map from the `afrilearndata::afriairports` object showing all airport locations, colored according to the `type` variable.
+
+```{r eval = FALSE}
+# Write and view your answer:
+Q_gg_chor <- 
+  ggplot(data = afrilearndata::afriairports) +
+  geom__(_______________)
+Q_gg_chor
+```
+
+```{r include = FALSE}
+# Check your answer:
+.CHECK_Q_gg_chor()
+.HINT_Q_gg_chor()
+```
+:::

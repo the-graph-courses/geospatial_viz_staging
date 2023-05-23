@@ -1,0 +1,31 @@
+---
+subtitle: "Further data analysis with R (draft)"
+toc-title: "Table of contents"
+author: "A guidebook for analyzing public health data with R"
+# detail: "This document serves as a course accompaniment for the 'Intro to data analysis with R' course that can be found on https://thegraphcourses.org"
+credits: "This document serves as a course accompaniment for the 'Further data analysis with R' course that can be found on https://thegraphcourses.org. <br> The GRAPH Courses is a project of the Global Research and Analyses for Public Health (GRAPH) Network, with the support of the World Health Organization (WHO)."
+date: "`r format(Sys.Date(), '%B %Y')`"
+---
+
+```{r include = F}
+# reduce default plot size
+knitr::opts_chunk$set(fig.asp = 0.8, fig.width = 5)
+```
+
+
+```{r echo = F, include = F, warning = F, message = F}
+# Load packages ----
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(clock,
+               knitr,
+               tidyverse, 
+               here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T, render = knitr::knit_print)
+
+```
+

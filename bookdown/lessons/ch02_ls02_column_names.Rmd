@@ -1,0 +1,345 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: yes
+    toc: yes
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+  word_document:
+    toc: yes
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, echo = F, message = F, warning = F}
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load("tidyverse",
+               "knitr",
+               "janitor",
+               "here",
+               "skimr",
+                "inspectdf",
+               update=F)
+
+
+# Source functions 
+source(here::here("global/functions/misc_functions.R"))
+
+# default render
+registerS3method("reactable_5_rows", "data.frame", reactable_5_rows)
+knitr::opts_chunk$set(class.source = "tgc-code-block")
+
+## autograders
+suppressMessages(source(here::here(("ch02_data_cleaning_pipeline/lessons/ch02_ls02_column_names_autograder.R"))))
+```
+
+------------------------------------------------------------------------
+
+# Data cleaning: tidying column names
+
+## Learning objectives
+
+1.  You can use `janitor::clean_names()` to column names automatically.
+2.  You can use `rename()` and `rename_with()` to clean column names manually.
+
+## Intro to the lesson
+
+In R, column names are the "header" or "top" value of a column. They are used to refer to columns in the code, and serve as a default label in figures. They should have "clean", standardized syntax so that we can work with them, and so that our code can be readable to other coders.
+
+::: pro-tip
+Ideally, column names:
+
+-   should be short
+-   should have no spaces or periods(space and periods should be replaced by underscore "\_")
+-   should have no unusual characters(&, #, \<, >)
+-   should have a similar style
+:::
+
+In this lesson, we will explore how to clean column names manually and automatically in R.
+
+::: side-note
+As a reminder, the data we are cleaning is the data from the COVID-19 serological survey conducted in Yaounde, Cameroon.
+:::
+
+```{r, message = F, include=T}
+yaounde <- read_csv(here::here('ch02_data_cleaning_pipeline/data/yaounde_data.csv'))
+```
+
+## Columns of our Data
+
+We can use the `names()` function from base R. Or return to this chapter's intro to have a look at the output of `skim()`
+
+```{r, message = F, include=T, render = knitr::knit_print}
+names(yaounde)
+```
+
+We can see that:
+
+-   some names contain spaces
+-   some names contain special characters such as `..`
+-   some names are in upper case while some are not
+
+::: practice
+1.  Display the names of the `typhoid` dataset.
+
+```{r,eval = FALSE,echo=FALSE}
+q1 <- "YOUR ANSWER HERE"
+.check_q1()
+.hint_q1()
+```
+:::
+
+## Automatically clean column names
+
+### `janitor::clean_names()`
+
+A handy function for standardizing column names is the `clean_names()` from the {janitor} package.
+
+![](../images/janitor_clean_names.png){width="400"}
+
+::: key-point
+The function `clean_names()`: -
+
+-   Converts all names to consist of only underscores, numbers, and letters.
+
+-   Parses letter cases and separators to a consistent format. (default is snake_case)
+
+-   Handles special characters(&, #, \<, >) or accented characters.
+:::
+
+```{r, message = F,warning=FALSE, render = knitr::knit_print}
+yaounde %>%
+  clean_names() %>%
+  names()
+```
+
+::: recap
+From this output, we can see that:
+
+-   upper case variable names were converted to lower case (e.g., `EDUCATION` is now `education`)
+
+-   spaces inside the variable names have been converted to underscores (e.g., `id ind` is now `id_ind`)
+
+-   periods(`.`) have all been replaced by underscores (e.g., `is.smoker` is now `is_smoker`)
+:::
+
+
+::: practice
+2.  Use the `clean_names()` function from {janitor} to clean the variables names `typhoid` dataset. **Do not display the column names** 
+
+```{r,eval = FALSE,echo=FALSE}
+q2 <- "YOUR ANSWER HERE"
+.check_q2()
+.hint_q2()
+```
+
+
+:::
+## Manually cleaning column names
+
+We can also rename columns manually, either as an alternative to the automatic procedure described above or **in addition to the automatic step above**.
+
+We will first illustrate how to manually clean column names as an alternative to the automatic procedure using the functions `rename()` and `rename_with()`.
+
+### `rename()` and `rename_with()`
+
+::: recap
+The `rename()` function is simply a way to change variable names. It was covered in our data wrangling chapter.
+
+As a reminder, its syntax is so: `rename(new_name = old_name)`
+:::
+
+Here, manually, we could rename `weight kg` to `weight`, `height cm` to `height`, `is.smoker` to `smoker`, `is.pregnant` to `pregnant` and `is.medicated` to `medicated`.
+
+```{r, eval=FALSE, echo=TRUE, render = knitr::knit_print}
+yaounde %>% rename(weight = `weight kg`,
+                   height = `height cm`,
+                   smoker = is.smoker,
+                   pregnant = is.pregnant,
+                   medicated = is.medicated) %>%
+            names()
+```
+
+::: watch-out
+But this would make a long list if we have a dataset with 300 columns. Let's see how to do so with `rename_with()`.
+:::
+
+Instead of changing each column individually, `rename_with` is a handy shortcut to do the same modification to all (or a collection of) column names.
+
+::: vocab
+The arguments of `rename_with` are: a data frame
+
+-   a function to apply to each column name
+
+-   a selection of column to rename (by default all columns)
+:::
+
+Say, for example, we want all the column names to be in lower case, we can either change all the columns in upper case to lower case, 1 at a time (which would be a time consuming exercise), or we can use the rename_with function;
+
+```{r, render = knitr::knit_print}
+yaounde %>% 
+  rename_with(tolower) %>%
+  names()
+```
+
+Here we see that all columns such as `AGE` and `SEX` etc. have been transformed to lower case.
+
+::: practice
+3.  Manually rename the following column names in the `typhoid` dataset; `CaseorControl`and `Levelofeducation` to `case_control`, `education_level`, respectively. 
+
+```{r,eval = FALSE,echo=FALSE}
+q3 <- "YOUR ANSWER HERE"
+.check_q3()
+.hint_q3()
+```
+
+4.  Convert all the column names in the `typhoid` dataset to lower case
+
+```{r,eval = FALSE,echo=FALSE}
+q4 <- "YOUR ANSWER HERE"
+.check_q4()
+.hint_q4()
+```
+
+:::
+
+## `str_replace` {.unnumbered}
+
+::: key-point
+The `rename_with` function can also be used for more complex operations, such as, modifying column names with unwanted characters (whitespaces, special characters).
+:::
+
+We use a new function called `str_replace` to replace the whitespaces from our column names with an underscore.
+
+::: vocab
+The function allows us to replace matched patterns in a string. The arguments are:
+
+-   a pattern such as `"is."` or `"-"`
+
+-   a replacement pattern
+:::
+
+Let's build on what we did before. We corrected for upper cases, now let's correct whitespaces. 
+
+```{r, render = knitr::knit_print}
+yaounde %>% 
+  rename_with(tolower) %>%
+  rename_with(str_replace, pattern = " ",replacement = "_") %>%
+  names()
+```
+
+::: watch-out
+To replace special characters like the period (`.`), we adjust the syntax slightly by adding `\\` before the special character.
+:::
+
+```{r, render = knitr::knit_print}
+yaounde %>% 
+  #correcting for upper cases
+  rename_with(tolower) %>%
+  #correcting for white spaces
+  rename_with(str_replace, pattern = " ",replacement = "_") %>%
+  #correcting for periods
+  rename_with(str_replace, pattern = "\\.",replacement = "_") %>%
+  names()
+```
+
+::: watch-out
+Note, however, how only the first occurrence of `.` was replaced. If we want to replace all occurrences of `.` we can use the function `str_replace_all`.
+
+Here we see that `treatment..combinations` has become `treatment._combinations`: still not ideal as a column name.
+:::
+
+```{r, render = knitr::knit_print}
+yaounde %>% 
+  #correcting for upper cases
+  rename_with(tolower) %>%
+  #correcting for ALL white spaces
+  rename_with(str_replace_all, pattern = " ",replacement = "_") %>%
+  #correcting for ALL periods
+  rename_with(str_replace_all, pattern = "\\.",replacement = "_") %>%
+  names()
+```
+
+But even with this, we still have weird column names such as `symptoms__` or `treatment__combinations`. These names are cleaned automatically by {janitor}'s `clean_names()` to `symptoms` and `treatment_combinations`: remember to use this function first! **It will save you a lot of trouble/manipulations.** 
+
+
+
+# Automatic then manual cleaning of column names
+
+Evidently, manually cleaning column names can be a cumbersome task, particularly when cleaning a large dataset with many variables. A combination of the automatic and manual procedure is more desirable as it not only saves on time, but can help make our column names more readable. We can start with the automatic clean-up, then check there are no weird column names remaining (which would need manual cleanup).
+
+Here is an example of combining automatic and manual cleaning: a more appropriate cleanup would be to standardise the column names, first, and then remove the prefix `is_` from all columns.
+
+```{r render = reactable_5_rows}
+yaounde %>% 
+  # standardize column name syntax
+  clean_names() %>%
+  # manually re-name columns
+  rename_with(str_replace_all, pattern = "is_",replacement = "")
+```
+
+Now let's save this first step of cleaning as a dataset. 
+
+::: pro-tip
+It is good practice to save your dataset regularly in different steps of cleaning. In case you should find later on that your cleaning generated a data manipulation error and need to go back through your cleaning steps !
+:::
+
+```{r, render = knitr::knit_print}
+yaounde_cleaned_column_names <- 
+  yaounde %>% 
+  # standardize column name syntax
+  clean_names() %>%
+  # manually re-name columns
+  rename_with(str_replace_all, pattern = "is_",replacement = "")
+
+write_csv(yaounde_cleaned_column_names,
+          here::here('ch02_data_cleaning_pipeline/data/yaounde_data_clean_names.csv'))
+```
+
+::: practice
+
+5.  Standardize the column names in the `typhoid` dataset then; 
+
+-  replace `or_` with `_`
+
+-  replace `of` with `_`
+
+- rename variables `below10years` `n1119years` `n2035years` `n3644years`, `n4565years` `above65years` to
+ `num_below_10_yrs` `num_11_19_yrs` `num_20_35_yrs` `num_36_44_yrs`, `num_45_65_yrs` `num_above_65_yrs`
+
+```{r,eval = FALSE,echo=FALSE}
+q5 <- "YOUR ANSWER HERE"
+.check_q5()
+.hint_q5()
+```
+
+:::
+
+## Wrapping up
+In this lesson, we have been able to automatically and manually clean column names. This is only the first step to fixing the structural errors in our data. The next step would be removing any empty rows or columns from the data. We will be tackling this in the next lesson.
+
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson: `r tgc_contributors_list(ids = c("eem", "lolovanco"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   Horst, A. (2021). *Dplyr-learnr*. <https://github.com/allisonhorst/dplyr-learnr> (Original work published 2020)
+
+-   Batra, Neale, et al. The Epidemiologist R Handbook. 2021.*Cleaning data and core functions*. <https://epirhandbook.com/en/cleaning-data-and-core-functions.html#cleaning-data-and-core-functions>
+
+Artwork was adapted from:
+
+-   Horst, A. (2021). *R & stats illustrations by Allison Horst*. <https://github.com/allisonhorst/stats-illustrations> (Original work published 2018)
+
+```{r, include = F}
+ # knitr::purl(input = here::here("chapter_04_data_wrangling/lessons/01_select_rename.Rmd"),
+ #             output = here::here("chapter_04_data_wrangling/lessons/01_select_rename.R"),
+ #             documentation = 2)
+```

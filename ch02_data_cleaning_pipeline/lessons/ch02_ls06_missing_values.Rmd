@@ -1,0 +1,370 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: yes
+    toc: yes
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+  word_document:
+    toc: yes
+---
+```{r, echo = F, message = F, warning = F}
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load("tidyverse",
+               "knitr",
+               "janitor",
+               "here",
+               "skimr",
+               "inspectdf",
+               update=F)
+
+
+# Source functions 
+source(here::here("global/functions/misc_functions.R"))
+
+# default render
+registerS3method("reactable_5_rows", "data.frame", reactable_5_rows)
+knitr::opts_chunk$set(class.source = "tgc-code-block")
+
+## autograders
+suppressMessages(source(here::here(("ch02_data_cleaning_pipeline/lessons/ch02_ls06_missing_values_autograder.R"))))
+
+# #Limit the number of lines to display
+# hook_output <- knit_hooks$get("output")
+# knit_hooks$set(output = function(x, options) {
+#   lines <- options$output.lines
+#   if (is.null(lines)) {
+#     return(hook_output(x, options))  # pass to default hook
+#   }
+#   x <- unlist(strsplit(x, "\n"))
+#   more <- "..."
+#   if (length(lines)==1) {        # first n lines
+#     if (length(x) > lines) {
+#       # truncate the output, but add ....
+#       x <- c(head(x, lines), more)
+#     }
+#   } else {
+#     x <- c(more, x[lines], more)
+#   }
+#   # paste these lines together
+#   x <- paste(c(x, ""), collapse = "\n")
+#   hook_output(x, options)
+# })
+``` 
+
+------------------------------------------------------------------------
+
+<!-- # Data cleaning: missing values -->
+
+## Learning objectives
+
+1.  You explore `NA` values using `is.na()` to test for missing values.
+2.  You will learn that some `NA` values are normal with the example of gender-specific variables
+2.  You will replace missing values encoded differently with `NA`s using `na_if()` 
+3.  You will use `replace_na()` to replace `NA` with another value. 
+  
+
+## Intro to the lesson
+
+The most common problem related to data cleaning is handling missing values. It can be difficult to perform statistical analysis on data where one or more values in the data are missing.
+In this lesson, we will explore how to handle missing values.
+
+::: pro-tip
+Too many missing variables: small sample size of complete and hence **a bias** in analysis ! 
+
+**The smaller the dataset, the bigger the bias problem !** 
+:::
+
+
+## Our data
+
+::: recap 
+The data we are cleaning is the data from the COVID-19 serological survey conducted in Yaounde, Cameroon. 
+
+We will use the version of the dataset with:
+-   standardised column names
+-   no empty columns and rows
+-   no duplicates
+-   cleaned column content and types
+:::
+
+```{r, message = F, include=T, warning=FALSE}
+
+#data frame
+yaounde <- read.csv(here::here('ch02_data_cleaning_pipeline/data/yaounde_cleaned.csv'))
+
+```
+
+## Identifying missing values
+
+We can identify the number of missing values for each variable from the `n_missing` attribute of the skim output.
+
+
+```{r, message = F,warning=FALSE, render = reactable_5_rows}
+yaounde %>%
+  skim() %>%
+  select(skim_variable,n_missing, complete_rate) %>%
+  arrange(desc(n_missing))
+```
+
+::: practice
+
+1. Identify the number of missing values for each variable in the `typhoid` dataset.
+
+```{r,eval = FALSE,echo=FALSE}
+q1 <- "YOUR ANSWER HERE"
+.check_q1()
+.hint_q1()
+```
+:::
+
+## What to do with variables with missing data ?
+
+### Drop the variables {.unnumbered}
+
+Here we define a vector of columns that are less than 10% complete which we will simply drop altogether from further analysis: they cannot supply unbiased information. 
+
+Looking above, we see that these columns are `drugsource`, `consultation`,`sequelae`, and `respiration_frequency`. So we expect to remove 4 columns.
+
+We check that we have correctly dropped these 4 columns by printing `ncol()` before and after our manipulation. 
+
+```{r, message = F,warning=FALSE, render = knit_print}
+columns_with_too_many_missing <- 
+  yaounde %>%
+  skim() %>%
+  select(skim_variable,n_missing, complete_rate) %>%
+  filter(complete_rate < 0.1) %>%
+  select(skim_variable) %>%
+  pull()
+
+ncol(yaounde)
+
+yaounde_dropped_incomplete <- 
+  yaounde %>%
+  select(-columns_with_too_many_missing)
+
+ncol(yaounde_dropped_incomplete)
+
+```
+
+```{r, message = F,warning=FALSE, render = reactable_5_rows}
+yaounde_dropped_incomplete %>%
+  skim() %>%
+  select(skim_variable,n_missing, complete_rate) %>%
+  arrange(desc(n_missing))
+```
+
+### Make subsets where the variable has complete information {.unnumbered}
+
+::: recap 
+Your go-to for checking if a column or a row is `NA` in a dataframe is the `is.na()` function.
+:::
+
+You may want to keep only patients that have complete drug treatment information.
+
+```{r, message = F,warning=FALSE, render = knit_print}
+nrow(yaounde)
+
+yaounde_subset_complete_drugs <- 
+  # We must use the version of the dataset without overly incomplete variables, else the variable drugsource will bias our subsetting
+  yaounde_dropped_incomplete %>%
+  filter(across(contains("drug"),
+                ~!is.na(.x)))
+
+nrow(yaounde_subset_complete_drugs)
+```
+
+::: watch-out
+The number of patients we can consider for further analysis drops from 971 to 295. Our sample size is reduced but we can still perform further statistical analysis as long as we are careful of checking for biases in this population. We should, for example, plot key variables such as age, BMI, etc. to check that their histograms are not biased. 
+:::
+
+### Some missing data makes sense! The example of gender specific data {.unnumbered}
+
+As we know, men cannot be pregnant. So having a 56% incompleteness for the variable indicating pregnancy could just reflect the proportion of men in the study, not the percentage of missing data! 
+
+Let's look further and contextualize this variable! 
+
+```{r, message = F,warning=FALSE, render = reactable_5_rows}
+yaounde %>%
+  filter(sex=="female") %>%
+  count(pregnant)
+```
+We see that we have 549 out of 971 patients that are women. 
+
+How complete are our records of pregnancy, for women? We see that we only have 4 female patients missing information `NA` on their pregnancy BUT 57 women are also categorized as having given `no response`. In our analysis, this comes down to the same value as `NA` ("we do not know").
+
+We should:
+-   Ask the data collectors if this "no reponse" can mean something more than missing information
+-   Convert the `no response` to `NA`
+
+:::vocab
+We can convert a value to `NA` using the `na_if()` function within `mutate()` 
+
+The syntax is: `mutate(column = na_if(column, value_to_convert_to_NA))`
+:::
+
+```{r, message = F,warning=FALSE, render = reactable_5_rows}
+yaounde %>%
+  filter(sex=="female") %>%
+  mutate(pregnant = na_if(pregnant, "no response")) %>%
+  count(pregnant)
+```
+
+Then we can do two things : 
+-   Save this subset dataset for women and work with it when we want to investigate female related inquiries
+-   Change the global dataset to differenciate these two types of `NA`: for men it means "Non applicable" and for a women it is a true `NA` (i.e. missing data)
+
+Let's edit the entire dataset, to keep all our data together.
+
+```{r, message = F,warning=FALSE, render = reactable_5_rows}
+yaounde %>%
+  mutate(pregnant = na_if(pregnant, "no response")) %>%
+  # by default, all other variables are set to NA
+  mutate(pregnant= case_when(sex=="female" & !is.na(pregnant) ~ pregnant,
+                             sex=="male" ~ "non applicable")) %>%
+  count(pregnant)
+```
+It's always good to check what we did so let's verify that the number of men is the same as the number of `non applicable`: 422.
+
+```{r, message = F,warning=FALSE, render=knit_print}
+nrow(yaounde %>% filter(sex=="male"))
+```
+
+All good !
+
+::: side-note
+This way, we are also ensuring data correctness: if the sex of the patient is male, we declare it is impossible for there to be pregnancy information.
+:::
+
+### Be wary of hidden `NA` values ! {.unnumbered}
+
+We saw for the `pregnant` variable that we had "hidden" `NA` values entered as `no response`. There is the same occurence in the `medicated` variable. 
+
+```{r, message = F,warning=FALSE, render = reactable_5_rows}
+yaounde %>% 
+  count(medicated)
+```
+
+Now let's correct it !
+
+```{r, message = F,warning=FALSE, render = reactable_5_rows}
+yaounde %>%
+  mutate(medicated = na_if(medicated, "no response")) %>%
+  count(medicated)
+```
+
+::: pro-tip
+When we put it all together, we can use `across` to handle both columns (`pregnant` and `medicated`) at the same time. 
+:::
+
+## Replace with values / Impute missing data {.unnumbered}
+
+We will have a complex analysis on this later using MICE. Stay tuned! 
+
+In this dataset, `smoker` has 2 missing values! let's look into it. 
+
+```{r, message = F,warning=FALSE, render = reactable_5_rows}
+yaounde %>%
+  skim() %>%
+  select(skim_variable,n_missing, complete_rate) %>%
+  filter(skim_variable=="smoker")
+```
+
+Let's have a look:
+
+```{r, message = F,warning=FALSE, render = reactable_5_rows}
+yaounde %>%
+  count(smoker)
+```
+Imagine you wanted to make a graph and wanted to recode those 2 `NA` to a category name that makes more sense to the general public.
+
+:::side-note
+`NA` are of common use for programmers but for a non-coder, general public, they may not even know what an "NA" is. Make sure to always rename them with "missing value" or "unknown" when presenting your data. 
+:::
+
+:::vocab
+The function `replace_na()` allows to substitute all `NA` values with another value (string or numeric). It is combined to `mutate()`
+
+The syntax is as follows: 
+
+`mutate(column = replace_na(column, replacement_value_string_or_numeric))`
+:::
+
+```{r, message = F,warning=FALSE, render = reactable_5_rows}
+yaounde %>%
+  mutate(smoker = replace_na(smoker, "missing information")) %>%
+  count(smoker)
+```
+::: recap
+`na_if` converts: 
+
+a value (numeric/character) -> `NA`. 
+
+`replace_na` converts: 
+
+`NA` -> a value (numeric/character)
+:::
+
+## Global overview
+
+As a last step, let's look how many of the variables (`ncol(yaounde)`) collected have a complete information (`complete_rate==1`). 
+
+```{r, message = F,warning=FALSE, render = knit_print}
+ncol(yaounde)
+
+ncol(yaounde %>%
+       skim() %>%
+       filter(complete_rate==1))
+```
+
+A bit more than half our variables have complete information. Seeing that these include essential demographic information such as `age`, `sex` etc, this is pretty satisfying. We can perform an analysis using this dataset. 
+
+## Putting it all together
+
+```{r, message = F,warning=FALSE, render = reactable_5_rows}
+yaounde_missing_handled <- 
+  yaounde %>%
+  # remove unusable data columns defined above
+  select(-columns_with_too_many_missing) %>%
+  # handle hidden NA 
+  mutate(across(c(pregnant,medicated),
+                ~ na_if(.x, "no response"))) %>%
+  # handle normal missing values by redefining them
+  mutate(pregnant= case_when(sex=="female" & !is.na(pregnant) ~ pregnant,
+                             sex=="male" ~ "non applicable"))
+```
+
+**Missing values were the LAST step !!** 
+
+Let's now save our totally cleaned dataset, ready for plotting or statistical analysis: we made it, **BRAVO** ! 
+
+```{r, message = T,warning=FALSE}
+write_csv(yaounde_missing_handled,
+          here::here('ch02_data_cleaning_pipeline/data/yaounde_clean.csv'))
+```
+
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+`r tgc_contributors_list(ids = c("eem", "lolovanco"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   Horst, A. (2021). *Dplyr-learnr*.
+    <https://github.com/allisonhorst/dplyr-learnr> (Original work
+    published 2020)
+
+-   *Subset columns using their names and types---Select*. (n.d.).
+    Retrieved 31 December 2021, from
+    <https://dplyr.tidyverse.org/reference/select.html>
+
+Artwork was adapted from:
+
+-   Horst, A. (2021). *R & stats illustrations by Allison Horst*.
+    <https://github.com/allisonhorst/stats-illustrations> (Original work
+    published 2018)

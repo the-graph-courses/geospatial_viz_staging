@@ -1,0 +1,616 @@
+---
+title: '\ '
+output:
+  # word_document:
+  #   toc: true
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: inline
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+# Source autograder script quietly 
+suppressMessages(source(here::here("ch06_basic_geospatial_viz/lessons/ch06_ls09_utm_autograder.R")))
+```
+
+```{r,echo=FALSE}
+ggplot2::theme_set(new = theme_bw())
+```
+
+<!-- # Geospatial analysis: UTM coordinate system -->
+
+## Introduction
+
+So far, all spatial data visualized contain locations measured in **angular units** (longitude/latitude). But, what if data came in a different coordinate system measured in **linear units**? Like the *planar coordinates* of this summary figure!
+
+![Figure 1. Actual Earth, Geoid, Ellipsoid and Planar Coordinates. The Ellipsoid uses angular units (longitude/latitude), and Planar Coordinates uses linear units (foots or meters). Source: [Rhumbline](https://youtu.be/Z41Dt7_R180).](images/crs-datum_projection-closer.png)
+
+In this lesson we are going to learn how to **set up** our data with a **UTM** Coordinate System, measured in **meters** instead of longitude/latitude, and how to **transform** spatial objects from UTM to longitude/latitude, and vice versa!
+
+## Learning objectives
+
+1.  Configure data with **UTM coordinate system** using the `st_as_sf()` function.
+
+2.  Change the **CRS projection** of a `sf` object using the `st_transform()` function.
+
+## Prerequisites
+
+This lesson requires the following packages:
+
+```{r,eval=TRUE,echo=TRUE,message=FALSE}
+if(!require('pacman')) install.packages('pacman')
+
+pacman::p_load(malariaAtlas,
+               colorspace,
+               ggplot2,
+               cholera,
+               spData,
+               dplyr,
+               here,
+               rio,
+               sf)
+
+pacman::p_load_gh("afrimapr/afrilearndata",
+                  "wmgeolab/rgeoboundaries")
+```
+
+This lesson requires familiarity with `{dplyr}`: if you need to brush up, have a look at our introductory course on data wrangling.
+
+## Set up a CRS Projection to UTM coordinates
+
+![](images/0-whitebox.JPG)
+
+• If you receive a data frame with coordinates, but *without* a CRS projection.
+
+![](images/0-whitebox.JPG)
+
+• and you want to make a `ggplot` map with,
+
+![](images/0-whitebox.JPG)
+
+• You can use `st_as_sf()` from `{sf}`.
+
+![](images/0-whitebox.JPG)
+
+::: recap
+![](images/0-graybox.JPG)
+
+• For **point** data we need: coordinates (`"x","y"`) and the CRS (`4326`)
+
+![](images/0-graybox.JPG)
+
+```{r,eval=FALSE}
+fatalities %>% 
+  
+  ggplot() +
+  geom_sf(alpha = 0.3)
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+• However, what if you receive coordinates **different to** *longitude* and *latitude*?
+
+![](images/0-whitebox.JPG)
+
+• Let's use **malaria prevalence in The Gambia**.
+
+![](images/0-whitebox.JPG)
+
+• From children obtained at **65 villages**:
+
+![](images/0-whitebox.JPG)
+
+### Malaria prevalence
+
+![](images/0-whitebox.JPG)
+
+• First, we read the `gambia_summarized.rds` file with [`{readr}`](https://readr.tidyverse.org/).
+
+![](images/0-whitebox.JPG)
+
+```{r,message=FALSE,warning=FALSE}
+# "ch06_basic_geospatial_viz/data/gambia_summarized.rds"
+
+gambia_point_summary <- 
+  
+
+gambia_point_summary
+```
+
+![](images/0-whitebox.JPG)
+
+• Data frame with 65 observations and 5 variables:
+
+![](images/0-whitebox.JPG)
+
+-   `x`: x coordinate of the village (**UTM**),
+-   `y`: y coordinate of the village (**UTM**),
+-   `total`: total number of tests performed,
+-   `positive`: number of *positive* tests, and
+-   `prev`: malaria *prevalence* in each village.
+
+![](images/0-whitebox.JPG)
+
+::: vocab
+• **UTM** stants for Universal Transverse Mercator, another coordinate system.
+:::
+
+![](images/0-whitebox.JPG)
+
+#### Set up the CRS projection {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• To make a map with `ggplot2` and `geom_sf()`,
+
+![](images/0-whitebox.JPG)
+
+• We need to transform the `data.frame` to an `sf` object.
+
+![](images/0-whitebox.JPG)
+
+• To use `st_as_sf()` from `{sf}`, we need to specify a CRS projection.
+
+![](images/0-whitebox.JPG)
+
+• But, **units** of `x` and `y` are **not** *Geographic* coordinates (longitude/latitude).
+
+![](images/0-whitebox.JPG)
+
+• Instead, these are **UTM format (Easting/Northing)**, or **Projected** coordinates.
+
+![](images/0-whitebox.JPG)
+
+::: vocab
+![](images/0-graybox.JPG)
+
+• Two **CRS coordinate systems:**
+
+![](images/0-graybox.JPG)
+
+• **Geographic** - *longitude and latitude* refer a location on the Earth's *3D* ellipsoid surface.
+
+![](images/0-graybox.JPG)
+
+• **Projected** - *easting and northing* Cartesian coordinates refer a location on a *2D* Earth.
+
+![](images/0-graybox.JPG)
+
+![Figure 2. A **geographic** coordinate system measured in *angular units* is compared to a **projected** coordinate system measured in *linear units*. Source: [ArcGIS Pro](https://pro.arcgis.com/en/pro-app/2.8/help/mapping/properties/coordinate-systems-and-projections.htm).](images/utm-geographic-projected.png)
+
+![](images/0-graybox.JPG)
+
+• In R, it looks like this:
+
+![](images/0-graybox.JPG)
+
+![Figure 3. Coordinate systems. Left: Geographic, Right: Projected.](images/crs_01.png){width="415"}
+:::
+
+![](images/0-whitebox.JPG)
+
+::: key-point
+![](images/0-graybox.JPG)
+
+• All **Projected CRSs** are *based on* a **Geographic CRS**
+
+![](images/0-graybox.JPG)
+
+• Rely on *map projections* to convert the 3D surface of the Earth into Easting and Northing (x and y) values for a 2D surface.
+
+![](images/0-graybox.JPG)
+
+![Figure 4. Coordinate systems. Left: Geographic, Right: Projected. Source: [ayresriverblog](https://www.earthdatascience.org/courses/earth-analytics/spatial-data-r/intro-to-coordinate-reference-systems/).](images/utm-from_geograph_to_projected-2.png){width="440"}
+:::
+
+![](images/0-whitebox.JPG)
+
+::: practice
+Which of the following options of Coordinate Reference System (CRS) types:
+
+a.  `"geographic_crs"`
+b.  `"projected_crs"`
+
+...corresponds to each of these datasets, given the magnitude of the values in their `x` and `y` columns:
+
+the `parana` dataset?
+
+```{r,eval=FALSE}
+parana <- import("https://github.com/cran/geoR/raw/master/data/parana.rda")
+as_tibble(parana$coords)
+```
+
+```{r,include=FALSE}
+# unlock your answer:
+# q1 <- "geographic_crs"
+# q1 <- "projected_crs"
+
+.check_q1()
+.hint_q1()
+```
+
+the `fatalities` dataset?
+
+```{r,eval=FALSE}
+pacman::p_load(cholera)
+as_tibble(fatalities)
+```
+
+```{r,include=FALSE}
+# unlock your answer:
+# q2 <- "geographic_crs"
+# q2 <- "projected_crs"
+
+.check_q2()
+.hint_q2()
+```
+:::
+
+##### Set UTM Projected coordinates with `st_as_sf()` {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• Now we can set **UTM coordinates**.
+
+![](images/0-whitebox.JPG)
+
+• Specify the projection of The Gambia, **UTM zone 28** (`"+proj=utm +zone=28"`) in `crs` argument.
+
+![](images/0-whitebox.JPG)
+
+```{r}
+gambia_projected <- gambia_point_summary %>% 
+  # first, specify the projection of gambia
+  # UTM zone 28
+  st_as_sf(     )
+
+gambia_projected
+```
+
+![](images/0-whitebox.JPG)
+
+• Confirm the presence of the:
+
+![](images/0-whitebox.JPG)
+
+• CRS text (`CRS: +proj=utm +zone=28`) inside the **header** of the new `sf` object, and
+
+![](images/0-whitebox.JPG)
+
+• the **unit** the `geometry` column in **meters** (`<POINT [m]>`).
+
+![](images/0-whitebox.JPG)
+
+::: vocab
+![](images/0-graybox.JPG)
+
+• **UTM** system divides Earth
+
+![](images/0-graybox.JPG)
+
+• **60 zones** of *6 degrees of longitude in width*.
+
+![](images/0-graybox.JPG)
+
+• Each zone uses a *transverse Mercator projection*
+
+![](images/0-graybox.JPG)
+
+• It maps a region of large north-south extent.
+
+![](images/0-graybox.JPG)
+
+![Figure 5. UTM zones in the USA. Source: [Chrismurf at English Wikipedia, via Wikimedia Commons (CC-BY)](https://datacarpentry.org/organization-geospatial/03-crs/index.html)](images/utm-zones-USA.svg)
+
+![](images/0-graybox.JPG)
+
+• How can I **get** *UTM zones* for a specific part of the world?
+
+![](images/0-graybox.JPG)
+
+• Use [online interactive maps](https://mangomap.com/robertyoung/maps/69585/what-utm-zone-am-i-in-#), or
+
+![](images/0-graybox.JPG)
+
+• Gridded images available in [wikipedia](https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system#Exceptions).
+:::
+
+![](images/0-whitebox.JPG)
+
+::: key-point
+![](images/0-graybox.JPG)
+
+• In the **UTM** system, a **position** on the Earth is given by the:
+
+![](images/0-graybox.JPG)
+
+1.  UTM *zone* number,
+
+![](images/0-graybox.JPG)
+
+2.  *Hemisphere* (north or south), and
+
+![](images/0-graybox.JPG)
+
+3.  Easting and northing *coordinates* in the zone which are measured in **meters**.
+
+![](images/0-graybox.JPG)
+
+• *Eastings* are referenced from *the central meridian* of each zone, and
+
+![](images/0-graybox.JPG)
+
+• *Northings* are referenced from *the equator*.
+:::
+
+![](images/0-whitebox.JPG)
+
+::: practice
+`parana_data` contains the average rainfall over different years for the period May-June (dry-season). It was collected at 143 recording stations throughout *Parana State, Brasil*.
+
+Set `UTM` coordinate system to the `parana_data`. Parana State is located in the UTM zone number `22`.
+
+```{r}
+parana_data <- as_tibble(parana$coords) %>% 
+  mutate(Rainfall = parana$data)
+```
+
+```{r,eval = FALSE}
+q3 <- parana_data %>% 
+  st_as_sf(coords = c("east", "north"), 
+           crs = "+proj=______ +zone=______")
+q3
+```
+
+```{r,include=FALSE}
+.check_q3()
+.hint_q3()
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+##### Transform to Geographic coordinates with `st_transform()` {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• To transform UTM *projected* coordinates to *geographic* coordinates
+
+![](images/0-whitebox.JPG)
+
+• e.g., **longitude/latitude** with datum **WGS84**
+
+![](images/0-whitebox.JPG)
+
+• Use `st_transform()` where we set a CRS to `"+proj=longlat +datum=WGS84"`:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+gambia_geographic <- gambia_projected %>% 
+  # second, transform 
+  # projected coordinates to
+  # geographic coordinates
+  
+
+gambia_geographic
+```
+
+![](images/0-whitebox.JPG)
+
+• Confirm the **update** of the:
+
+![](images/0-whitebox.JPG)
+
+• CRS text to `CRS: +proj=longlat +datum=WGS84` inside the **header**, and
+
+![](images/0-whitebox.JPG)
+
+• The **units** of the `geometry` column to **degrees** (`<POINT [°]>`).
+
+![](images/0-whitebox.JPG)
+
+::: vocab
+![](images/0-graybox.JPG)
+
+• A **PROJ string** includes the following information:
+
+![](images/0-graybox.JPG)
+
+• `+proj=`: the projection of the data (e.g. `utm`, `longlat`, or `laea`)
+
+![](images/0-graybox.JPG)
+
+• `+zone=`: the zone of the data, specific to the UTM projection (e.g. `28`)
+
+![](images/0-graybox.JPG)
+
+• `+datum=`: the datum use (e.g. `WGS84`)
+
+![](images/0-graybox.JPG)
+
+• `+units=`: the units for the coordinates of the data (e.g. `m`)
+:::
+
+![](images/0-whitebox.JPG)
+
+::: practice
+With the UTM coordinate system data stored in `q3`:
+
+Transform its Projected CRS to a Geographic CRS using the `longitude/latitude` (`longlat`) projection with datum `WGS84`.
+
+```{r,eval = FALSE}
+q4 <- q3 %>% 
+  st_transform(crs = "+proj=______ +datum=______")
+q4
+```
+
+```{r,include=FALSE}
+.check_q4()
+.hint_q4()
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+::: side-note
+![](images/0-graybox.JPG)
+
+• To reproduce [John Snow's map](https://cs.calvin.edu/courses/info/601/13geospatial/class/snow.html#4) of previous lessons,
+
+![](images/0-graybox.JPG)
+
+• we needed to *set* and *transform* different CRS in the same coding pipeline:
+
+![](images/0-graybox.JPG)
+
+```{r,eval=FALSE}
+mdsr::CholeraDeaths %>%
+  # british national grid
+  st_set_crs(27700) %>%
+  # to wgs84
+  st_transform(4326)
+```
+
+![](images/0-graybox.JPG)
+
+• **Projected CRS** are a common choice made by a *public mapping agency*.
+
+![](images/0-graybox.JPG)
+
+• With local data sources, to ensure *compatibility*, work with the official CRS provided.
+:::
+
+![](images/0-whitebox.JPG)
+
+#### Map prevalences {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• Now with the right CRS projection,
+
+![](images/0-whitebox.JPG)
+
+• Let's **overlap** these points with other Spatial data objects:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+gambia_adm_2 <- geoboundaries(   )
+```
+
+![](images/0-whitebox.JPG)
+
+```{r,fig.height=2,fig.width=8}
+ggplot() +
+  geom_sf(data = ) +
+  geom_sf(data = gambia_geographic, ) +
+  colorspace::
+```
+
+![](images/0-whitebox.JPG)
+
+::: pro-tip
+![](images/0-graybox.JPG)
+
+• **Which CRS to use?**
+
+![](images/0-graybox.JPG)
+
+• "There exist no all-purpose projections, all involve distortion when far from the center of the specified frame" (Bivand, Pebesma, and Gómez-Rubio 2013).
+
+![](images/0-graybox.JPG)
+
+• When **Geographic CRS**, the answer is often **WGS84**.
+
+![](images/0-graybox.JPG)
+
+• Used by default for web mapping, in *GPS* datasets.
+
+![](images/0-graybox.JPG)
+
+• WGS84 is the most common CRS in the world,
+
+![](images/0-graybox.JPG)
+
+• so it is worth knowing its *EPSG code: 4326*.
+
+![](images/0-graybox.JPG)
+
+• Useful to convert unusual CRSs into something that is widely understood.
+:::
+
+![](images/0-whitebox.JPG)
+
+```{r include = F}
+.score_print()
+```
+
+```{r include = F}
+pacman::p_unload(raster) # avoid masking select(). Temporary investigation
+```
+
+## Wrap up
+
+![](images/0-whitebox.JPG)
+
+• How to **transform** the CRS of `sf` objects between different *coordinate systems*.
+
+![](images/0-whitebox.JPG)
+
+• The characteristics of **Projected** coordinate systems, compared to *Geographic* systems.
+
+![](images/0-whitebox.JPG)
+
+![Figure 6. A **geographic** coordinate system measured in *angular units* is compared to a **projected** coordinate system measured in *linear units*. Source: [ArcGIS Pro](https://pro.arcgis.com/en/pro-app/2.8/help/mapping/properties/coordinate-systems-and-projections.htm).](images/utm-geographic-projected.png)
+
+![](images/0-whitebox.JPG)
+
+• Now, we can enrich our Thematic maps
+
+![](images/0-whitebox.JPG)
+
+• Let's add **text** and **labels** referring to specific places or regions, and
+
+![](images/0-whitebox.JPG)
+
+• Map elements like **scale bars** and a **north arrow**!
+
+![](images/0-whitebox.JPG)
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson: `r tgc_contributors_list(ids = c("avallecam", "lolovanco"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   *Moreno, M., Basille, M. Drawing beautiful maps programmatically with R, sf and ggplot2 --- Part 1: Basics*. (2018). Retrieved 10 May 2022, from <https://r-spatial.org/r/2018/10/25/ggplot2-sf.html>
+
+-   *Data carpentry. Introduction to Geospatial Concepts: Coordinate Reference Systems*. (2021). Retrieved 15 May 2022, from <https://datacarpentry.org/organization-geospatial/03-crs/index.html>
+
+-   *Moraga, Paula. Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny. Chapter 9: Spatial modeling of geostatistical data. Malaria in The Gambia*. (2019). Retrieved 10 May 2022, from <https://www.paulamoraga.com/book-geospatial/sec-geostatisticaldataexamplespatial.html>
+
+-   *Carrasco-Escobar, G., Barja, A., Quispe, J. [Visualization and Analysis of Spatial Data in Public Health]*. (2021). Retrieved 15 May 2022, from <https://www.reconlearn.org/post/spatial-analysis-1-spanish.html>
+
+`r tgc_license()`

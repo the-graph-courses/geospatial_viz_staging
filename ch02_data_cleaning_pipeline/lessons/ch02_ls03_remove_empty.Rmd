@@ -1,0 +1,210 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: yes
+    toc: yes
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+  word_document:
+    toc: yes
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, echo = F, message = F, warning = F}
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load("tidyverse",
+               "knitr",
+               "janitor",
+               "here",
+               "skimr",
+               "inspectdf",
+               update=F)
+
+
+# Source functions 
+source(here::here("global/functions/misc_functions.R"))
+
+# default render
+registerS3method("reactable_5_rows", "data.frame", reactable_5_rows)
+knitr::opts_chunk$set(class.source = "tgc-code-block")
+
+## autograders
+suppressMessages(source(here::here(("ch02_data_cleaning_pipeline/lessons/ch02_ls03_remove_empty_autograder.R"))))
+
+```
+
+------------------------------------------------------------------------
+
+<!-- # Data cleaning: removing empty rows and columns -->
+
+## Learning objectives
+
+1.  You will use `janitor::remove_empty()`, to remove empty rows and columns.
+
+2.  You will learn when to remove empty rows and columns and why it is meaningful
+
+## Intro to the lesson
+
+::: vocab
+An **EMPTY** row/column is one where all values are `NA` values.
+:::
+
+::: key-point
+There are two clear moments where you will want to check for empty rows or columns:
+
+1.  When you load a dataset, you always want to check if it has any empty rows or columns and remove them. The goal is that **every row is a meaningful data point** and that **every column is a meaningful variable**.
+
+2.  Another moment where you will want to check for empty rows or empty columns will be after wrangling the data.
+:::
+
+::: side-note
+A quick example: if you filter to keep only the children of the dataset, then maybe some of these children will have missing records. With their `age` information they are not empty rows INITALLY but if AFTER FILTERING for the `age` variable, then they are empty records and should not be considered for the subsequent analysis.
+:::
+
+In this lesson, we will explore how to remove empty rows and columns in R.
+
+## Our Data
+
+::: recap
+We are cleaning the data from the COVID-19 serological survey conducted in Yaounde, Cameroon.
+
+We will use the version of the dataset with standardized column names.
+:::
+
+```{r, message = F, include=T, warning=FALSE}
+
+yaounde <- read.csv(here::here('ch02_data_cleaning_pipeline/data/yaounde_data_clean_names.csv'))
+
+```
+
+The first step to removing the empty rows and columns is to identify these empty columns and rows.
+
+## Exploring emptiness
+
+We will again use the `inspect_na()` function from the package {inspectdf} to identify empty columns.
+
+```{r, message = F, include=T, warning=FALSE, render=knitr::knit_print}
+
+inspectdf::inspect_na(yaounde) 
+
+```
+
+From the output we see that the `pcnt` indicates 100% emptiness (i.e. `NA` values) for this `na` column: there is a `NA` values in every row.
+
+::: watch-out
+We also see that `sequelae`, `respiration_frequency`, `consultation` are respectively 98.8%, 98.2%, 92.4% incomplete (filled with `NA`). **These variables are unusable for further analysis.**
+
+There was an issue during data collection, and it cannot be undone at the programming level.
+
+The less data you have, the more you have to leave aside variables which are not documented correctly.
+:::
+
+::: practice
+1.  Identify the empty columns in the `typhoid` dataset.
+
+```{r,eval = FALSE,echo=FALSE}
+q1 <- "YOUR ANSWER HERE"
+.check_q1()
+.hint_q1()
+```
+:::
+
+## Remove empty columns
+
+In order to remove empty columns from the data frame, we will use the `remove_empty()` function from the {`janitor`} package. This function removes all columns from a data frame that are composed entirely of `NA` values.
+
+::: vocab
+The syntax is `remove_empty(data,"cols")`, where data is a data frame and `"cols"` specifies that we are removing empty columns.
+:::
+
+We will apply the function on the `yaounde` dataset and remove the empty column identified earlier.
+
+```{r,message = T,warning=FALSE, render=knitr::knit_print}
+ncol(yaounde)
+
+yaounde <- yaounde %>% 
+  remove_empty("cols")
+
+ncol(yaounde)
+
+```
+
+We can see that the column named `na` has been removed from the data.
+
+2.  Remove the empty columns from the `typhoid` dataset.
+
+```{r,eval = FALSE,echo=FALSE}
+q2 <- "YOUR ANSWER HERE"
+.check_q2()
+.hint_q2()
+```
+:::
+
+## Remove empty rows
+
+While it is relatively easy to identify empty columns from the `skim()` output, its not as easy to do so for empty rows. Fortunately, the `remove_empty()` also works if there are empty rows in the data. The only change in the syntax is specifying `"rows"`instead of `"cols"`.
+
+```{r,message = T,warning=FALSE, render=knitr::knit_print}
+nrow(yaounde)
+
+yaounde <- yaounde %>% 
+  remove_empty("rows")
+
+nrow(yaounde)
+```
+
+The number of rows has gone from 981 to 979 suggesting there were empty rows in the data that have been removed.
+
+::: pro-tip
+The `remove_empty()` function can be used to remove empty rows and columns simultaneously. This can be done by adding the arguments `which = c("rows", "cols")`. Also, not specifying this argument will lead to R removing both.
+:::
+
+::: practice
+3.  Remove both the empty rows and columns from the `typhoid` dataset.
+
+```{r,eval = FALSE,echo=FALSE}
+q3 <- "YOUR ANSWER HERE"
+.check_q3()
+.hint_q3()
+```
+:::
+
+::: watch-out
+Data is **collected by HUMANS** which means that, in order to indicate an uncollected data, a human might input all `0` (zeros) or `"NA"` (`NA` but as a string)
+
+CAREFUL: `remove_empty()` will not be able to identify these rows/columns as "empty" !
+
+A good practice to identify these could be to look at each column with `unique(column_name)` from base R to see of which unique values it is composed. 
+:::
+
+Let's save our even cleaner dataset !
+
+```{r, message = F,warning=FALSE}
+yaounde_no_empty <- yaounde %>% 
+  remove_empty(which = c("rows","cols"))
+
+write_csv(yaounde_no_empty,
+          here::here('ch02_data_cleaning_pipeline/data/yaounde_data_clean_structure.csv'))
+
+```
+
+## Wrapping up
+In this lesson, we have been able to remove the empty rows and columns from our data. The next step in the data cleaning pipeline would be to check for irregularities in the data. In the next lesson, we will start with deduplicating data entries. 
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson: `r tgc_contributors_list(ids = c("eem", "lolovanco"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   Batra, Neale, et al. The Epidemiologist R Handbook. 2021.*Cleaning data and core functions*. <https://epirhandbook.com/en/cleaning-data-and-core-functions.html#cleaning-data-and-core-functions>
+
+-   Sam Firke, Bill Denney , Chris Haid , Ryan Knight, Malte Grosser , Jonathan Zadra  (2021). janitor: Simple Tools for Examining and Cleaning Dirty Data. R package version  2.1.0. <https://cran.r-project.org/web/packages/janitor/vignettes/janitor.html>
+
+

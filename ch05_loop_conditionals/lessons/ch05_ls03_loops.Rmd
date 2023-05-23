@@ -1,0 +1,251 @@
+---
+title: '\ '
+output:
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+  word_document:
+    toc: true
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: console
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+library(dplyr)
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+# Source autograder script quietly 
+mute(here("ch05_loop_conditionals/lessons/ch05_ls03_loops_autograder.R"))
+```
+
+<!-- # Loops: introduction -->
+
+## Learning objectives
+
+1.  You will learn how to create an iteration to repeat your code over multiple objects.
+
+## Introduction to the dataset
+
+In this lesson, we will use the data comprise of 136 cases of influenza A H7N9 in China.
+
+```{r render = reactable_10_rows, message = FALSE}
+
+flu <- read_csv(here("ch05_loop_conditionals/data/fluH7N9_china_2013.csv"))
+flu
+
+```
+
+## Repeating instructions in a loop
+
+Loops make it possible to repeat code several times, either according to a condition or according to the elements of a vector.
+
+You will learn in the **functions** lesson that one of the most important tools to improve reproducibility and reduce code duplication is creating your own functions. Another important tool that will enable you to reduce code duplication is iteration over a loop. This means that the days of copy-and-paste the same code to repeat the same operation on different columns, or even in different data sets, are over!
+
+## `for` loop
+
+The `for` loop is defined by the statement `for`. The principle behind it is that it will iterate a code over all the items in a vector. 
+
+For example, given a vector defined as `c(1,2,3,4,5)`, you can iterate over each value of this vector and print each value using a `for` statement:
+
+```{r}
+
+v = c(1, 2, 3, 4,5)
+for (i in v) {            # 1. sequence
+  
+  print(i)                # 2. body
+  
+}
+
+```
+
+The simplest `for` loop will have at least two elements. Here we will refer to these elements as `sequence`, and `body`. In the `sequence`, we will define a vector/sequence in which the values will be iterated, and in the `body` we will define operations that it will be done with each of the iterated values. 
+
+The `for` statement can iterate over any value in a vector, numeric or not. For example, instead of use `c(1,2,3,4,5)`, we could use: `c('Ana', 'Benedict', 'Carlos', 'Daniel', 'Eduardo')` and iterate over a list of names:
+
+```{r}
+
+v = c('Ana', 'Benedict', 'Carlos', 'Daniel', 'Eduardo')
+for (i in v) {            # 1. sequence
+  
+  print(i)                # 2. body
+  
+}
+
+```
+
+You also can iterate over a sequence of numbers as `1:5`: 
+
+```{r}
+
+for (i in 1:5) {            # 1. sequence
+  
+  print(i)                  # 2. body
+  
+}
+
+```
+
+In the examples above, we just iterated over the vector and printed each value. Still, usually, we want to save this result to use in other operations, such as creating a plot or a data frame. In this case, we need to define a vector where we will save the result after each operation.   
+
+```{r}
+x = c()                   # create an empty vector 
+
+for (i in 1:5){           # sequence
+  
+  x_i = i^3               # body
+  
+  x = append(x, x_i)      # save the result in a vector
+  
+}
+
+x
+``` 
+
+::: watch-out
+
+You must create your empty element to save the results **outside** the loop. Otherwise, you will save the result of the last iteration.  
+
+:::
+
+
+::: key-point 
+That's the usual way that we build and use a `for` loop. We can summarize it in four steps: 
+
+* Create an empty element to save the values obtained in the loop;
+* Define a sequence that will be iterated; 
+* Define the operations that will be done inside the loop (the `body`); 
+* Save the result in the element **created outside** the loop. 
+:::
+
+Observe that we have a lot of possibilities when using the `for` statements. Let's now see a practice example that can be useful when analysing data. 
+
+Imagine we have the following data set to analyse:
+
+```{r render = reactable_10_rows} 
+
+set.seed(1)
+df <- tibble(
+  height = runif(n = 20, min = 1.50, max = 2.10),
+  weight = runif(n = 20, min = 50, max = 150),
+  age = runif(n = 20, min = 18, max = 80),
+  heart_rate = runif(n = 20, min = 40, max = 120),
+  bmi = weight / (height ^2)
+)
+
+df
+```
+
+Now, imagine that you need to compute the median of each variable. Normally, we would copy and paste:
+
+```{r}
+
+median(df$height)
+
+median(df$weight)
+
+median(df$age)
+
+median(df$heart_rate)
+
+median(df$bmi)
+
+```
+
+This is a lot of copy-and-paste for just one descriptive statistic. Imagine doing this for the mean, standard deviation, minimum and maximum values?
+
+**The `for` loop can easily iterate for all columns!** 
+
+
+To do this, we can simply define an output vector for each desired metric, where the result will be saved after each iteration. 
+
+```{r}
+
+out_median = c()                                  # create an empty vector
+
+for (column in colnames(df)){                     # sequence 
+    
+  col_median = median(df[[column]])               # body
+  
+  out_median = append(out_median, col_median)     # save the result 
+}
+
+out_median
+```
+
+Note that you can use any name for the iterator value. In the example above, we use the name `column`. 
+
+::: practice
+-   Using the `df2` data set below, create a loop that calculates the mean of each variable and stores it in a vector called `df2_means`.Your answer must be the vector `df_means`. 
+
+```{r render = reactable_10_rows} 
+
+set.seed(1) 
+df2 <- tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rpois(10, 10),
+  d = rnorm(10),
+  e = rpois(10, 3),
+  f = rnorm(10),
+)
+
+df2
+```
+
+```{r include = F}
+
+df2_means = c()
+
+for (i in 1:ncol(df2)){
+  
+  df2_means = append(df2_means, mean(df2[[i]]))
+}
+
+q1 <- df2_means
+
+.check_q1()
+
+.hint_q1()
+
+```
+
+:::
+
+
+```{r include = F}
+.score_print()
+```
+
+--------------------------------------------------------------------------------
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r tgc_contributors_list(ids = c("dcpcamara", "eduardo", "lolovanco", "kendavidn"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   Barnier, Julien. "Introduction à R et au tidyverse." Accessed May 23, 2022. <https://juba.github.io/tidyverse>
+
+-   Wickham, Hadley; Grolemund, Garrett. "R for Data Science." Accessed May 25, 2022. <https://r4ds.had.co.nz/>
+
+<!-- (Chicago format. You can use https://www.citationmachine.net) -->
+
+`r tgc_license()`
+

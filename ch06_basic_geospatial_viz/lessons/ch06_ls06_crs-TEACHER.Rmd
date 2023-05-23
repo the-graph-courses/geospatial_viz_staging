@@ -1,0 +1,554 @@
+---
+title: '\ '
+output:
+  # word_document:
+  #   toc: true
+  html_document:
+    number_sections: true
+    toc: true
+    css: !expr here::here("global/style/style.css")
+    highlight: kate
+    pandoc_args: --shift-heading-level-by=-1
+editor_options:
+  markdown:
+    wrap: 100
+  canonical: true
+  chunk_output_type: inline
+---
+
+```{r, include = FALSE, warning = FALSE, message = FALSE}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, knitr, here)
+
+# Source functions 
+source(here("global/functions/misc_functions.R"))
+
+# knitr settings
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+# Source autograder script quietly 
+suppressMessages(source(here::here("ch06_basic_geospatial_viz/lessons/ch06_ls06_crs_autograder.R")))
+```
+
+```{r,echo=FALSE}
+ggplot2::theme_set(new = theme_bw())
+```
+
+<!-- # Geospatial analysis: coordinate reference systems -->
+
+## Introduction
+
+From the previous lesson, we learned that **Spatial data** require a **Coordinate Reference System (CRS)** to relate the spatial elements of the data with the *surface of Earth*. For that reason, Coordinate systems are a *key component* of geographic objects.
+
+![Figure 1. CRS components include (A) the Coordinate System (Longitude/Latitude) and (B) the Map Projection (e.g., Conical or Cylindrical). Source: [ArcMap](https://desktop.arcgis.com/en/arcmap/10.3/guide-books/map-projections/geographic-coordinate-system.htm) and [EarthLab](https://www.earthdatascience.org/courses/use-data-open-source-python/intro-vector-data-python/spatial-data-vector-shapefiles/geographic-vs-projected-coordinate-reference-systems-python/).](images/crs-coordsys_projections.JPG)
+
+However, Coordinate systems can **distort** the geographical view of the world. Its **misuse** can lead to misconceptions about the relative sizes of countries.
+
+![Figure 2. Map projections distort the geographical view of the world. Source: [Visualcapitalist](https://www.visualcapitalist.com/wp-content/uploads/2018/11/mercator-vs-truesize.gif)](images/crs-mercator-vs-truesize.gif){width="450"}
+
+In this lesson we are going to learn how to manage the CRS of maps by **zooming in** to an area of interest, and **change it** depending of our requirements, within a `ggplot` object.
+
+![](images/0-whitebox.JPG)
+
+## Learning objectives
+
+1.  Zoom in `ggplot` maps with Coordinate Reference Systems (**CRS**) using the `coord_sf()` function.
+
+2.  Change the **CRS projection** of a `ggplot` map using the `crs` argument of `coord_sf()`.
+
+![](images/0-whitebox.JPG)
+
+## Prerequisites
+
+This lesson requires the following packages:
+
+```{r,eval=TRUE,echo=TRUE,message=FALSE}
+if(!require('pacman')) install.packages('pacman')
+
+pacman::p_load(malariaAtlas,
+               colorspace,
+               ggplot2,
+               cholera,
+               spData,
+               dplyr,
+               here,
+               rio,
+               sf)
+
+pacman::p_load_gh("afrimapr/afrilearndata",
+                  "wmgeolab/rgeoboundaries")
+```
+
+This lesson requires familiarity with `{dplyr}`: if you need to brush up, have a look at our introductory course on data wrangling.
+
+![](images/0-whitebox.JPG)
+
+## Data and basic plot
+
+![](images/0-whitebox.JPG)
+
+• Let's create a `world` base map from `{spData}`:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+ggplot(data = world) +
+    geom_sf()
+```
+
+![](images/0-whitebox.JPG)
+
+## Manage Coordinate systems with `coord_sf()`
+
+![](images/0-whitebox.JPG)
+
+• `coord_sf()` from `{ggplot2}` deals with **coordinate systems**,
+
+![](images/0-whitebox.JPG)
+
+• In both: the *extent* and *projection* of a map.
+
+![](images/0-whitebox.JPG)
+
+### "Zoom in" on maps
+
+![](images/0-whitebox.JPG)
+
+• **extent** refers to "zoom" in the area of interest,
+
+![](images/0-whitebox.JPG)
+
+• `coord_sf()` uses `xlim` (x-axis) and `ylim` (y-axis) arguments.
+
+![](images/0-whitebox.JPG)
+
+• Let's *zoom in* the `world` map to the African continent,
+
+![](images/0-whitebox.JPG)
+
+• Area delimited in **longitude** between 20°W and 55°E, and
+
+![](images/0-whitebox.JPG)
+
+• in **latitude** between 35°S and 40°N.
+
+![](images/0-whitebox.JPG)
+
+```{r,warning=FALSE,message=FALSE}
+ggplot(data = world) +
+    geom_sf() +
+    
+```
+
+::: watch-out
+![](images/0-graybox.JPG)
+
+• Check which `+` and `-` **signs** are related with the **cardinal direction**:
+
+![](images/0-graybox.JPG)
+
+• In longitude: West is `-`, East is `+`,
+
+• In latitude: South is `-`, North is `+`.
+:::
+
+![](images/0-whitebox.JPG)
+
+::: practice
+Zoom in the `africountries` map to Sierra Leona, which is in an area delimited in longitude between 14°W and 10°W, and in latitude between 6°N and 10°N.
+
+```{r,eval = FALSE}
+q1 <- 
+  ggplot(data = africountries) +
+    geom_sf() +
+    ________(xlim = c(___, ___), ylim = c(6, 10))
+q1
+```
+
+```{r,include=FALSE}
+.check_q1()
+.hint_q1()
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+### Change the Projection of a map
+
+![](images/0-whitebox.JPG)
+
+• `world` with a **CRS projection** called *WGS84*
+
+![](images/0-whitebox.JPG)
+
+• Let's check to the **fifth line** of the **header**
+
+![](images/0-whitebox.JPG)
+
+```{r,eval=FALSE,echo=TRUE}
+world
+```
+
+![](images/0-whitebox.JPG)
+
+    ##    Geometry set for 177 features 
+    ##    Geometry type: MULTIPOLYGON
+    ##    Dimension:     XY
+    ##    Bounding box:  xmin: -180 ymin: -89.9 xmax: 180 ymax: 83.64513
+    ## 👉 Geodetic CRS:  WGS 84 👈
+    ##    First 5 geometries:
+
+![](images/0-whitebox.JPG)
+
+• *WGS84* corresponds to the **EPSG code 4326**:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+st_crs(world)$input
+```
+
+![](images/0-whitebox.JPG)
+
+::: key-point
+![](images/0-graybox.JPG)
+
+• **Projection** refers to a mathematical equation
+
+![](images/0-graybox.JPG)
+
+• It projects the *round* earth (3D) onto a *flat* surface (2D).
+
+![](images/0-graybox.JPG)
+
+![Figure 3. (a) Cylindrical projections, (b) Conical projections and (c) Planar projections. Source: [QGIS](https://docs.qgis.org/3.22/en/docs/gentle_gis_introduction/coordinate_reference_systems.html).](images/crs-map_projections.JPG){width="436"}
+:::
+
+![](images/0-whitebox.JPG)
+
+::: vocab
+![](images/0-graybox.JPG)
+
+• **EPSG** \~ European Petroleum Survey Group (EPSG).
+
+![](images/0-graybox.JPG)
+
+• *EPSG* is a Spatial Reference System Identifier (SRID)
+
+![](images/0-graybox.JPG)
+
+• *EPSG* has arbitrary **codes** for concrete **CRS projections**.
+
+![](images/0-graybox.JPG)
+
+• One of these is **WGS84** \~ *World Geodetic System 1984*.
+:::
+
+![](images/0-whitebox.JPG)
+
+• `crs` argument in `coord_sf()` **overrides** this to **any projection**.
+
+![](images/0-whitebox.JPG)
+
+• Let's change *WGS84* projection to the *ETRS89*,
+
+![](images/0-whitebox.JPG)
+
+• ETRS89 \~ Lambert Azimuthal Equal-Area projection (alias LAEA),
+
+![](images/0-whitebox.JPG)
+
+• **EPSG code 3035**:
+
+![](images/0-whitebox.JPG)
+
+```{r}
+ggplot(data = world) +
+    geom_sf() +
+    coord_sf(      )
+```
+
+![](images/0-whitebox.JPG)
+
+• CRS projection useful for [European countries](https://epsg.io/3035).
+
+![](images/0-whitebox.JPG)
+
+::: practice
+Change the CRS projection of the `ggplot` map with the `world` object to the [Pseudo-Mercator](https://epsg.io/3857) coordinate system, which is EPSG code `3857`.
+
+```{r,eval = FALSE}
+q2 <- 
+  ggplot(data = world) +
+    geom_sf() +
+    ________(crs = ________)
+q2
+```
+
+```{r,include=FALSE}
+.check_q2()
+.hint_q2()
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+#### Choosing a Projection / CRS {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+::: reminder
+![](images/0-graybox.JPG)
+
+• **Which projection should I use?**
+
+![](images/0-graybox.JPG)
+
+• To decide, answer these questions:
+
+![](images/0-graybox.JPG)
+
+• What is the area of minimal distortion?
+
+![](images/0-graybox.JPG)
+
+• What aspect of the data does it preserve?
+:::
+
+![](images/0-whitebox.JPG)
+
+::: pro-tip
+![](images/0-graybox.JPG)
+
+• Take time to identify a **projection** suited for your project.
+
+![](images/0-graybox.JPG)
+
+• You don't have to stick to the ones that are popular.
+:::
+
+![](images/0-whitebox.JPG)
+
+• Online [Projection Wizard](http://projectionwizard.org/)
+
+![](images/0-whitebox.JPG)
+
+• helps you **discover** projections to **better fit for your data**.
+
+![](images/0-whitebox.JPG)
+
+![Figure 4. Steps to find a custom projection with Project Wizard.](images/projection_wizard.JPG){width="456"}
+
+![](images/0-whitebox.JPG)
+
+• Let's **find** a projection for the African continent:
+
+![](images/0-whitebox.JPG)
+
+1.  Define your *area* of interest,
+
+![](images/0-whitebox.JPG)
+
+2.  Select a *distortion* property,
+
+![](images/0-whitebox.JPG)
+
+3.  Confirm the map outcome that *fits* your needs,
+
+![](images/0-whitebox.JPG)
+
+4.  Copy the text inside the **PROJ** option.
+
+![](images/0-whitebox.JPG)
+
+• Then, paste that valid **PROJ string** to the `crs` argument:
+
+![](images/0-whitebox.JPG)
+
+```{r world-coord}
+ggplot(data = world) +
+    geom_sf() +
+    coord_sf(crs =      )
+```
+
+![](images/0-whitebox.JPG)
+
+::: vocab
+• [PROJ](http://proj4.org/) is an open-source library for *storing*, *representing* and *transforming* CRS information.
+:::
+
+![](images/0-whitebox.JPG)
+
+::: practice
+Change the CRS projection of the `ggplot` map with the `world` object to the [Aitoff](https://proj.org/operations/projections/aitoff.html) coordinate system, using the `+proj=aitoff` PROJ string.
+
+```{r,eval = FALSE}
+q3 <- 
+  ggplot(data = world) +
+    geom_sf() +
+    ________(crs = "________")
+q3
+```
+
+```{r,include=FALSE}
+.check_q3()
+.hint_q3()
+```
+:::
+
+![](images/0-whitebox.JPG)
+
+#### CRS components {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• Four **CRS** key components:
+
+![](images/0-whitebox.JPG)
+
+1.  *Coordinate System* - e.g. longitude/latitude (the most common), or UTM;
+
+![](images/0-whitebox.JPG)
+
+2.  *Units* - e.g. decimal degrees (long/lat), or meters (UTM);
+
+![](images/0-whitebox.JPG)
+
+3.  *Datum* - a particular modeled version of the Earth (e.g. WGS84);
+
+![](images/0-whitebox.JPG)
+
+4.  *Projections* - equation to project the round earth (3D) onto a flat surface (2D).
+
+![](images/0-whitebox.JPG)
+
+#### CRS projections {.unnumbered}
+
+![](images/0-whitebox.JPG)
+
+• The **"orange peel" analogy** to understand *projections*.
+
+![](images/0-whitebox.JPG)
+
+1.  **Datum** is the choice of fruit to use:
+
+![](images/0-whitebox.JPG)
+
+• Is the earth an orange, a lemon, a lime, a grapefruit?
+
+![](images/0-whitebox.JPG)
+
+![Figure 5. Image of citrus. Source: [Michele Tobias](https://github.com/MicheleTobias/R-Projections-Workshop).](images/crs-citrus.jpg)
+
+![](images/0-whitebox.JPG)
+
+• Let's imagine that the **earth** is an *orange*,
+
+![](images/0-whitebox.JPG)
+
+2.  **Projection** is how you *peel it* and then *flatten the peel*.
+
+![](images/0-whitebox.JPG)
+
+![Figure 6. Image of peeled orange with globe. Source: [Lincoln blogs](http://blogs.lincoln.ac.nz/gis/2017/03/29/where-on-earth-are-we/).](images/crs-orange-peel-earth.jpg){width="420"}
+
+![](images/0-whitebox.JPG)
+
+• As an example, maps of the United States in **different projections**
+
+![](images/0-whitebox.JPG)
+
+![Figure 7. Maps of the United States in different projections (Source: [opennews.org](https://www.earthdatascience.org/courses/earth-analytics/spatial-data-r/intro-to-coordinate-reference-systems/))](https://media.opennews.org/cache/06/37/0637aa2541b31f526ad44f7cb2db7b6c.jpg){width="487"}
+
+![](images/0-whitebox.JPG)
+
+• Differences in *shape* are associated with each projection.
+
+![](images/0-whitebox.JPG)
+
+• Are a result of the calculations used to *flatten* the data onto a 2D map.
+
+![](images/0-whitebox.JPG)
+
+::: watch-out
+![](images/0-graybox.JPG)
+
+• Data from the **same location** but saved in **different projections**
+
+![](images/0-graybox.JPG)
+
+• will not line up in any GIS software.
+
+![](images/0-graybox.JPG)
+
+• It's important to **identify the coordinate reference system** applied to the data
+
+![](images/0-graybox.JPG)
+
+• **and retain it** throughout data processing and analysis.
+:::
+
+![](images/0-whitebox.JPG)
+
+```{r include = F}
+.score_print()
+```
+
+```{r include = F}
+pacman::p_unload(raster) # avoid masking select(). Temporary investigation
+```
+
+![](images/0-whitebox.JPG)
+
+## Wrap up
+
+![](images/0-whitebox.JPG)
+
+• How to **manage** a CRS *projection* in `ggplot` maps,
+
+![](images/0-whitebox.JPG)
+
+• How projections are **codified** with *EPSG* codes and *PROJ* strings,
+
+![](images/0-whitebox.JPG)
+
+• What are the **components** of a CRS.
+
+![](images/0-whitebox.JPG)
+
+![Figure 8. Summary figure for Datum and Projections, with respect to the Ellipsoid and Planar Coordinates, as abstractions of the Actual Earth and Geoid. Source: [Rhumbline](https://youtu.be/Z41Dt7_R180)](images/crs-datum_projection.png){width="441"}
+
+![](images/0-whitebox.JPG)
+
+• So far, spatial data with locations measured in **angular units** (longitude/latitude).
+
+• But, what if data came in a different coordinate system measured in **linear units**? Like the planar coordinates!
+
+![](images/0-whitebox.JPG)
+
+• In the next lesson, we are going to learn about the **UTM** coordinate system, and
+
+![](images/0-whitebox.JPG)
+
+• how to **transform** spatial objects from UTM to longitude/latitude, and vice versa!
+
+![](images/0-whitebox.JPG)
+
+## Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson: `r tgc_contributors_list(ids = c("avallecam", "lolovanco"))`
+
+## References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   *Moreno, M., Basille, M. Drawing beautiful maps programmatically with R, sf and ggplot2 --- Part 1: Basics*. (2018). Retrieved 10 May 2022, from <https://r-spatial.org/r/2018/10/25/ggplot2-sf.html>
+
+-   *Data carpentry. Introduction to Geospatial Concepts: Coordinate Reference Systems*. (2021). Retrieved 15 May 2022, from <https://datacarpentry.org/organization-geospatial/03-crs/index.html>
+
+-   *Moraga, Paula. Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny. Chapter 9: Spatial modeling of geostatistical data. Malaria in The Gambia*. (2019). Retrieved 10 May 2022, from <https://www.paulamoraga.com/book-geospatial/sec-geostatisticaldataexamplespatial.html>
+
+-   *Carrasco-Escobar, G., Barja, A., Quispe, J. [Visualization and Analysis of Spatial Data in Public Health]*. (2021). Retrieved 15 May 2022, from <https://www.reconlearn.org/post/spatial-analysis-1-spanish.html>
+
+`r tgc_license()`

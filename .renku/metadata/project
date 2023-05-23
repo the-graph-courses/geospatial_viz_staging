@@ -1,0 +1,32 @@
+{
+  "@renku_data_type": "renku.core.models.project.Project",
+  "@renku_oid": "project",
+  "agent_version": "1.1.3",
+  "annotations": [],
+  "automated_update": true,
+  "creator": {
+    "@renku_data_type": "renku.core.models.provenance.agent.Person",
+    "@renku_data_value": {
+      "affiliation": null,
+      "alternate_name": null,
+      "email": "avallecam@gmail.com",
+      "id": "mailto:avallecam@gmail.com",
+      "name": "Andree Valle Campos"
+    }
+  },
+  "date_created": {
+    "@renku_data_type": "datetime.datetime",
+    "@renku_data_value": "2022-03-31T13:21:41+00:00"
+  },
+  "description": "",
+  "id": "/projects/avallecam/further-data-analysis-with-r-staging",
+  "immutable_template_files": [],
+  "keywords": [],
+  "name": "further-data-analysis-with-r-staging",
+  "template_id": "R-minimal",
+  "template_metadata": "{\"__template_source__\": \"https://github.com/SwissDataScienceCenter/renku-project-template\", \"__template_ref__\": \"0.3.1\", \"__template_id__\": \"R-minimal\", \"__namespace__\": \"the-graph-courses\", \"__automated_update__\": true, \"__repository__\": \"https://renkulab.io/gitlab\", \"__sanitized_project_name__\": \"further-data-analysis-with-r-staging\", \"__project_slug__\": \"the-graph-courses/further-data-analysis-with-r-staging\", \"__project_description__\": \"\", \"__renku_version__\": \"1.1.3\", \"name\": \"further-data-analysis-with-r-staging\", \"__name__\": \"further-data-analysis-with-r-staging\", \"__template_version__\": \"3d81adaba71d652a4b0c82572b1632ea55548428\"}",
+  "template_ref": "0.3.1",
+  "template_source": "https://github.com/SwissDataScienceCenter/renku-project-template",
+  "template_version": "3d81adaba71d652a4b0c82572b1632ea55548428",
+  "version": 9
+}
