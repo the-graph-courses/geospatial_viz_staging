@@ -35,7 +35,7 @@ options(scipen=10000)
 
 ------------------------------------------------------------------------
 
-<!-- # Geospatial analysis: R for GIS -->
+# Geospatial analysis: R for GIS
 
 ## Introduction
 
@@ -106,8 +106,7 @@ pacman::p_load(tidyverse, ggspatial, leaflet,
 # country boundaries
 gambia_boundaries <- geoboundaries(country = "Gambia", adm_lvl = 1)
 # malaria prevalence
-gambia_prevalence <- read_rds(here("ch06_basic_geospatial_viz",
-                                   "data", "gambia_prevalence.rds"))
+gambia_prevalence <- read_rds(here("data", "gambia_prevalence.rds"))
 # 👉 third, plot data:
 
 ggplot() +
