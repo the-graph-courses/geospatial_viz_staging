@@ -50,7 +50,7 @@ pacman::p_load(malariaAtlas)
 # create one hint per question
 .hint_q1 <- function(){
   'Use the sf::read_sf() function, AND 
-   use the here::here() function to detail the path from the "ch06_basic_geospatial_viz" folder.' -> out
+   use the here::here() function to detail the path from the "basic_geospatial_viz" folder.' -> out
   cat(out)
 }
 # solution of question

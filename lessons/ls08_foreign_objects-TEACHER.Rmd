@@ -28,7 +28,7 @@ source(here("global/functions/misc_functions.R"))
 knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
 
 ## autograders
-suppressMessages(source(here::here("ch06_basic_geospatial_viz/lessons/ch06_ls08_foreign_objects_autograder.R")))
+suppressMessages(source(here::here("basic_geospatial_viz/lessons/ls08_foreign_objects_autograder.R")))
 ```
 
 ```{r,echo=FALSE}

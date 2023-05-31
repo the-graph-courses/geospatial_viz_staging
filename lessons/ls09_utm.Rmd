@@ -28,7 +28,7 @@ source(here("global/functions/misc_functions.R"))
 knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
 
 # Source autograder script quietly 
-suppressMessages(source(here::here("lessons/ch06_ls09_utm_autograder.R")))
+suppressMessages(source(here::here("lessons/ls09_utm_autograder.R")))
 ```
 
 ```{r,echo=FALSE}

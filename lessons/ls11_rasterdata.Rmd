@@ -31,14 +31,14 @@ A Grid of cells (also known as *Pixels*) contains in each cell information such 
 We **read** Raster data using the `rast()` function from the `{terra}` package.
 
 ::: practice
-Run this code to read Raster data. First, use `{here}` to specify the file path. Then, use `{terra}` to read the `.tif` file inside the `ch06_basic_geospatial_viz/data/gis/` folder:
+Run this code to read Raster data. First, use `{here}` to specify the file path. Then, use `{terra}` to read the `.tif` file inside the `basic_geospatial_viz/data/gis/` folder:
 
 ```{r,eval=FALSE,echo=TRUE}
 pacman::p_load(terra)
 pacman::p_load(here)
 
 raster_path <- 
-  here::here("ch06_basic_geospatial_viz",
+  here::here("basic_geospatial_viz",
              "data","gis",
              "GMB_altitude.tif")
 

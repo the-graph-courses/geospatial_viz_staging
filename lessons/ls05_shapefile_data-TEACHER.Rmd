@@ -28,7 +28,7 @@ source(here("global/functions/misc_functions.R"))
 knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
 
 ## autograders
-suppressMessages(source(here::here("ch06_basic_geospatial_viz/lessons/ch06_ls05_shapefile_data_autograder.R")))
+suppressMessages(source(here::here("basic_geospatial_viz/lessons/ls05_shapefile_data_autograder.R")))
 ```
 
 ```{r,echo=FALSE}
@@ -131,7 +131,7 @@ pacman::p_load_gh("afrimapr/afrilearndata",
 ![](images/0-whitebox.JPG)
 
 ``` r
-"ch06_basic_geospatial_viz/data/boundaries/sle_adm3.shp"
+"basic_geospatial_viz/data/boundaries/sle_adm3.shp"
 ```
 
 ![](images/0-whitebox.JPG)
@@ -141,7 +141,7 @@ pacman::p_load_gh("afrimapr/afrilearndata",
 ![](images/0-whitebox.JPG)
 
 ```{r}
-shape_file <- ......(here("ch06_basic_geospatial_viz/data/boundaries/sle_adm3.shp"))
+shape_file <- ......(here("basic_geospatial_viz/data/boundaries/sle_adm3.shp"))
 ```
 
 ![](images/0-whitebox.JPG)
@@ -157,7 +157,7 @@ shape_file %>% class()
 :::
 
 ::: practice
-Read the shapefile called `sle_hf.shp` inside the `ch06_basic_geospatial_viz/data/healthsites/` folder. Use the `read_sf()` function:
+Read the shapefile called `sle_hf.shp` inside the `basic_geospatial_viz/data/healthsites/` folder. Use the `read_sf()` function:
 
 ```{r,eval = FALSE}
 q1 <- ________(here("________"))
@@ -185,7 +185,7 @@ q1
 ![](images/0-whitebox.JPG)
 
 ```{r,eval=TRUE,echo=FALSE}
-list.files(path = here("ch06_basic_geospatial_viz/data/boundaries"),
+list.files(path = here("basic_geospatial_viz/data/boundaries"),
            full.names = FALSE) %>% 
   tibble::enframe(name = NULL)
 ```
@@ -506,7 +506,7 @@ First 10 features:
 ![](images/0-whitebox.JPG)
 
 ```{r,eval=TRUE,echo=FALSE}
-list.files(path = here("ch06_basic_geospatial_viz/data/boundaries"),
+list.files(path = here("basic_geospatial_viz/data/boundaries"),
            full.names = FALSE) %>% 
   tibble::enframe(name = NULL)
 ```
@@ -592,7 +592,7 @@ stores the *Attributes* for each shape?
 ![](images/0-whitebox.JPG)
 
 ``` r
-"ch06_basic_geospatial_viz/data/newshapefile/countries.shp"
+"basic_geospatial_viz/data/newshapefile/countries.shp"
 ```
 
 ![](images/0-whitebox.JPG)
@@ -602,7 +602,7 @@ stores the *Attributes* for each shape?
 ![](images/0-whitebox.JPG)
 
 ```{r,warning=FALSE}
-countries %>% ......(here("ch06_basic_geospatial_viz/data/newshapefile/countries.shp"))
+countries %>% ......(here("basic_geospatial_viz/data/newshapefile/countries.shp"))
 ```
 
 ![](images/0-whitebox.JPG)
@@ -616,7 +616,7 @@ countries %>% ......(here("ch06_basic_geospatial_viz/data/newshapefile/countries
 ![](images/0-whitebox.JPG)
 
 ```{r,eval=TRUE,echo=FALSE}
-list.files(path = here("ch06_basic_geospatial_viz/data/newshapefile"),
+list.files(path = here("basic_geospatial_viz/data/newshapefile"),
            full.names = FALSE) %>% 
   tibble::enframe(name = NULL)
 ```

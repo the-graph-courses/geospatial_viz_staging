@@ -28,7 +28,7 @@ source(here("global/functions/misc_functions.R"))
 knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
 
 # Source autograder script quietly 
-suppressMessages(source(here::here("ch06_basic_geospatial_viz/lessons/ch06_ls03_physical_features_autograder.R")))
+suppressMessages(source(here::here("basic_geospatial_viz/lessons/ls03_physical_features_autograder.R")))
 ```
 
 ```{r,echo=FALSE}
@@ -122,7 +122,7 @@ This lesson requires familiarity with `{ggplot2}`: if you need to brush up, have
 
 ```{r}
 south_am_roads <- 
-  read_rds(here("ch06_basic_geospatial_viz/data/south_am_roads.rds"))
+  read_rds(here("basic_geospatial_viz/data/south_am_roads.rds"))
 
 south_am_roads
 ```
@@ -164,7 +164,7 @@ Data from here: <https://zenodo.org/record/4985219>
 
 ```{r}
 sacramento_rivers <- 
-  read_rds(here("ch06_basic_geospatial_viz/data/sacramento_rivers.rds"))
+  read_rds(here("basic_geospatial_viz/data/sacramento_rivers.rds"))
 
 ggplot(data = sacramento_rivers) + 
   

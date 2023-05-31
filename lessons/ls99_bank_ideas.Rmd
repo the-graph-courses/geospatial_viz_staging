@@ -7,7 +7,7 @@ To make a more complete map of the Western province of Sierra Leona, Health faci
 We start by defining two Hospital sites (point data), according to their longitude and latitude, collected by GPS devices in the field, using the `read_csv()` function from the `{readr}` package:
 
 ```{r sites-sites}
-sites <- readr::read_csv(here("ch06_basic_geospatial_viz/data/gps_healthsites.csv"))
+sites <- readr::read_csv(here("basic_geospatial_viz/data/gps_healthsites.csv"))
 
 sites
 ```
@@ -58,7 +58,7 @@ Districts (polygon data) can be retrieved from local **shapefile** data. This ti
 sierra_leone_shp <- 
   sf::read_sf(
     here(
-      "ch06_basic_geospatial_viz/data/boundaries/sle_adm3.shp"
+      "basic_geospatial_viz/data/boundaries/sle_adm3.shp"
       )) %>% 
   filter(admin1Name=="Western")
 
@@ -563,7 +563,7 @@ ggplot(data = countries) +
 We can replicate John Snow’s Dot map with the number of deaths per household of the 1854 London cholera outbreak:
 
 ```{r}
-cholera_deaths <- read_rds(here("ch06_basic_geospatial_viz/data/cholera_deaths.rds"))
+cholera_deaths <- read_rds(here("basic_geospatial_viz/data/cholera_deaths.rds"))
 
 ggplot(data = cholera_deaths) + 
   geom_sf(mapping = aes(size = Count), alpha = 0.7)

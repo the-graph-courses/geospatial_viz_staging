@@ -153,7 +153,7 @@ pacman::p_load(tidyverse, ggspatial, leaflet,
 # country boundaries
 gambia_boundaries <- geoboundaries(country = "Gambia", adm_lvl = 1)
 # malaria prevalence
-gambia_prevalence <- read_rds(here("ch06_basic_geospatial_viz",
+gambia_prevalence <- read_rds(here("basic_geospatial_viz",
                                    "data", "gambia_prevalence.rds"))
 ```
 
@@ -342,7 +342,7 @@ if(!require('pacman')) install.packages('pacman')
 pacman::p_load(tmap, spData)
 
 # 👉 data
-load(here("ch06_basic_geospatial_viz/data/nz_elev.rda"))
+load(here("basic_geospatial_viz/data/nz_elev.rda"))
 
 # 👉 plot
 tm_shape(nz_elev)  +

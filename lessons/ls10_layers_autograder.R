@@ -40,9 +40,9 @@ pacman::p_load_gh("afrimapr/afrihealthsites",
   function() {
     .problem_number <<- 1
     
-    .q1_correct <- readxl::read_xlsx(here::here("ch06_basic_geospatial_viz",
+    .q1_correct <- readxl::read_xlsx(here::here("basic_geospatial_viz",
                                                 "data", "gps_healthsites.xlsx")) # write correct answer
-    # .q1_mistake1 <- readxl::read_xlsx(here::here("ch06_basic_geospatial_viz",
+    # .q1_mistake1 <- readxl::read_xlsx(here::here("basic_geospatial_viz",
     #                                              "data", "gps_healthsites.xlsx")) # optional: highlight common mistake
     
     .autograder <<-
@@ -63,7 +63,7 @@ cat(out)
 }
 # solution of question
 .solution_q1 <- function(){
-  'read_xlsx(here("ch06_basic_geospatial_viz/data/gps_healthsites.xlsx"))' -> out
+  'read_xlsx(here("basic_geospatial_viz/data/gps_healthsites.xlsx"))' -> out
   cat(out)
 }
 
@@ -79,9 +79,9 @@ cat(out)
 # # test the check function
 # q1 <- c(1,1)
 # .check_q1()
-# q1 <- read_xlsx(here("ch06_basic_geospatial_viz/data/gps_healthsites.xlsx"))
+# q1 <- read_xlsx(here("basic_geospatial_viz/data/gps_healthsites.xlsx"))
 # .check_q1()
-# #q1 <- read_xlsx(here("ch06_basic_geospatial_viz/data/gps_healthsites.xlsx"))
+# #q1 <- read_xlsx(here("basic_geospatial_viz/data/gps_healthsites.xlsx"))
 # #.check_q1()
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
