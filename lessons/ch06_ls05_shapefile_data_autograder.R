@@ -29,10 +29,10 @@ pacman::p_load(malariaAtlas)
     .problem_number <<- 1
     
     .q1_correct <- 
-      sf::read_sf(here("ch06_basic_geospatial_viz/data/healthsites/sle_hf.shp"),
+      sf::read_sf(here("data/healthsites/sle_hf.shp"),
                   quiet = TRUE) # write correct answer
     .q1_mistake1 <- 
-      sf::read_sf(here("ch06_basic_geospatial_viz/data/boundaries/sle_adm3.shp"),
+      sf::read_sf(here("data/boundaries/sle_adm3.shp"),
                   quiet = TRUE) # optional: highlight common mistake
     
     .autograder <<-
@@ -55,7 +55,7 @@ pacman::p_load(malariaAtlas)
 }
 # solution of question
 .solution_q1 <- function(){
-  'sf::read_sf(here("ch06_basic_geospatial_viz/data/healthsites/sle_hf.shp")' -> out
+  'sf::read_sf(here("data/healthsites/sle_hf.shp")' -> out
   cat(out)
 }
 
@@ -68,11 +68,11 @@ pacman::p_load(malariaAtlas)
 # # [backend]
 # # test the check function
 # q1 <-
-#   sf::read_sf(here("ch06_basic_geospatial_viz/data/boundaries/sle_adm3.shp"),
+#   sf::read_sf(here("data/boundaries/sle_adm3.shp"),
 #               quiet = TRUE)
 # .check_q1()
 # q1 <-
-#   sf::read_sf(here("ch06_basic_geospatial_viz/data/healthsites/sle_hf.shp"),
+#   sf::read_sf(here("data/healthsites/sle_hf.shp"),
 #               quiet = TRUE)
 # .check_q1()
 

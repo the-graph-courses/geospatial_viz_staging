@@ -191,7 +191,7 @@ if(!require('pacman')) install.packages('pacman')
 pacman::p_load(tmap, spData)
 
 # 👉 data
-load(here("ch06_basic_geospatial_viz/data/nz_elev.rda"))
+load(here("data/nz_elev.rda"))
 
 # 👉 plot
 tm_shape(nz_elev)  +

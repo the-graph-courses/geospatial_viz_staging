@@ -28,16 +28,14 @@ source(here("global/functions/misc_functions.R"))
 knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
 
 ## autograders
-suppressMessages(source(here::here("ch06_basic_geospatial_viz/lessons/ch06_ls07_boundary_data_autograder.R")))
+suppressMessages(source(here::here("lessons/ch06_ls07_boundary_data_autograder.R")))
 ```
 
 ```{r,echo=FALSE}
 ggplot2::theme_set(new = theme_bw())
 ```
 
-------------------------------------------------------------------------
-
-<!-- # Geospatial analysis: boundary data -->
+# Boundary data
 
 ## Introduction
 

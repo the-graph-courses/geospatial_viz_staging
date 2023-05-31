@@ -28,16 +28,14 @@ source(here("global/functions/misc_functions.R"))
 knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
 
 ## autograders
-suppressMessages(source(here::here("ch06_basic_geospatial_viz/lessons/ch06_ls05_shapefile_data_autograder.R")))
+suppressMessages(source(here::here("lessons/ch06_ls05_shapefile_data_autograder.R")))
 ```
 
 ```{r,echo=FALSE}
 ggplot2::theme_set(new = theme_bw())
 ```
 
-------------------------------------------------------------------------
-
-<!-- # Geospatial analysis: Read and Write Shapefiles -->
+# Read and Write Shapefiles
 
 ## Introduction
 
@@ -91,13 +89,13 @@ Let's read the `sle_adm3.shp` file, available inside the `data/boundaries/` fold
 1.  Identify the **file path** up to the `.shp` filename, *relative to* the working directory of the R project:
 
 ``` r
-"ch06_basic_geospatial_viz/data/boundaries/sle_adm3.shp"
+"data/boundaries/sle_adm3.shp"
 ```
 
 2.  Then, use `sf::read_sf()` to paste that *path* within `here()` as follows:
 
 ```{r}
-shape_file <- read_sf(here("ch06_basic_geospatial_viz/data/boundaries/sle_adm3.shp"))
+shape_file <- read_sf(here("data/boundaries/sle_adm3.shp"))
 ```
 
 ::: rstudio-cloud
@@ -112,7 +110,7 @@ ggplot(data = shape_file) +
 :::
 
 ::: practice
-Read the shapefile called `sle_hf.shp` inside the `ch06_basic_geospatial_viz/data/healthsites/` folder. Use the `read_sf()` function:
+Read the shapefile called `sle_hf.shp` inside the `data/healthsites/` folder. Use the `read_sf()` function:
 
 ```{r,eval = FALSE}
 q1 <- ________(here("________"))
@@ -128,7 +126,7 @@ q1
 Wait! *Shapefiles* have an interesting feature, they do not come alone! They came with a list of sub-component files. Let's check at the files in the `data/boundaries/` folder:
 
 ```{r,eval=TRUE,echo=FALSE}
-list.files(path = here("ch06_basic_geospatial_viz/data/boundaries"),
+list.files(path = here("data/boundaries"),
            full.names = FALSE) %>% 
   tibble::enframe(name = NULL)
 ```
@@ -300,7 +298,7 @@ Each of these files are *related* with elements of the **`sf` header**.
 As an example, this is a list with the sub-component files of a *Shapefile* called `sle_adm3.shp`. All of them are located in **the same** `data/boundaries/` folder:
 
 ```{r,eval=TRUE,echo=FALSE}
-list.files(path = here("ch06_basic_geospatial_viz/data/boundaries"),
+list.files(path = here("data/boundaries"),
            full.names = FALSE) %>% 
   tibble::enframe(name = NULL)
 ```
@@ -357,20 +355,20 @@ Let's write the `countries` object to an `countries.shp` file, located inside th
 1.  Define the **file path** up to the `.shp` filename, *relative to* the working directory of the R project:
 
 ``` r
-"ch06_basic_geospatial_viz/data/newshapefile/countries.shp"
+"data/newshapefile/countries.shp"
 ```
 
 2.  Then, use `sf::write_sf()` to paste that *path* within `here()` as follows:
 
 ```{r,warning=FALSE}
 pacman::p_load(sf)
-countries %>% write_sf(here("ch06_basic_geospatial_viz/data/newshapefile/countries.shp"))
+countries %>% write_sf(here("data/newshapefile/countries.shp"))
 ```
 
 As a result, now we have *all the components* of a **`sf` object** in *four new files* that belong to one **Shapefile**:
 
 ```{r,eval=TRUE,echo=FALSE}
-list.files(path = here("ch06_basic_geospatial_viz/data/newshapefile"),
+list.files(path = here("data/newshapefile"),
            full.names = FALSE) %>% 
   tibble::enframe(name = NULL)
 ```

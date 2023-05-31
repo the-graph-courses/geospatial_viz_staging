@@ -23,7 +23,7 @@ pacman::p_load(tidyverse,
 ## q1 ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.internal_pcrime <- read_rds(here("ch06_basic_geospatial_viz/data/pcrime.rds"))
+.internal_pcrime <- read_rds(here("data/pcrime.rds"))
 
 # .internal_pcrime %>% 
 #   epihelper::st_coordinates_tidy() %>% 

@@ -28,7 +28,7 @@ source(here("global/functions/misc_functions.R"))
 knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
 
 # Source autograder script quietly 
-suppressMessages(source(here::here("ch06_basic_geospatial_viz/lessons/ch06_ls03_physical_features_autograder.R")))
+suppressMessages(source(here::here("lessons/ch06_ls03_physical_features_autograder.R")))
 ```
 
 ```{r,echo=FALSE}
@@ -36,9 +36,7 @@ ggplot2::theme_set(new = theme_bw())
 options(scipen=10000)
 ```
 
-------------------------------------------------------------------------
-
-<!-- # Geospatial analysis: density maps -->
+# Physical features
 
 ## Introduction
 
@@ -90,7 +88,7 @@ We can create a Physical feature map of the Road network in South America and `c
 
 ```{r}
 south_am_roads <- 
-  read_rds(here("ch06_basic_geospatial_viz/data/south_am_roads.rds"))
+  read_rds(here("data/south_am_roads.rds"))
 
 ggplot(data = south_am_roads) + 
   geom_sf(aes(color = type))
@@ -115,7 +113,7 @@ Below is an example mapping a *classification* of rivers in the Sacramento basin
 
 ```{r}
 sacramento_rivers <- 
-  read_rds(here("ch06_basic_geospatial_viz/data/sacramento_rivers.rds"))
+  read_rds(here("data/sacramento_rivers.rds"))
 
 ggplot(data = sacramento_rivers) + 
   geom_sf(aes(color = richness), size = 1)

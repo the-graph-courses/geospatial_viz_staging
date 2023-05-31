@@ -28,14 +28,14 @@ source(here("global/functions/misc_functions.R"))
 knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
 
 # Source autograder script quietly 
-mute(here("ch06_basic_geospatial_viz/lessons/ch06_ls10_layers_autograder.R"))
+mute(here("lessons/ch06_ls10_layers_autograder.R"))
 ```
 
 ```{r,echo=FALSE}
 ggplot2::theme_set(new = theme_bw())
 ```
 
-<!-- # Geospatial analysis: additional layers -->
+# Additional layers
 
 ## Introduction
 
@@ -419,12 +419,12 @@ We also added District boundaries from a local shapefile data to fill each polyg
 ```{r, message=FALSE,warning=FALSE}
 # districts
 sierra_leone_shp <- 
-  sf::read_sf(here("ch06_basic_geospatial_viz/data/boundaries/sle_adm3.shp")) %>% 
+  sf::read_sf(here("data/boundaries/sle_adm3.shp")) %>% 
   filter(admin1Name=="Western")
 
 # field site points
 sites_sf <- readr::read_csv(
-  here("ch06_basic_geospatial_viz/data/gps_healthsites.csv")) %>% 
+  here("data/gps_healthsites.csv")) %>% 
   st_as_sf(coords = c("gps_longitude","gps_latitude"), crs = 4326)
 ```
 

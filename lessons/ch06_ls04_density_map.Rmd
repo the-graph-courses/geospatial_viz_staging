@@ -28,7 +28,7 @@ source(here("global/functions/misc_functions.R"))
 knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
 
 # Source autograder script quietly 
-suppressMessages(source(here::here("ch06_basic_geospatial_viz/lessons/ch06_ls04_density_map_autograder.R")))
+suppressMessages(source(here::here("lessons/ch06_ls04_density_map_autograder.R")))
 ```
 
 ```{r,echo=FALSE}
@@ -36,9 +36,7 @@ ggplot2::theme_set(new = theme_bw())
 options(scipen=10000)
 ```
 
-------------------------------------------------------------------------
-
-<!-- # Geospatial analysis: density maps -->
+# Density maps
 
 ## Introduction
 
@@ -121,7 +119,7 @@ afriairports %>%
 Create a Density map with the `pcrime` data read from the `pcrime.rds` local file.
 
 ```{r}
-pcrime <- read_rds(here("ch06_basic_geospatial_viz/data/pcrime.rds"))
+pcrime <- read_rds(here("data/pcrime.rds"))
 ```
 
 ```{r,eval=FALSE}
@@ -222,7 +220,7 @@ For example, for our London cholera outbreak Dot map, we want overlay it on the 
 The `annotation_map_tile()` function adds a layer of **map tiles** pulled from [Open Street Map](https://www.openstreetmap.org/). We can control the `zoom` level. Here, we map the number of deaths at each location to the size of the dot.
 
 ```{r, results = "hide", warning = FALSE, message = FALSE}
-cholera_deaths <- read_rds(here("ch06_basic_geospatial_viz/data/cholera_deaths.rds"))
+cholera_deaths <- read_rds(here("data/cholera_deaths.rds"))
 
 ggplot(data = cholera_deaths) + 
   
