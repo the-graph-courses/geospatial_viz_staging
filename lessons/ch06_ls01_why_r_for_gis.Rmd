@@ -1,14 +1,14 @@
 ---
 title: '\ '
 output:
-  # word_document:
-  #   toc: true
-  html_document:
+ html_document:
     number_sections: true
     toc: true
     css: !expr here::here("global/style/style.css")
     highlight: kate
     pandoc_args: --shift-heading-level-by=-1
+ # word_document:
+  #   toc: true
 editor_options:
   markdown:
     wrap: 100
@@ -33,9 +33,7 @@ ggplot2::theme_set(new = theme_bw())
 options(scipen=10000)
 ```
 
-------------------------------------------------------------------------
-
-# Geospatial analysis: R for GIS
+# R for GIS
 
 ## Introduction
 
@@ -60,21 +58,6 @@ Here we are going to learn **why to use R** to address all these tasks, accordin
 ## Prerequisites
 
 This lesson requires familiarity with basic R and `{ggplot2}`: if you need to brush up, have a look at our introductory course on R and data visualization.
-
-```{r,eval=TRUE,echo=TRUE,message=FALSE}
-if(!require('pacman')) install.packages('pacman')
-pacman::p_load_gh("wmgeolab/rgeoboundaries")
-pacman::p_load(tidyverse, 
-               ggspatial, 
-               leaflet, 
-               mapview,
-               raster,
-               spData,
-               stars, 
-               tmap, 
-               here,
-               sf)
-```
 
 ## What is Geospatial analysis?
 
