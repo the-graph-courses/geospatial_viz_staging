@@ -1,38 +1,36 @@
-# further-data-analysis-with-r-staging
 
+# Geospatial Visualization with R
 
-## Introduction
+This is the staging repository for the geospatial visualization course under development by the GRAPH Courses. The course will be finalized and deployed fully by mid 2024. 
 
-This is a Renku project - basically a git repository with some
-bells and whistles. You'll find we have already created some
-useful things like `data` and `notebooks` directories and
-a `Dockerfile`.
+## Course Lessons
 
-## Working with the project
+### 1. [Why R for GIS](https://the-graph-courses.github.io/geospatial_viz_staging/lessons/ls01_why_r_for_gis)
+Explore the reasons why R is a powerful tool for GIS and geospatial data analysis.
 
-The simplest way to start your project is right from the Renku
-platform - just click on the `Environments` tab and start a new session.
-This will start an interactive environment right in your browser.
+### 2. [Thematic Maps](https://the-graph-courses.github.io/geospatial_viz_staging/lessons/ls02_thematic_maps)
+Learn how to create thematic maps that convey specific data themes on geographical maps.
 
-To work with the project anywhere outside the Renku platform,
-click the `Settings` tab where you will find the
-git repo URLs - use `git` to clone the project on whichever machine you want.
+### 3. [Physical Features](https://the-graph-courses.github.io/geospatial_viz_staging/lessons/ls03_physical_features)
+Understand how to represent physical features on maps using R.
 
-### Changing interactive environment dependencies
+### 4. [Density Maps](https://the-graph-courses.github.io/geospatial_viz_staging/lessons/ls04_density_map)
+Discover how to visualize data density on maps, useful for population studies and resource distributions.
 
-Initially we install a very minimal set of packages to keep the images small.
-However, you can add python and conda packages in `requirements.txt` and
-`environment.yml`, and R packages to `install.R` (listed as, for example,
-`install.packages("ggplot2")`), to your heart's content. If you need more fine-grained
-control over your environment, please see [the documentation](https://renku.readthedocs.io/en/latest/user/advanced_interfaces.html#dockerfile-modifications).
+### 5. [Shapefile Data](https://the-graph-courses.github.io/geospatial_viz_staging/lessons/ls05_shapefile_data)
+Get hands-on experience with shapefile data and how it's used in creating detailed geospatial visualizations.
 
-## Project configuration
+### 6. [Coordinate Reference Systems (CRS)](https://the-graph-courses.github.io/geospatial_viz_staging/lessons/ls06_crs)
+Dive into the world of CRS and learn how to manage geospatial data in different coordinate systems.
 
-Project options can be found in `.renku/renku.ini`. In this
-project there is currently only one option, which specifies
-the default type of environment to open, in this case `/rstudio`.
+### 7. [Boundary Data](https://the-graph-courses.github.io/geospatial_viz_staging/lessons/ls07_boundary_data)
+Explore the use of boundary data in mapping regions, countries, and custom-defined areas.
 
-## Moving forward
+### 8. [Foreign Objects](https://the-graph-courses.github.io/geospatial_viz_staging/lessons/ls08_foreign_objects)
+Learn about incorporating foreign objects.
 
-Once you feel at home with your project, we recommend that you replace
-this README file with your own project documentation! Happy data wrangling!
+### 9. [Understanding UTM](https://the-graph-courses.github.io/geospatial_viz_staging/lessons/ls09_utm)
+Gain insights into the Universal Transverse Mercator (UTM) systems for more precise location mapping.
+
+### 10. [Working with Layers](https://the-graph-courses.github.io/geospatial_viz_staging/lessons/ls10_layers)
+Master the art of layering in geospatial visualizations to create complex and informative maps.
