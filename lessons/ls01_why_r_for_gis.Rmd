@@ -45,15 +45,15 @@ Spatial aspects of your data can provide a lot of insights into the *spread* of 
 
 ![](images/gis_head_image.png)
 
-Here we are going to learn **why to use R** to address all these tasks, according to the needs of applied epidemiologists.
+Here we are going to learn **how to use R** to address all these questions, according to the needs of applied epidemiologists.
 
 ## Learning objectives
 
-1.  Define what is a **geospatial analysis**.
+1.  Define **geospatial analysis**.
 
-2.  Identify the main analytical task that a **GIS software** need to solve.
+2.  Identify the main analytical tasks that **GIS software** can solve.
 
-3.  Identify the **advantages** of R as a GIS software.
+3.  Identify the **advantages** of using R as GIS software.
 
 ## Prerequisites
 
@@ -63,11 +63,11 @@ This lesson requires familiarity with basic R and `{ggplot2}`: if you need to br
 
 Geospatial analysis is the study of data with *geographic* locations or coordinates--that is, data related to positions on the Earth's surface. This branch of data analysis is essential to epidemiology.
 
-A geospatial analysis can, for example, help us to:
+A geospatial analysis can help us to:
 
 -   Identify **hot-spots** and potential **high-risk areas** for communicable disease spread;
 -   Discover environmental **correlates** and potential causes of non-communicable diseases; or
--   Determine the **how accessible** is healthcare for people that need it;
+-   Determine the **accessibility of** **healthcare** for people that need it.
 
 As an example, here is a map of malaria prevalence predictions in The Gambia created with `{ggplot2}`, adapted from Moraga, 2019.
 
@@ -90,6 +90,7 @@ pacman::p_load(tidyverse, ggspatial, leaflet,
 gambia_boundaries <- geoboundaries(country = "Gambia", adm_lvl = 1)
 # malaria prevalence
 gambia_prevalence <- read_rds(here("data", "gambia_prevalence.rds"))
+
 # 👉 third, plot data:
 
 ggplot() +
