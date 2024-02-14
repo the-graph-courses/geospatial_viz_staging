@@ -81,7 +81,7 @@ A *Density map* is a type of Thematic map where colours are used to represent in
 
 ### How to plot it? {.unnumbered}
 
-As an example, we are going to use the `afriairports` dataset, from the `{afrilearndata}` package, that contains the locations from African airports.
+As an example, we are going to use the `afriairports` dataset, from the `{afrilearndata}` package, that contains the locations of African airports.
 
 With a Dot map we get *overlapping points* using the `geom_sf()` function, as in here:
 
@@ -90,11 +90,11 @@ ggplot(data = afriairports) +
   geom_sf()
 ```
 
-A *Density map* with `{ggplot2}` will require **four main steps** from a `sf` object. Let's create a Density map!
+A *Density map* with `{ggplot2}` will require **four main steps**. Let's use the `afriairports` dataset as an example:
 
 1.  First, use `epihelper::st_coordinates_tidy()` to *retrieve* the point coordinates.
-2.  Then, start `ggplot()` defining the *new* coordinates column names `X` and `Y`,
-3.  Using `geom_bin_2d()` to depict the *number of airports per area*,
+2.  Then, use the `ggplot()` function to define the *new* coordinates column names `X` and `Y`,
+3.  Use the `geom_bin_2d()` function to depict the *number of airports per area*,
 4.  Lastly, use the `coord_sf()` function to *transform* the figure **X** and **Y** axis:
     -   fix their aspect ratio and
     -   add a coordinate reference system format (for instance, from 30°S to 40°N in the **Y** axis).
@@ -105,7 +105,7 @@ afriairports %>%
   # 👉 (1) extract coordinates
   st_coordinates_tidy() %>% 
   
-  # 👉 (2) start ggplot
+  # 👉 (2) define new coordinates with ggplot() 
   ggplot(aes(x = X, y = Y)) +
   
   # 👉 (3) with a new geom function
@@ -268,9 +268,7 @@ pcrime %>%
 ```
 
 ::: watch-out
-
 -   The basemap must be bellow the `geom_*` function!
-
 :::
 
 ::: rstudio-cloud
