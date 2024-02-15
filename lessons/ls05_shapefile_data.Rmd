@@ -149,7 +149,7 @@ Since this `sf` object is a special kind of **data frame**, we can manipulate it
 
 ```{r}
 countries %>% 
-  select(name,    # country name
+  dplyr::select(name,    # country name
          pop_est) # estimated population
 ```
 
@@ -165,11 +165,13 @@ Let's go line-by-line through *the most relevant sections* of this header to see
 
 The first line of the header tells you the number of **features** and **fields** in the `sf` object:
 
-    👉 Simple feature collection with 177 features and 2 fields 👈
-       Geometry type: MULTIPOLYGON
-       Dimension: XY
-       Bounding box: xmin: -180 ymin: -90 xmax: 180 ymax: 83.64513
-       Geodetic CRS: +proj=longlat +datum=WGS84
+```         
+👉 Simple feature collection with 177 features and 2 fields 👈
+   Geometry type: MULTIPOLYGON
+   Dimension: XY
+   Bounding box: xmin: -180 ymin: -90 xmax: 180 ymax: 83.64513
+   Geodetic CRS: +proj=longlat +datum=WGS84
+```
 
 **Features** are simply the geographical objects represented by each *row* of the data frame. In our `countries` dataset, each country has its own row; therefore each country is a feature.
 
@@ -198,11 +200,13 @@ q_nz_features_fields <- "C. 5 features and 4 fields"
 
 The second line of the header gives you the type of geometry in the `sf` object:
 
-       Simple feature collection with 177 features and 2 fields
-    👉 Geometry type: MULTIPOLYGON 👈
-       Dimension: XY
-       Bounding box: xmin: -180 ymin: -90 xmax: 180 ymax: 83.64513
-       Geodetic CRS: +proj=longlat +datum=WGS84
+```         
+   Simple feature collection with 177 features and 2 fields
+👉 Geometry type: MULTIPOLYGON 👈
+   Dimension: XY
+   Bounding box: xmin: -180 ymin: -90 xmax: 180 ymax: 83.64513
+   Geodetic CRS: +proj=longlat +datum=WGS84
+```
 
 **Geometry** is essentially a synonym for *"shape"*. There are three main geometry types: points, lines and polygons. Each of these has its respective "multi" version: multipoints, multilines and multipolygons.
 
@@ -275,11 +279,13 @@ Some noteworthy points about this column:
 
 The final header line tells us what Coordinate Reference System used.
 
-       Simple feature collection with 177 features and 2 fields
-       Geometry type: MULTIPOLYGON
-       Dimension: XY
-       Bounding box: xmin: -180 ymin: -90 xmax: 180 ymax: 83.64513
-    👉 Geodetic CRS: +proj=longlat +datum=WGS84 👈
+```         
+   Simple feature collection with 177 features and 2 fields
+   Geometry type: MULTIPOLYGON
+   Dimension: XY
+   Bounding box: xmin: -180 ymin: -90 xmax: 180 ymax: 83.64513
+👉 Geodetic CRS: +proj=longlat +datum=WGS84 👈
+```
 
 **Coordinate Reference System (CRS)** relate the spatial elements of the data with the *surface of Earth*.
 
