@@ -126,7 +126,7 @@ ggplot(data = north_south_am) +
 ◘ Use `ne_countries()`, `ggplot()` and `geom_sf()` to plot a single map of all the countries in the Asia and Africa continent
 
 ```{r eval = FALSE}
-q_asia_africa <- 
+asia_africa <- 
   .........(returnclass = "sf", 
             ......... = c(".........", "........."))
 

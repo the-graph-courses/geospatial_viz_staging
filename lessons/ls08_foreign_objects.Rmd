@@ -39,7 +39,7 @@ ggplot2::theme_set(new = theme_bw())
 
 ## Introduction
 
-Let say that you receive a raw `data.frame` with coordinate points per row, and I want to create a Thematic map with it, how can I make it using `{ggplot2}`? Or that you use a package to get spatial data but in a object class like `SpatVector` or `SpatialPolygonsDataFrame`, how can I use them with `{ggplot2}`?
+Let say that you receive a raw `data.frame` with coordinate points per row, and want to create a thematic map. How can you make thematic maps using `{ggplot2}`? Or, what if that you use a package to get spatial data, but the objects are in a different class, like `SpatVector` or `SpatialPolygonsDataFrame`. How can we use these objects with `{ggplot2}`?
 
 ![Figure 1. (A) Map from a raw data.frame with coordinate points. (B) Dot map with the same data converted to a `sf` object.](images/geoboundaries_05.png)
 
@@ -89,7 +89,9 @@ bolivia_level3 %>%
   select(starts_with("NAME_")) #👈👈👈👈👈👈👈👈👈👈👈👈👈
 ```
 
-This is useful for situations where you want to `filter()` only a specific subset of sub-divisions (e.g. level 3) within a region (level 1) or department (level 2).
+This is useful for situations where you want to `filter()` only a specific subset of sub-divisions (e.g. level 3) within a region (level 2) or department (level 1).
+
+For example, all the provinces (level 2) within the `Santa Cruz` department (level 1):
 
 ```{r}
 bolivia_level3 %>% 
@@ -106,11 +108,13 @@ However, I can not create `ggplot` maps with it because it is a `SpatVector` cla
 gadm(country = "Bolivia", level = 3, path = tempdir())
 ```
 
-    👉 class       : SpatVector 👈
-       geometry    : polygons 
-       dimensions  : 344, 16  (geometries, attributes)
-       extent      : -69.64525, -57.45443, -22.90657, -9.670923
-       coord. ref. : +proj=longlat +datum=WGS84 +no_defs 
+```         
+👉 class       : SpatVector 👈
+   geometry    : polygons 
+   dimensions  : 344, 16  (geometries, attributes)
+   extent      : -69.64525, -57.45443, -22.90657, -9.670923
+   coord. ref. : +proj=longlat +datum=WGS84 +no_defs 
+```
 
 ### Convert foreign Polygon geometries to `sf` {.unnumbered}
 
@@ -226,10 +230,10 @@ However, if you would like to make a **custom plot** for your particular researc
 
 To convert a `data.frame` to an `sf` object, we can use the `st_as_sf()` from the `{sf}` package.
 
-In case of **Point** patterns data (like for a **Dot map**):
+In case of **Point** patterns data (like for a **Dot map**), two arguments are required:
 
--   the `coords` argument need to specify the names of the variables holding the **Coordinates**, and
--   the `crs` argument specify the **Coordinate Reference System (CRS)** to be assigned (here WGS84, which is the CRS code \#`4326`).
+-   the `coords` argument must specify the names of the variables holding the **Coordinates**, and
+-   the `crs` argument must specify the **Coordinate Reference System (CRS)** to be assigned (here WGS84, which is the CRS code \#`4326`).
 
 ```{r,eval=TRUE,echo=TRUE}
 zimbabwe_malaria_pr_sf <- 
@@ -308,10 +312,6 @@ q4
 
 ```{r include = F}
 .score_print()
-```
-
-```{r include = F}
-pacman::p_unload(raster) # avoid masking select(). Temporary investigation
 ```
 
 ## Wrap up
