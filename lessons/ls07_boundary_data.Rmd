@@ -163,7 +163,7 @@ ggplot(data = china_indonesia) +
 
 ## Mapping country borders with `{rgeoboundaries}`
 
-`{rnaturalearth}` is useful for accessing to continents and country borders that not need too much boundaries resolution. `{rgeoboundaries}` is an alternative package that provides access to high resolution country boundaries.
+`{rnaturalearth}` is useful for accessing continents and country borders that do not need much boundary resolution. `{rgeoboundaries}` is an alternative package that provides access to high resolution country boundaries.
 
 ![Figure 2. Ireland according to {rnaturalearth} and {rgeoboundaries} packages.](images/geoboundaries_01.png)
 
@@ -296,7 +296,7 @@ q_geodata
 ```
 :::
 
-This is *multiple column output* useful for situations where you want to `filter()` only the sub-divisions (level 3) from a specific region (level 1) of department (level 2).
+This *multiple column output* is useful for situations where you want to `filter()` the sub-divisions (level 3) from a specific region (level 1) of departments (level 2).
 
 For example, let's filter the *municipalities* (level 3) from the *department* (level 1) called `Santa Cruz`, in Bolivia:
 
@@ -319,11 +319,13 @@ The header of *this* object details that it is of class `SpatVector`. **It is no
 gadm(country = "Bolivia", level = 3, path = tempdir())
 ```
 
-    👉 class       : SpatVector 👈
-       geometry    : polygons 
-       dimensions  : 344, 16  (geometries, attributes)
-       extent      : -69.64525, -57.45443, -22.90657, -9.670923
-       coord. ref. : +proj=longlat +datum=WGS84 +no_defs 
+```         
+👉 class       : SpatVector 👈
+   geometry    : polygons 
+   dimensions  : 344, 16  (geometries, attributes)
+   extent      : -69.64525, -57.45443, -22.90657, -9.670923
+   coord. ref. : +proj=longlat +datum=WGS84 +no_defs 
+```
 
 ## Wrap up
 
