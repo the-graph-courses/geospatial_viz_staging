@@ -81,11 +81,11 @@ pacman::p_load_gh("yutannihilation/ggsflabel",
 
 ## Build an informative map
 
-We will create a map to figure out how are Tier 3 Hospitals distributed in the Western Province of Sierra Leone. For this, we are going to retrieve real Hospital information from a public repository.
+We will create a map to figure out how Tier 3 Hospitals are distributed in the Western Province of Sierra Leone. For this, we are going to retrieve real Hospital information from a public repository.
 
 ### Access hospital sites with `{afrihealthsites}` {.unnumbered}
 
-Instead of looking up coordinates manually, the [package `{afrihealthsites}`](https://github.com/afrimapr/afrihealthsites) provides a function `afrihealthsites()`, which allows to retrieve geographic coordinates of African health facilities from different sources:
+Instead of looking up coordinates manually, the [package `{afrihealthsites}`](https://github.com/afrimapr/afrihealthsites) provides a function `afrihealthsites()`, which allows to retrieve geographic coordinates of African health facilities from different sources.
 
 You can run the following code to retrieve geographic coordinates of all the health facilities in Sierra Leone available in the `who` database:
 
@@ -117,7 +117,7 @@ We can now keep the Tier 3 health facilities inside the Western province:
 
 ```{r}
 sle_healthsites_set <- 
-  
+   
   sle_healthsites_all %>%
   
   filter(admin1 == "Western Area") %>% # 👈👈👈👈👈👈👈👈👈👈👈👈👈👈👈
@@ -163,7 +163,7 @@ ggplot() +
 
 ### Add a Scale bar and North arrow with `{ggspatial}` {.unnumbered}
 
-We introduce here the package `{ggspatial}`, which provides easy-to-use functions to create a scale bar and north arrow on a `ggplot` map:
+Here we introduce the `{ggspatial}` package, which provides easy-to-use functions to create a scale bar and north arrow on a `ggplot` map:
 
 -   `annotation_north_arrow()` allows to add the north symbol and
 -   `annotation_scale()` a scale bar.
@@ -233,7 +233,7 @@ sle_healthsites_set %>%
   geom_sf_text(mapping = aes(label= facility_name)) # 👈👈👈👈👈👈👈
 ```
 
-This is not really satisfactory, as the names overlap on the points, and they are not easy to read on the grey background. The [package `{ggsflabel}`](https://yutannihilation.github.io/ggsflabel/index.html) offers a very flexible approach (inspired in `{ggrepel}`) to deal with label placement in `ggplot` maps with `sf` objects (with `geom_sf_text_repel` and `geom_sf_label_repel`), including automated movement of labels in case of overlap.
+This is not really satisfactory, as the names overlap on the points, and they are not easy to read on the grey background. The [`{ggsflabel}` package](https://yutannihilation.github.io/ggsflabel/index.html) offers a very flexible approach (inspired in `{ggrepel}`) to deal with label placement in `ggplot` maps with `sf` objects (with `geom_sf_text_repel` and `geom_sf_label_repel`), including automated movement of labels in case of overlap.
 
 We use it here to "nudge" the labels away, and connect them to the city locations:
 
@@ -385,7 +385,7 @@ ggplot() +
   
   # province labels
   geom_sf_label_repel(data = sierra_leone %>%         # 👈👈👈👈👈👈
-                        filter(shapeName!="Eastern"), 
+                      filter(shapeName!="Eastern"), 
                       mapping = aes(label=shapeName)) +
   
   # hospital points 
@@ -484,13 +484,9 @@ ggplot() +
 .score_print()
 ```
 
-```{r include = F}
-pacman::p_unload(raster) # avoid masking select(). Temporary investigation
-```
-
 ## Wrap up
 
-This example fully demonstrates that adding **layers** on `ggplot2` is relatively straightforward, as long as the data is properly stored in an `sf` object. Adding additional layers like **external** data, color **palettes**, point or polygon **labels** and **map annotations** would simply follow the same logic, with additional calls *after* `geom_sf()` and at the *right place* in the `ggplot2` sequence.
+This example fully demonstrates that adding **layers** on `ggplot2` is relatively straightforward, as long as the data is properly stored as an `sf` object. Adding additional layers like **external** data, color **palettes**, point or polygon **labels** and **map annotations** would simply follow the same logic, with additional calls *after* `geom_sf()` and at the *right place* in the `ggplot2` sequence.
 
 ## Contributors {.unlisted .unnumbered}
 
