@@ -92,7 +92,7 @@ fatalities %>%
 
 However, what if you receive coordinates **different to** *longitude* and *latitude*?
 
-To exemplify this scenario, we are going to use **malaria prevalence in The Gambia**. We use data of malaria prevalence in children obtained at **65 villages** in The Gambia.
+To illustrate this scenario, we are going to use **malaria prevalence in The Gambia**. We use data of malaria prevalence in children obtained at **65 villages** in The Gambia.
 
 ### Malaria prevalence
 
@@ -192,7 +192,7 @@ First, we need to set **UTM coordinates**. For this, we specify the projection o
 gambia_projected <- gambia_point_summary %>% 
   # first, specify the projection of gambia
   # UTM zone 28
-  st_as_sf(coords = c("x", "y"),
+  st_as_sf(coords = c("x", "y"), 
            crs = "+proj=utm +zone=28")
 
 gambia_projected
@@ -300,7 +300,7 @@ mdsr::CholeraDeaths %>%
   st_transform(4326)
 ```
 
-**Projected CRS** are a choice made by a *public mapping agency*. So, with local data sources, work with the CRS in which the data was provided, to ensure *compatibility*, even if the official CRS is not the most accurate.
+**Projected CRS** are a choice made by a *public mapping agencies.* So, with local data sources, it is better to work with the CRS in which the data was provided to ensure *compatibility*, even if the official CRS is not the most accurate.
 :::
 
 #### Map prevalences {.unnumbered}
@@ -331,10 +331,6 @@ ggplot() +
 
 ```{r include = F}
 .score_print()
-```
-
-```{r include = F}
-pacman::p_unload(raster) # avoid masking select(). Temporary investigation
 ```
 
 ## Wrap up
