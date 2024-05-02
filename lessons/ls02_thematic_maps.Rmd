@@ -145,9 +145,9 @@ In the following lessons, we will learn how to get more of them and even convert
 
 This type of map is particularly useful when visualizing a variable and how it changes across defined regions or geopolitical areas.
 
-![Figure 2. Choropleth map with the number of cases in a simulated Ebola epidemic in Sierra Leona.](images/intro_choropleth_01.png)
+![Figure 2. Choropleth map with the number of cases in a simulated Ebola epidemic in Sierra Leone.](images/intro_choropleth_01.png)
 
-In Figure 2, the region of interest (Sierra Leona) has been partitioned into a finite number of subregions (districts) at which the number of cases have been aggregated.
+In Figure 2, the region of interest (Sierra Leone) has been partitioned into a finite number of subregions (districts) at which the number of cases have been aggregated.
 
 ::: vocab
 The type of shape that *Choropleth maps* visualize is called **Polygons**. This shape collects data that pertains to an enclosed region partitioned into a finite number of *areal units* with well-defined boundaries. For example, attributes collected by ZIP code, census tract, or the administrative boundary levels of a country (Figure 2).
