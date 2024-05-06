@@ -88,28 +88,28 @@ pacman::p_load_gh("afrimapr/afrilearndata",
 • Use `ne_countries()` with the `returnclass = "sf"` argument.
 
 ```{r}
-countries <- 
+countries <- ______(______ = "______")
 ```
 
-• It returns an `sf` object!
+• It returns an `sf` object with the shapes for all countries!
 
 • So, `countries` can be plotted with `geom_sf()`:
 
 ```{r}
-
+ggplot(______ = ______) + 
+  ______()
 ```
 
 • Wonderful!
 
 ### A single continent {.unnumbered}
 
-• Let's subset the `"south america"` **continent**,
-
-• Use the `continent` argument of `ne_countries()`:
+• Let's subset the `"south america"` **continent**, using the `continent` argument of `ne_countries()`:
 
 ```{r}
 # Countries in South America
-south_am <- ne_countries(returnclass = "sf") # 👈👈👈👈
+south_am <- ne_countries(returnclass = "sf",
+                         ______ = "______") # 👈👈👈👈
 
 ggplot(data = south_am) + 
   geom_sf()
@@ -121,7 +121,8 @@ ggplot(data = south_am) +
 
 ```{r}
 # Countries in north and south america
-north_south_am <- ne_countries(returnclass = "sf") # 👈👈👈👈
+north_south_am <- ne_countries(returnclass = "sf",
+                               ______ = ______("______", "______")) # 👈👈👈👈
 
 ggplot(data = north_south_am) +
   geom_sf()
@@ -132,8 +133,8 @@ ggplot(data = north_south_am) +
 
 ```{r eval = FALSE}
 q_asia_africa <- 
-  .........(returnclass = "sf", 
-            ......... = c(".........", "........."))
+  ______(returnclass = "sf", 
+            ______ = c("______", "______"))
 
 ggplot(data = asia_africa) +
   geom_sf()
@@ -142,15 +143,14 @@ ggplot(data = asia_africa) +
 
 ### Multiple countries {.unnumbered}
 
-• Subset **one** or **multiple** countries,
-
-• e.g. `"nigeria"` and `"niger"`
+• Subset **one** or **multiple** countries, e.g. `"nigeria"` and `"niger"`
 
 • Use the `country` argument:
 
 ```{r}
 # Map of Nigeria and Niger
-nigeria_niger <- ne_countries(returnclass = "sf")
+nigeria_niger <- ne_countries(returnclass = "sf",
+                              ______ = ______("______","______"))
 
 ggplot(data = nigeria_niger) +
   geom_sf()
@@ -161,8 +161,8 @@ ggplot(data = nigeria_niger) +
 
 ```{r eval=FALSE}
 china_indonesia <- 
-  .........(returnclass = "sf", 
-            ......... = c(".........", "........."))
+  ______(returnclass = "sf", 
+            ______ = c("______", "______"))
 
 ggplot(data = china_indonesia) +
   geom_sf()
@@ -173,7 +173,7 @@ ggplot(data = china_indonesia) +
 
 ## Mapping country borders with `{rgeoboundaries}`
 
-• `{rnaturalearth}` access borders that *do not need too much* boundaries resolution.
+• `{rnaturalearth}` access borders that *do not need too much* boundary resolution.
 
 • `{rgeoboundaries}` access to the *high* resolution country boundaries.
 
@@ -188,14 +188,14 @@ ggplot(data = china_indonesia) +
 • Use `geoboundaries()` to download the administrative boundary of `"Zimbabwe"`.
 
 ```{r,eval=FALSE,echo=TRUE}
-zimbabwe_boundary <- 
+zimbabwe_boundary <- ______(______ = "______")
 ```
 
 ::: key-point
 • `zimbabwe_boundary` is a `"sf"` class object.
 
 ```{r,eval=FALSE,echo=FALSE,message=FALSE}
-
+class(______)
 ```
 
 • So, `zimbabwe_boundary` can be plotted with `geom_sf()`:
@@ -213,11 +213,6 @@ Download the boundaries of `Sierra Leone` using the `geoboundaries()` function.
 q1 <- ________(________ = "Sierra Leone")
 q1
 ```
-
-```{r,include = FALSE}
-.check_q1()
-.hint_q1()
-```
 :::
 
 ### Different administrative levels {.unnumbered}
@@ -233,7 +228,8 @@ q1
 • Let's get the **first** (`1`) administrative level boundaries of `"Zimbabwe"`:
 
 ```{r,fig.height=3}
-zimbabwe_boundaries_adm1 <- 
+zimbabwe_boundaries_adm1 <- ______(______ = "______",
+                                   ______ = ______)
 
 ggplot(data = zimbabwe_boundaries_adm1) +
   geom_sf()
@@ -242,7 +238,8 @@ ggplot(data = zimbabwe_boundaries_adm1) +
 • Let's get the **second** (`2`) administrative level boundaries of Zimbabwe:
 
 ```{r,fig.height=3}
-zimbabwe_boundaries_adm2 <- 
+zimbabwe_boundaries_adm2 <- ______(______ = "______",
+                                   ______ = ______)
 
 ggplot(data = zimbabwe_boundaries_adm2) +
   geom_sf()
@@ -257,11 +254,6 @@ Download the `third` administrative level boundaries of `Sierra Leone`, using th
 q2 <- geoboundaries(country = "Sierra Leone", ________ = ________)
 q2
 ```
-
-```{r,include = FALSE}
-.check_q2()
-.hint_q2()
-```
 :::
 
 ::: pro-tip
@@ -273,7 +265,8 @@ q2
 
 ```{r, eval=FALSE}
 zimbabwe_mozambique_adm2 <- 
-  geoboundaries(country = )
+  geoboundaries(country = ______("______","______"),
+                ______ = ______)
 ```
 
 ```{r,eval=FALSE}
@@ -300,7 +293,7 @@ geoboundaries(country = "Bolivia", adm_lvl = 3) %>%
 • `gadm()` from `{geodata}` provides the name of all the levels above the one requested:
 
 ```{r,message=FALSE,warning=FALSE}
- %>% 
+ ______(______ = "______", level = ______, path = ______())%>% 
   
   as_tibble() %>% 
   select(starts_with("NAME_"))
@@ -329,7 +322,7 @@ gadm(country = "Bolivia", level = 3, path = tempdir()) %>%
   as_tibble() %>% 
   select(starts_with("NAME_")) %>% 
   
-   #👈👈👈👈👈👈👈👈👈👈👈👈👈👈
+  ______(______ == "______")#👈👈👈👈👈👈👈👈👈👈👈👈👈👈
 ```
 
 • But, how can we make a province map with *this* output?
