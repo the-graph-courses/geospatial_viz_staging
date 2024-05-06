@@ -98,9 +98,7 @@ This lesson requires familiarity with `{ggplot2}`: if you need to brush up, have
 
 ### How to plot it? {.unnumbered}
 
-• Let's use `afriairports`, from `{afrilearndata}`,
-
-• It contains the locations from African airports.
+• Let's use `afriairports`, from `{afrilearndata}`, which contains the locations from African airports.
 
 • With `geom_sf()` function we get *overlapping points*:
 
@@ -109,36 +107,24 @@ ggplot(data = afriairports) +
   geom_sf()
 ```
 
-• A *Density map* require four main steps:
+• A *Density map* requires four main steps:
 
 1.  `epihelper::st_coordinates_tidy()` to *retrieve* the point coordinates.
-
-```{=html}
-<!-- -->
-```
 2.  `ggplot()` defining *new* coordinate column names `X` and `Y`,
-
-```{=html}
-<!-- -->
-```
 3.  `geom_bin_2d()` to depict the *number of airports per area*,
-
-```{=html}
-<!-- -->
-```
 4.  `coord_sf()` to *transform* axis aspect ratio and coordinate format.
 
 ```{r,eval=TRUE,echo=TRUE}
 afriairports %>% 
   
   # 👉 (1) extract coordinates
-   %>% 
+  ______() %>% 
   
   # 👉 (2) start ggplot
-  ggplot() +
+  ggplot(aes(______ = ______, ______ = ______)) +
   
   # 👉 (3) with a new geom function
-   +
+   ______() +
   
   # 👉 (4) transform axis
   coord_sf()
@@ -148,7 +134,7 @@ afriairports %>%
 Create a Density map with the `pcrime` data read from the `pcrime.rds` local file.
 
 ```{r}
-pcrime <- read_rds(here("basic_geospatial_viz/data/pcrime.rds"))
+pcrime <- read_rds(here("data/pcrime.rds"))
 ```
 
 ```{r,eval=FALSE}
@@ -161,7 +147,7 @@ Use the `geom_bin_2d()`, to portrait the number of crimes per area, faceted by t
 pcrime %>% 
   st_coordinates_tidy() %>% 
   ggplot(aes(x = X,y = Y)) +
-  ........() +
+  ______() +
   coord_sf() +
   facet_wrap(~marks)
 ```
@@ -196,10 +182,10 @@ afriairports %>%
   st_coordinates_tidy() %>% 
   
   # (2) start ggplot
-  ggplot(aes(x = X, y = Y)) +
+  ggplot(aes(x = ______, y = ______)) +
   
   # 👉 with an alternative geom function 👈
-  (contour_var = "") +
+  ______(contour_var = "______") +
   
   # (4) transform axis
   coord_sf()
@@ -217,9 +203,9 @@ afriairports %>%
   ggplot(aes(x = X, y = Y)) +
   
   # 👉 with an alternative geom function 👈
-  stat_density_2d(
+  ______(
     geom = "raster",
-    mapping = aes(fill = after_stat(count)),
+    mapping = aes(fill = after_stat(______)),
     contour = FALSE) + 
   scale_fill_viridis_c() +
   
@@ -234,7 +220,7 @@ This will be useful to built a Density map with `geom_density_2d_filled()` and p
 
 ```{r,eval=FALSE}
 pcrime %>% 
-  ........................ %>% 
+  ______ %>% 
   ggplot(aes(x = X,y = Y)) +
   geom_density_2d_filled() +
   coord_sf() +
@@ -264,12 +250,12 @@ pcrime %>%
 
 ```{r, results = "hide", warning = FALSE, message = FALSE}
 cholera_deaths <- 
-  read_rds(here("basic_geospatial_viz/data/cholera_deaths.rds"))
+  read_rds(here("data/cholera_deaths.rds"))
 
 ggplot(data = cholera_deaths) + 
   
   # 👉 add a basemap 👈
-  (zoomin = 0) + 
+  ______(zoomin = 0) + 
   
   # continue with ggplot
   geom_sf(mapping = aes(size = Count), alpha = 0.5)
@@ -282,7 +268,7 @@ Add a Basemap to a Dot map using the `africapitals` object and the `annotation_m
 
 ```{r,eval=FALSE,echo=TRUE}
 ggplot(data = africapitals) +
-  .......() + 
+  ______() + 
   geom_sf(mapping = aes(size = pop), alpha = 0.5)
 ```
 :::
@@ -301,7 +287,7 @@ pcrime %>%
   ggplot(aes(x = X, y = Y)) +
   
   # 👉 add a basemap 👈
-  (zoomin = 0) + 
+  ______(zoomin = 0) + 
   
   # (3) with a new geom function
   geom_bin_2d() +
@@ -324,8 +310,8 @@ Use two functions, `annotation_map_tile()` and `geom_bin_2d()`, to add a Basemap
 afriairports %>% 
   st_coordinates_tidy() %>% 
   ggplot(aes(x = X, y = Y)) +
-  ...........() + 
-  ...........() +
+  ______() + 
+  ______() +
   coord_sf()
 ```
 :::

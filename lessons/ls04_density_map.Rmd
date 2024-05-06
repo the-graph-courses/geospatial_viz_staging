@@ -213,7 +213,7 @@ For all our previous maps, we only have partial context for what we are seeing. 
 
 ### In a Dot map
 
-For example, for our London cholera outbreak Dot map, we want overlay it on the London street map---and this is exactly what `{ggspatial}` lets us do.
+For example, for our London cholera outbreak Dot map, we want to overlay it on the London street map---and this is exactly what `{ggspatial}` lets us do.
 
 ![Figure 7. John Snow's Dot map.](images/cholera_dot_size.png)
 
