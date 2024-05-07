@@ -96,8 +96,8 @@ pacman::p_load_gh("yutannihilation/ggsflabel",
 
 ```{r cities-fl}
 sle_healthsites_all <- 
-  afrihealthsites(country =        , 
-                  datasource =     ,
+  afrihealthsites(country = "______", 
+                  datasource = '______',
                   plot = FALSE) %>% 
   janitor::clean_names()
 
@@ -108,16 +108,15 @@ sle_healthsites_all
 Access to all the health facilities of `Zimbabwe` from the `healthsites` data source using the `afrihealthsites()` function.
 
 ```{r,eval=FALSE,echo=FALSE}
-afrihealthsites(country = "_______", 
-                datasource = "_______",
-                plot = FALSE) %>% print()
+afrihealthsites(country = "______", 
+                datasource = "______",
+                plot = FALSE) %>% 
+  print()
 ```
 :::
 
 ::: side-note
-• *Three-tier* health delivery classification
-
-• the highest tier (Tier 3) are responsible for most inpatient services as well as teaching and research missions ([Wang, 2021](https://equityhealthj.biomedcentral.com/articles/10.1186/s12939-021-01401-w)).}
+• According to the *three-tier* health delivery classification, the highest tier (Tier 3) are responsible for most inpatient services as well as teaching and research missions ([Wang, 2021](https://equityhealthj.biomedcentral.com/articles/10.1186/s12939-021-01401-w)).}
 :::
 
 • Let's keep Tier 3 health facilities inside the Western province:
@@ -127,8 +126,8 @@ sle_healthsites_set <-
   
   sle_healthsites_all %>%
   
-  filter(         ) %>% # 👈👈👈👈👈👈👈👈👈👈👈👈👈👈👈
-  filter(         )
+  filter(______ == "______") %>% # 👈👈👈👈👈👈👈👈👈👈👈👈👈👈👈
+  filter(______ == ______)
 ```
 
 • These sites belong to `Sierra Leone`,
@@ -136,7 +135,7 @@ sle_healthsites_set <-
 • Let's get their province boundaries with `{rgeoboundaries}`:
 
 ```{r}
-sierra_leone <- 
+sierra_leone <- ______(______ = "______", ______ = ______)
 ```
 
 • Let's map `sierra_leone` and `sle_healthsites_set`:
@@ -145,10 +144,10 @@ sierra_leone <-
 ggplot() +
   
   # country map
-  
+  ______(______ = ______) +
   
   # hospital points
-  
+  ______(______ = ______)
 ```
 
 • Let's use `coord_sf()` to **zoom in** in area of interest:
@@ -157,13 +156,13 @@ ggplot() +
 ggplot() +
   
   # country map
-  geom_sf(       ) +
+  geom_sf(______ = ______) +
   
   # hospital points
-  geom_sf(       ) +
+  geom_sf(______ = ______) +
   
   # map extent
-         (xlim = c(-13.5,-12.7), ylim = c(8.0,8.7)) # 👈👈👈👈👈👈👈
+  ______(xlim = c(-13.5,-12.7), ylim = c(8.0,8.7)) # 👈👈👈👈👈👈👈
 ```
 
 ::: recap
@@ -188,8 +187,8 @@ ggplot() +
   geom_sf(data = sle_healthsites_set) +
   
   # map annotations
-         (       ) + # 👈👈👈👈👈👈👈👈👈👈👈👈
-         (       ) +
+  ______(______ = "______") + # 👈👈👈👈👈👈👈👈👈👈👈👈
+  ______(______ = "______") +
   
   # map extent
   coord_sf(xlim = c(-13.5,-12.7), ylim = c(8.0,8.7))
@@ -200,6 +199,12 @@ ggplot() +
 • `location` uses `"tr"` for top right, `"bl"` for bottom left, etc.
 
 ::: practice
+The `zimbabwe_adm1` object contains the boundaries of all the provinces in Zimbabwe.
+
+```{r, eval = TRUE, echo = TRUE}
+zimbabwe_adm1 <- geoboundaries(country = "Zimbabwe", adm_lvl = 1)
+```
+
 To this `ggplot` map with the `zimbabwe_adm1` object:
 
 Add a Scale bar located in the `bottom right` of the map, and a North arrow in the `top left`.
@@ -213,22 +218,17 @@ q4 <-
   _________
 q4
 ```
-
-```{r,include=FALSE}
-.check_q4()
-.hint_q4()
-```
 :::
 
 ::: side-note
 • The [North arrow style](https://paleolimbot.github.io/ggspatial/reference/north_arrow_orienteering.html) can be adjusted with `style`.
 
-• [scale distance](https://paleolimbot.github.io/ggspatial/reference/annotation_scale.html) is set to `"km"` by default, also in "m", "cm", "mi", "ft", or "in".
+• [scale distance](https://paleolimbot.github.io/ggspatial/reference/annotation_scale.html) is set to `"km"` by default, you can also set it in "m", "cm", "mi", "ft", or "in".
 :::
 
 ### Add hospital names with `geom_sf_text_repel()` {.unnumbered}
 
-• `geom_sf_text()` to add hospital locations and names as text:
+• Use `geom_sf_text()` to add hospital locations and names as text:
 
 ```{r cities-plot}
 sle_healthsites_set %>% 
@@ -239,17 +239,9 @@ sle_healthsites_set %>%
   geom_sf_text(mapping = aes(label= facility_name)) # 👈👈👈👈👈👈👈
 ```
 
-• This is not really satisfactory,
+• This is not really satisfactory, as the names overlap on the points, and it's not easy to read on the background.
 
-• names overlap on the points,
-
-• not easy to read on the background.
-
-• [`{ggsflabel}`](https://yutannihilation.github.io/ggsflabel/index.html) inspired in `{ggrepel}`
-
-• deal with label placement in `ggplot` maps with `sf` objects
-
-• including automated movement of labels in case of overlap.
+• [`{ggsflabel}`](https://yutannihilation.github.io/ggsflabel/index.html) inspired in `{ggrepel}`deal with label placement in `ggplot` maps with `sf` objects, including automated movement of labels in case of overlap.
 
 • `geom_sf_text_repel` and `geom_sf_label_repel`
 
@@ -261,7 +253,7 @@ sle_healthsites_set %>%
   # geometry
   geom_sf() +
   # label
-           (         ) # 👈👈👈👈
+  ______(______ = ______(______ = ______)) # 👈👈👈👈
 ```
 
 ::: practice
@@ -284,13 +276,8 @@ q5 <-
   zimbabwe_hospitals %>% 
   ggplot() +
   geom_sf() +
-  ____________
+  ______()
 q5
-```
-
-```{r,include=FALSE}
-.check_q5()
-.hint_q5()
 ```
 :::
 
@@ -360,7 +347,7 @@ sierra_leone %>%
   geom_sf() +
   
   # province labels
-           (         ) # 👈👈👈👈👈👈👈👈👈👈👈
+  ______(______(______ = ______)) # 👈👈👈👈👈👈👈👈👈👈👈
 ```
 
 ::: practice
@@ -381,13 +368,8 @@ q2 <-
   geom_sf() + 
   
   # province labels
-  geom_sf_....._.....(aes(label = .....))
+  ______(aes(label = ______))
 q2
-```
-
-```{r,include=FALSE}
-.check_q2()
-.hint_q2()
 ```
 :::
 
@@ -401,7 +383,9 @@ ggplot() +
   geom_sf(data = sierra_leone) +
   
   # province labels
-         (       ) +         # 👈👈👈👈👈👈
+  ______(______ = ______ %>% 
+         ______(______ = "______"),
+         ______ = ______(______ = ______)) +         # 👈👈👈👈👈👈
   
   # hospital points 
   geom_sf(data = sle_healthsites_set) +         
@@ -436,12 +420,12 @@ ggplot() +
 ```{r, message=FALSE,warning=FALSE}
 # districts
 sierra_leone_shp <- 
-  sf::read_sf(here("basic_geospatial_viz/data/boundaries/sle_adm3.shp")) %>% 
+  sf::read_sf(here("data/boundaries/sle_adm3.shp")) %>% 
   filter(admin1Name=="Western")
 
 # field site points
 sites_sf <- readr::read_csv(
-  here("basic_geospatial_viz/data/gps_healthsites.csv")) %>% 
+  here("data/gps_healthsites.csv")) %>% 
   st_as_sf(coords = c("gps_longitude","gps_latitude"), crs = 4326)
 ```
 
@@ -497,25 +481,13 @@ ggplot() +
        title = "How are Tier 3 Hospitals distributed in the Western Province of Sierra Leone?")
 ```
 
-```{r include = F}
-.score_print()
-```
-
-```{r include = F}
-pacman::p_unload(raster) # avoid masking select(). Temporary investigation
-```
-
 ------------------------------------------------------------------------
 
 ## Wrap up
 
-• Adding **layers** on `ggplot2` is relatively straightforward,
+• Adding **layers** on `ggplot2` is relatively straightforward, as long as the data is properly stored in an `sf` object.
 
-• as long as the data is properly stored in an `sf` object.
-
-• Adding additional layers like point or polygon **labels** and **map annotations** would simply follow the same logic,
-
-• with additional calls *after* `geom_sf()` and at the *right place* in the `ggplot2` sequence.
+• Adding additional layers like point or polygon **labels** and **map annotations** would simply follow the same logic, with additional calls *after* `geom_sf()` and at the *right place* in the `ggplot2` sequence.
 
 ------------------------------------------------------------------------
 
