@@ -508,3 +508,11 @@ Some material in this lesson was adapted from the following sources:
 -   *Wilke, Claus O. Fundamentals of Data Visualization. Chapter 4: Color scales*. (2020). Retrieved 01 June 2022, from <https://clauswilke.com/dataviz/color-basics.html#color-to-represent-data-values>
 
 `r tgc_license()`
+
+------------------------------------------------------------------------
+
+## Answer Key {.unnumbered}
+
+### RStudio Cloud 1 {.unlisted .unnumbered}
+
+

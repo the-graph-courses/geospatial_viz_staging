@@ -136,7 +136,7 @@ q_asia_africa <-
   ______(returnclass = "sf", 
             ______ = c("______", "______"))
 
-ggplot(data = asia_africa) +
+ggplot(data = q_asia_africa) +
   geom_sf()
 ```
 :::
@@ -384,3 +384,54 @@ Some material in this lesson was adapted from the following sources:
 -   *Moraga, Paula. Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny. Chapter 2: Spatial data and R packages for mapping*. (2019). Retrieved 01 April 2022, from <https://www.paulamoraga.com/book-geospatial/sec-spatialdataandCRS.html>
 
 `r tgc_license()`
+
+------------------------------------------------------------------------
+
+## Answer Key {.unnumbered}
+
+### RStudio Cloud 1 {.unlisted .unnumbered}
+Use `ne_countries()`, `ggplot()` and `geom_sf()` to plot a single map of all the countries in the Asia and Africa continent
+
+```{r eval = T}
+q_asia_africa <- 
+  ne_countries(returnclass = "sf", 
+                continent = c("asia", "africa")) 
+
+ggplot(data = q_asia_africa) +
+  geom_sf()
+```
+
+### RStudio Cloud 2 {.unlisted .unnumbered}
+Use `ne_countries()`, `ggplot()` and `geom_sf()` to plot a single map of the national borders of China and Indonesia
+
+```{r eval=T}
+china_indonesia <- 
+  ne_countries(returnclass = "sf",
+               country = c("china", "indonesia"))
+
+ggplot(data = china_indonesia) +
+  geom_sf()
+```
+
+### Practice Q1 {.unlisted .unnumbered}
+Download the boundaries of `Sierra Leone` using the `geoboundaries()` function.
+```{r,eval = FALSE}
+q1 <- geoboundaries(country = "Sierra Leone")
+q1
+```
+
+### Practice Q2 {.unlisted .unnumbered}
+Download the `third` administrative level boundaries of `Sierra Leone`, using the `geoboundaries()` function.
+```{r,eval = FALSE}
+q2 <- geoboundaries(country = "Sierra Leone", adm_lvl = 3)
+q2
+```
+
+### RStudio Cloud 3 {.unlisted .unnumbered}
+Use `gadm()` to download the `third` administrative level boundaries of `Sierra Leone`.
+```{r,eval = FALSE}
+q_geodata <- gadm(country = "Sierra Leone", 
+                  level = 3,
+                  path = tempdir())
+q_geodata
+```

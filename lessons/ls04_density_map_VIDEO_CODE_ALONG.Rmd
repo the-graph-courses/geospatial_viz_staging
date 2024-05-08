@@ -353,3 +353,48 @@ Some material in this lesson was adapted from the following sources:
 -   *Baumer, Benjamin S., Kaplan, Daniel T., and Horton, Nicholas J. Modern Data Science with R. Chapter 17: Working with geospatial data*. (2021). Retrieved 05 June 2022, from <https://mdsr-book.github.io/mdsr2e/ch-spatial.html>
 
 `r tgc_license()`
+
+------------------------------------------------------------------------
+
+## Answer Key {.unnumbered}
+
+### RStudio Cloud 1 {.unlisted .unnumbered}
+
+```{r}
+pcrime %>% 
+    epihelper::st_coordinates_tidy() %>% 
+    ggplot(aes(x = X,y = Y)) +
+    geom_bin_2d() +
+    coord_sf() +
+    facet_wrap(~marks)
+```
+
+### RStudio Cloud 2 {.unlisted .unnumbered}
+
+```{r}
+pcrime %>% 
+    epihelper::st_coordinates_tidy() %>% 
+    ggplot(aes(x = X,y = Y)) +
+    geom_density_2d_filled() +
+    coord_sf() +
+    facet_wrap(~marks)
+```
+
+### RStudio Cloud 3 {.unlisted .unnumbered}
+
+```{r}
+ggplot(data = africapitals) +
+    annotation_map_tile() + 
+    geom_sf(mapping = aes(size = pop), alpha = 0.5)
+```
+
+### RStudio Cloud 4 {.unlisted .unnumbered}
+
+```{r}
+afriairports %>% 
+    epihelper::st_coordinates_tidy() %>% 
+    ggplot(aes(x = X, y = Y)) +
+    annotation_map_tile() + 
+    geom_bin_2d() +
+    coord_sf()
+```

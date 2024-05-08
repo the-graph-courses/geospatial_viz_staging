@@ -443,3 +443,59 @@ Some material in this lesson was adapted from the following sources:
 -   *Moraga, Paula. Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny. Chapter 2: Spatial data and R packages for mapping*. (2019). Retrieved 01 April 2022, from <https://www.paulamoraga.com/book-geospatial/sec-spatialdataandCRS.html>
 
 `r tgc_license()`
+
+------------------------------------------------------------------------
+
+## Answer Key {.unnumbered}
+
+### Practice Q1 {.unlisted .unnumbered}
+
+```{r}
+q1 <- sf::read_sf(here("data/healthsites/sle_hf.shp"))
+q1
+```
+
+### Practice Q2 {.unlisted .unnumbered}
+The `spData::nz` dataset contains mapping information for the regions of New Zealand. How many features and fields does the dataset have?
+
+```{r eval = FALSE}
+# The correct line is:
+q_nz_features_fields <- "A. 16 features and 6 fields"
+```
+
+### Practice Q3 {.unlisted .unnumbered}
+The `ne_download()` function from {rnaturalearth} can be used to obtain a map of major world roads, using the code below:
+```{r eval = F, message = F}
+roads <- 
+  ne_download(scale = 10, 
+              category = "physical",
+              type = "geographic_lines", 
+              returnclass = "sf") 
+```
+
+What type of geometry is used to represent the rivers?
+```{r eval = FALSE}
+# The correct line is:
+q_rivers_geom_type <- "MULTILINESTRING"
+```
+
+### Practice Q4 & Q5 {.unlisted .unnumbered}
+Which of the following options of *component files of Shapefiles*:
+a.  `"shp"`
+b.  `"shx"`
+c.  `"dbf"`
+
+contains the *Geometry* data?
+```{r,include = T}
+# The correct line is:
+q4 <- "shp"
+```
+
+stores the *Attributes* for each shape?
+```{r,include = T}
+# The correct line is:
+q5 <- "dbf"
+```
+
+
+
