@@ -1,19 +1,16 @@
 ---
 title: 'Read and Write Shapefiles'
 output:
-  # word_document:
-  #   toc: true
   html_document:
     number_sections: true
     toc: true
+    toc_float: true
     css: !expr here::here("global/style/style.css")
     highlight: kate
-    pandoc_args: --shift-heading-level-by=-1
-editor_options:
-  markdown:
-    wrap: 100
-  canonical: true
+editor_options: 
   chunk_output_type: inline
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include = FALSE, warning = FALSE, message = FALSE}
@@ -34,7 +31,7 @@ ggplot2::theme_set(new = theme_bw())
 
 ------------------------------------------------------------------------
 
-## Introduction
+# Introduction
 
 • We built **Thematic maps** using `{ggplot2}`.
 
@@ -52,7 +49,7 @@ ggplot2::theme_set(new = theme_bw())
 
 ------------------------------------------------------------------------
 
-## Learning objectives
+# Learning objectives
 
 1.  Read Spatial data from **Shapefiles** using the `read_sf()` function from the `{sf}` package.
 
@@ -64,7 +61,7 @@ ggplot2::theme_set(new = theme_bw())
 
 ------------------------------------------------------------------------
 
-## Prerequisites
+# Prerequisites
 
 This lesson requires the following packages:
 
@@ -83,11 +80,11 @@ pacman::p_load_gh("afrimapr/afrilearndata",
 
 ------------------------------------------------------------------------
 
-## Shapefiles
+# Shapefiles
 
 • The most common data format for *storing* Spatial data.
 
-### How to read Shapefiles? {.unnumbered}
+## How to read Shapefiles?
 
 • Using `read_sf()` from `{sf}`.
 
@@ -147,7 +144,7 @@ list.files(path = here("data/boundaries"),
 
 ------------------------------------------------------------------------
 
-## Understanding `sf` objects
+# Understanding `sf` objects
 
 • `"sf"` stands for [Simple Features](https://en.wikipedia.org/wiki/Simple_Features), a set of widely-used *standards for storing geospatial information in databases*.
 
@@ -175,13 +172,13 @@ countries %>%
 
 • 5-line **header** and a **data frame**.
 
-### The `sf` header {.unlisted .unnumbered}
+## The `sf` header 
 
 • The *header* provides context about the rest of the object.
 
 • Let's go through *the most relevant sections*:
 
-### Features and Fields {.unnumbered}
+## Features and Fields
 
 • Tells you the number of **features** and **fields** in the `sf` object:
 
@@ -214,7 +211,7 @@ q_nz_features_fields <- "C. 5 features and 4 fields"
 ```
 :::
 
-### Geometry {.unnumbered}
+## Geometry 
 
 • Gives you the *type of geometry* in the `sf` object:
 
@@ -295,7 +292,7 @@ First 10 features:
 • `geom_sf()` automatically recognizes the geometry column.
 :::
 
-### Geodetic CRS {.unnumbered}
+## Geodetic CRS 
 
 • Tells us the Coordinate Reference System (CRS) used.
 
@@ -317,7 +314,7 @@ Bounding box: xmin: -180 ymin: -90 xmax: 180 ymax: 83.64513
 
 ------------------------------------------------------------------------
 
-## Delving into Shapefiles
+# Delving into Shapefiles
 
 • They are a *collection* of files,
 
@@ -376,7 +373,7 @@ stores the *Attributes* for each shape?
 ```
 :::
 
-### How to write Shapefiles? {.unnumbered}
+## How to write Shapefiles?
 
 • Let's write the `countries` object to an `countries.shp` file:
 
@@ -402,7 +399,7 @@ list.files(path = here("data/newshapefile"),
 
 ------------------------------------------------------------------------
 
-## Wrap up
+# Wrap up
 
 • We **read** and **write** *Shapefiles* using the *`{sf}`* package,
 
@@ -420,7 +417,7 @@ list.files(path = here("data/newshapefile"),
 
 ------------------------------------------------------------------------
 
-## Contributors {.unlisted .unnumbered}
+# Contributors {.unlisted .unnumbered}
 
 The following team members contributed to this lesson:
 
@@ -428,7 +425,7 @@ The following team members contributed to this lesson:
 
 ------------------------------------------------------------------------
 
-## References {.unlisted .unnumbered}
+# References {.unlisted .unnumbered}
 
 Some material in this lesson was adapted from the following sources:
 

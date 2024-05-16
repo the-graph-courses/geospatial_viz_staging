@@ -1,19 +1,16 @@
 ---
-title: '\ '
+title: 'Read and Write Shapefiles'
 output:
-  # word_document:
-  #   toc: true
   html_document:
     number_sections: true
     toc: true
+    toc_float: true
     css: !expr here::here("global/style/style.css")
     highlight: kate
-    pandoc_args: --shift-heading-level-by=-1
-editor_options:
-  markdown:
-    wrap: 100
-  canonical: true
+editor_options: 
   chunk_output_type: inline
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include = FALSE, warning = FALSE, message = FALSE}
@@ -35,9 +32,7 @@ suppressMessages(source(here::here("lessons/ls05_shapefile_data_autograder.R")))
 ggplot2::theme_set(new = theme_bw())
 ```
 
-# Read and Write Shapefiles
-
-## Introduction
+# Introduction
 
 We can built different types of **Thematic maps** using the `{ggplot2}` package.
 
@@ -49,7 +44,7 @@ But, how can we create *more* Thematic maps from **external Spatial data** gener
 
 In this lesson we are going learn how to read and write **Shapefiles**, and also dive into the **`sf` objects** components!
 
-## Learning objectives
+# Learning objectives
 
 1.  Read Spatial data from **Shapefiles** using the `read_sf()` function from the `{sf}` package.
 
@@ -59,7 +54,7 @@ In this lesson we are going learn how to read and write **Shapefiles**, and also
 
 4.  Write Spatial data in **Shapefiles** using `write_sf()`.
 
-## Prerequisites
+# Prerequisites
 
 This lesson requires the following packages:
 
@@ -76,11 +71,11 @@ pacman::p_load_gh("afrimapr/afrilearndata",
                   "wmgeolab/rgeoboundaries")
 ```
 
-## Shapefiles
+# Shapefiles
 
 **Shapefiles** are the most common data format for *storing* Spatial data.
 
-### How to read Shapefiles? {.unnumbered}
+## How to read Shapefiles?
 
 We can **read** Spatial data from **local files** with a `.shp` extension, as a ready-to-use **`sf` object**.
 
@@ -155,13 +150,13 @@ countries %>%
 
 What do we see? The object consists of a 5-line **header** and a **data frame**.
 
-### The `sf` header {.unlisted .unnumbered}
+## The `sf` header 
 
 The *header* provides some contextualizing information about the rest of the object. You usually don't need to pay too much attention to this header, but we will go through it in some detail.
 
 Let's go line-by-line through *the most relevant sections* of this header to see what these terms mean:
 
-### Features and Fields {.unnumbered}
+## Features and Fields
 
 The first line of the header tells you the number of **features** and **fields** in the `sf` object:
 
@@ -196,7 +191,7 @@ q_nz_features_fields <- "C. 5 features and 4 fields"
 ```
 :::
 
-### Geometry {.unnumbered}
+## Geometry 
 
 The second line of the header gives you the type of geometry in the `sf` object:
 
@@ -275,7 +270,7 @@ Some noteworthy points about this column:
 -   `geom_sf()` automatically recognizes the geometry column.
 :::
 
-### Geodetic CRS {.unnumbered}
+## Geodetic CRS 
 
 The final header line tells us what Coordinate Reference System used.
 
@@ -293,7 +288,7 @@ The final header line tells us what Coordinate Reference System used.
 
 For now, it is sufficient to know that coordinate systems are a *key component* of geographic objects. **We will cover them in detail later!**
 
-## Delving into Shapefiles
+# Delving into Shapefiles
 
 A **single shapefile** is actually a *collection* of at least three files - `.shp`, `.shx`, and `.dbf`.
 
@@ -354,7 +349,7 @@ stores the *Attributes* for each shape?
 ```
 :::
 
-### How to write Shapefiles? {.unnumbered}
+## How to write Shapefiles? 
 
 Let's write the `countries` object to an `countries.shp` file, located inside the `data/newshapefile/` folder, in two steps:
 
@@ -383,7 +378,7 @@ list.files(path = here("data/newshapefile"),
 .score_print()
 ```
 
-## Wrap up
+# Wrap up
 
 In this lesson, we have learned to **read** and **write** *Shapefiles* using the *`{sf}`* package, identify the **components** of an *`sf` object*, and their relation with the files within a *Shapefile*.
 

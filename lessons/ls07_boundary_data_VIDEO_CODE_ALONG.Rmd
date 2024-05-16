@@ -1,19 +1,16 @@
 ---
 title: 'Boundary Data'
 output:
-  # word_document:
-  #   toc: true
   html_document:
     number_sections: true
     toc: true
+    toc_float: true
     css: !expr here::here("global/style/style.css")
     highlight: kate
-    pandoc_args: --shift-heading-level-by=-1
-editor_options:
-  markdown:
-    wrap: 100
-  canonical: true
+editor_options: 
   chunk_output_type: inline
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include = FALSE, warning = FALSE, message = FALSE}
@@ -34,7 +31,7 @@ ggplot2::theme_set(new = theme_bw())
 
 ------------------------------------------------------------------------
 
-## Introduction
+# Introduction
 
 Country **borders** or **boundaries** can have several usages. For example, they can be used as background in Thematic maps or as delimiters of other Spatial data to ease the identification of spread patterns.
 
@@ -48,7 +45,7 @@ In this lesson we are going to learn how to access continent, country and admini
 
 ------------------------------------------------------------------------
 
-## Learning objectives
+# Learning objectives
 
 1.  Access to *low* resolution continent and country borders with `{rnaturalearth}`
 
@@ -58,7 +55,7 @@ In this lesson we are going to learn how to access continent, country and admini
 
 ------------------------------------------------------------------------
 
-## Prerequisites
+# Prerequisites
 
 This lesson requires the following packages:
 
@@ -79,7 +76,7 @@ pacman::p_load_gh("afrimapr/afrilearndata",
 
 ------------------------------------------------------------------------
 
-## Mapping country borders with `{rnaturalearth}`
+# Mapping country borders with `{rnaturalearth}`
 
 • Let's draw a world map with country borders.
 
@@ -102,7 +99,7 @@ ggplot(______ = ______) +
 
 • Wonderful!
 
-### A single continent {.unnumbered}
+## A single continent
 
 • Let's subset the `"south america"` **continent**, using the `continent` argument of `ne_countries()`:
 
@@ -141,7 +138,7 @@ ggplot(data = q_asia_africa) +
 ```
 :::
 
-### Multiple countries {.unnumbered}
+## Multiple countries
 
 • Subset **one** or **multiple** countries, e.g. `"nigeria"` and `"niger"`
 
@@ -171,7 +168,7 @@ ggplot(data = china_indonesia) +
 
 ------------------------------------------------------------------------
 
-## Mapping country borders with `{rgeoboundaries}`
+# Mapping country borders with `{rgeoboundaries}`
 
 • `{rnaturalearth}` access borders that *do not need too much* boundary resolution.
 
@@ -183,7 +180,7 @@ ggplot(data = china_indonesia) +
 
 • It provides country political administrative boundaries.
 
-### A single country {.unnumbered}
+## A single country
 
 • Use `geoboundaries()` to download the administrative boundary of `"Zimbabwe"`.
 
@@ -215,7 +212,7 @@ q1
 ```
 :::
 
-### Different administrative levels {.unnumbered}
+## Different administrative levels
 
 • If available, we can also download lower levels of administrative boundaries.
 
@@ -277,7 +274,7 @@ ggplot(data = zimbabwe_mozambique_adm2) +
 
 ------------------------------------------------------------------------
 
-## Mapping country borders with `{geodata}`
+# Mapping country borders with `{geodata}`
 
 • One limitation for `{rgeoboundaries}`
 
@@ -349,7 +346,7 @@ gadm(country = "Bolivia", level = 3, path = tempdir())
 
 ------------------------------------------------------------------------
 
-## Wrap up
+# Wrap up
 
 • How to **access** *low* and *high* resolution continent, country and multiple administrative level borders
 
@@ -361,7 +358,7 @@ gadm(country = "Bolivia", level = 3, path = tempdir())
 
 ------------------------------------------------------------------------
 
-## Contributors {.unlisted .unnumbered}
+# Contributors {.unlisted .unnumbered}
 
 The following team members contributed to this lesson:
 
@@ -369,7 +366,7 @@ The following team members contributed to this lesson:
 
 ------------------------------------------------------------------------
 
-## References {.unlisted .unnumbered}
+# References {.unlisted .unnumbered}
 
 Some material in this lesson was adapted from the following sources:
 

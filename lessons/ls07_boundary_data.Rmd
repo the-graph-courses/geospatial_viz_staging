@@ -1,19 +1,16 @@
 ---
-title: '\ '
+title: 'Boundary Data'
 output:
-  # word_document:
-  #   toc: true
   html_document:
     number_sections: true
     toc: true
+    toc_float: true
     css: !expr here::here("global/style/style.css")
     highlight: kate
-    pandoc_args: --shift-heading-level-by=-1
-editor_options:
-  markdown:
-    wrap: 100
-  canonical: true
+editor_options: 
   chunk_output_type: inline
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include = FALSE, warning = FALSE, message = FALSE}
@@ -35,9 +32,7 @@ suppressMessages(source(here::here("lessons/ls07_boundary_data_autograder.R")))
 ggplot2::theme_set(new = theme_bw())
 ```
 
-# Boundary data
-
-## Introduction
+# Introduction
 
 Country **borders** or **boundaries** can have several usages. For example, they can be used as background in Thematic maps or as delimiters of other Spatial data to ease the identification of spread patterns.
 
@@ -49,7 +44,7 @@ However, the access to this type of data can have **different outputs**, for exa
 
 In this lesson we are going to learn how to access continent, country and administrative level borders using `{rnaturalearth}`, `{rgeoboundaries}`, and `{geodata}` packages.
 
-## Learning objectives
+# Learning objectives
 
 1.  Access to *low* resolution continent and country borders with `{rnaturalearth}`
 
@@ -57,7 +52,7 @@ In this lesson we are going to learn how to access continent, country and admini
 
 3.  Access to *multiple* administrative level borders with `{geodata}`
 
-## Prerequisites
+# Prerequisites
 
 This lesson requires the following packages:
 
@@ -76,7 +71,7 @@ pacman::p_load_gh("afrimapr/afrilearndata",
                   "wmgeolab/rgeoboundaries")
 ```
 
-## Mapping country borders with `{rnaturalearth}`
+# Mapping country borders with `{rnaturalearth}`
 
 As an introduction to plotting boundaries in R, let's look at how to draw a simple world map with country borders. The package `{rnaturalearth}` contains information to map all the countries in the world, among other things.
 
@@ -97,7 +92,7 @@ ggplot(data = countries) +
 
 Wonderful! (Almost too easy!)
 
-### A single continent {.unnumbered}
+## A single continent
 
 To subset to a **specific continent**, use the `continent` argument of `ne_countries()`:
 
@@ -135,7 +130,7 @@ ggplot(data = asia_africa) +
 ```
 :::
 
-### Multiple countries {.unnumbered}
+## Multiple countries 
 
 To subset to a **specific country** or specific countries, use the `country` argument:
 
@@ -161,7 +156,7 @@ ggplot(data = china_indonesia) +
 ```
 :::
 
-## Mapping country borders with `{rgeoboundaries}`
+# Mapping country borders with `{rgeoboundaries}`
 
 `{rnaturalearth}` is useful for accessing continents and country borders that do not need much boundary resolution. `{rgeoboundaries}` is an alternative package that provides access to high resolution country boundaries.
 
@@ -169,7 +164,7 @@ ggplot(data = china_indonesia) +
 
 The [`{rgeoboundaries}`](https://github.com/wmgeolab/rgeoboundaries) package is a client for the [geoBoundaries API](https://www.geoboundaries.org/), providing country political administrative boundaries.
 
-### A single country {.unnumbered}
+## A single country 
 
 To download boundaries of countries we use the `geoboundaries()` function of `{rgeoboundaries}`. For example, we can download the administrative boundary of Zimbabwe and assign it to a variable called `zimbabwe_boundary` as follows.
 
@@ -208,7 +203,7 @@ q1
 ```
 :::
 
-### Different administrative levels {.unnumbered}
+## Different administrative levels 
 
 If available, lower levels of administrative boundaries in countries can be downloaded too. We just have to pass the administrative level as an argument in the `geoboundaries()` function.
 
@@ -265,7 +260,7 @@ ggplot(data = zimbabwe_mozambique_adm2) +
 ```
 :::
 
-## Mapping country borders with `{geodata}`
+# Mapping country borders with `{geodata}`
 
 A limitation of `{rgeoboundaries}` is that it only provides one column with the name of all the borders in that level:
 
@@ -327,7 +322,7 @@ gadm(country = "Bolivia", level = 3, path = tempdir())
    coord. ref. : +proj=longlat +datum=WGS84 +no_defs 
 ```
 
-## Wrap up
+# Wrap up
 
 In this lesson, we have learned how to **access** *low* and *high* resolution continent, country and multiple administrative level borders using `{rnaturalearth}`, `{rgeoboundaries}`, and `{geodata}` packages.
 
@@ -335,13 +330,13 @@ In this lesson, we have learned how to **access** *low* and *high* resolution co
 
 Now, we need to learn how to **convert** foreign spatial objects to `sf`, to keep making `ggplot2` maps!
 
-## Contributors {.unlisted .unnumbered}
+# Contributors {.unlisted .unnumbered}
 
 The following team members contributed to this lesson:
 
 `r tgc_contributors_list(ids = c("avallecam", "lolovanco", "kendavidn"))`
 
-## References {.unlisted .unnumbered}
+# References {.unlisted .unnumbered}
 
 Some material in this lesson was adapted from the following sources:
 
