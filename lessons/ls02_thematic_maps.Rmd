@@ -1,19 +1,16 @@
 ---
-title: '\ '
+title: 'Thematic Maps'
 output:
-  # word_document:
-  #   toc: true
   html_document:
     number_sections: true
     toc: true
+    toc_float: true
     css: !expr here::here("global/style/style.css")
     highlight: kate
-    pandoc_args: --shift-heading-level-by=-1
-editor_options:
-  markdown:
-    wrap: 100
-  canonical: true
+editor_options: 
   chunk_output_type: inline
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include = FALSE, warning = FALSE, message = FALSE}
@@ -36,9 +33,7 @@ ggplot2::theme_set(new = theme_bw())
 options(scipen=10000)
 ```
 
-# Thematic maps
-
-## Introduction
+# Introduction
 
 **Thematic maps** portrait geographic patterns about a particular subject theme in a geographic area. In the context of epidemiological outbreaks, these maps can be called *Epidemic maps*.
 
@@ -46,7 +41,7 @@ In this lesson we are going to learn about the most iconic types of Thematic map
 
 ![Figure 1. (A) Choropleth map with the number of cases in a simulated Ebola epidemic in Sierra Leona. (B) Dot map. Location of simulated Ebola cases in Sierra Leona, colored by each case outcome.](images/introplots_merge_01.png)
 
-## Learning objectives
+# Learning objectives
 
 1.  Identify two types of **Thematic maps** (choropleth and dot maps) used by epidemiologist to visualize Geospatial data.
 
@@ -72,19 +67,19 @@ pacman::p_load(rnaturalearth,
 
 This lesson requires familiarity with `{ggplot2}`: if you need to brush up, have a look at our introductory course on data visualization.
 
-## Choropleth map
+# Choropleth map
 
-### What is it? {.unnumbered}
+## What is it? 
 
 A *Choropleth map* is a type of thematic map where *colors, shading, or patterns* are used to represent **geographic regions** in relation to the value of an attribute.
 
 For instance a *larger value* could be indicated by a darker color, while a *smaller value* could be indicated by a lighter color.
 
-### How to plot it? {.unnumbered}
+## How to plot it? 
 
 Geospatial data can be plotted with the `{ggplot2}` package, using the **`geom_sf()`** function. Information such as *colors* and *shapes* can be depicted using the `aes()` function with the `fill`, `color` and `size` arguments.
 
-#### With Quantitative data {.unlisted .unnumbered}
+### With Quantitative data 
 
 A *Choropleth map* will usually require using the `fill` argument. Let's create a Choropleth map!
 
@@ -120,7 +115,7 @@ q1
 ```
 :::
 
-#### With Categorical data {.unlisted .unnumbered}
+### With Categorical data
 
 To create a map with countries *colored* by their Economical classification also use `fill`:
 
@@ -141,7 +136,7 @@ class(africountries)
 In the following lessons, we will learn how to get more of them and even convert foreign objects to `sf`!
 :::
 
-### How to use it? {.unnumbered}
+## How to use it?
 
 This type of map is particularly useful when visualizing a variable and how it changes across defined regions or geopolitical areas.
 
@@ -153,17 +148,17 @@ In Figure 2, the region of interest (Sierra Leone) has been partitioned into a f
 The type of shape that *Choropleth maps* visualize is called **Polygons**. This shape collects data that pertains to an enclosed region partitioned into a finite number of *areal units* with well-defined boundaries. For example, attributes collected by ZIP code, census tract, or the administrative boundary levels of a country (Figure 2).
 :::
 
-## Dot map
+# Dot map
 
-### What is it? {.unnumbered}
+## What is it?
 
 A *Dot map* is a thematic map type that uses **dots** to represent attribute values in your data.
 
-### How to plot it? {.unnumbered}
+## How to plot it? 
 
 The *Dot map* could use the `size` or `color` argument.
 
-#### With Quantitative data {.unlisted .unnumbered}
+### With Quantitative data 
 
 A Quantitative Dot map requires the `size` argument. Let's create a Dot map!
 
@@ -189,7 +184,7 @@ ggplot(data = cholera_deaths) +
 ```
 :::
 
-#### With Categorical data {.unlisted .unnumbered}
+### With Categorical data 
 
 To visualize airports *classified* by their type we need the `color` argument:
 
@@ -220,7 +215,7 @@ q2
 ```
 :::
 
-### How to use it? {.unnumbered}
+## How to use it? 
 
 This type of map is best used to visualize the *scatter of your data* and visually *scan for clusters*.
 
@@ -288,7 +283,7 @@ Your answer should be either "choropleth_map" or "dot_distribution_map".
 pacman::p_unload(raster) # avoid masking select(). Temporary investigation
 ```
 
-## Wrap up
+# Wrap up
 
 In this lesson, we learned about *Thematic maps*, how to create them using *{ggplot2}* and the *`geom_sf()`* function, and which type of *Geometry* they visualize.
 
@@ -296,7 +291,7 @@ In this lesson, we learned about *Thematic maps*, how to create them using *{ggp
 
 But, how can we complement Thematic maps with *geographic context*? Or how can we avoid *overlapped points* when needed? In the following lessons, we are going to learn about how to add *Physical features* to our maps and use *Density maps* to avoid overlaps in them!
 
-## Contributors {.unlisted .unnumbered}
+# Contributors {.unlisted .unnumbered}
 
 The following team members contributed to this lesson:
 

@@ -22,7 +22,7 @@ img {
 /* -----------div tips------------- */
 
 
-div.practice, div.watch-out, div.key-point, div.side-note, div.pro-tip, div.vocab, div.reminder, div.recap, div.rstudio-cloud, div.challenge, div.error{
+div.practice, div.r-practice, div.watch-out, div.key-point, div.side-note, div.pro-tip, div.vocab, div.reminder, div.recap, div.rstudio-cloud, div.challenge, div.error{
   padding: 0.5em;
   padding-top: 0.8em;
 
@@ -61,6 +61,14 @@ div.practice, div.watch-out, div.key-point, div.side-note, div.pro-tip, div.voca
   /* text color */
   color: #21949e;
   background-image: url("../../global/images/divs/practice.png");
+}
+
+  div.r-practice {
+  border: 4px #aed6d963;
+  border-style: dashed;
+  /* text color */
+  color: #21949e;
+  background-image: url("../../global/images/divs/r_practice.png");
 }
 
   div.watch-out {
@@ -143,6 +151,7 @@ div.practice, div.watch-out, div.key-point, div.side-note, div.pro-tip, div.voca
   background-image: url("../../global/images/divs/error.png");
 }
 
+
 /* --------------------------------------- */
 /* ----------- main elements ------------- */
 /* --------------------------------------- */
@@ -152,12 +161,12 @@ div.practice, div.watch-out, div.key-point, div.side-note, div.pro-tip, div.voca
 body {
   font-family: 'Tajawal', sans-serif;
   color: black;
-  font-size: 17px;
+  font-size: 18.5px;
   padding-left: 20px;
   padding-right: 20px;
   
     /* -----------shrink body width. easier to read------------- */
-    max-width: 800px;
+    /* max-width: 800px;*/
     margin: 0 auto;
   /* -----------background color important to distinguish iframe when embedded in WP------------- */
     background-color: #F9FAFD; 
@@ -169,7 +178,7 @@ body {
 
 
 pre, code{
-  font-size: 0.83em; /* font size for the results code block */
+  font-size: 0.9em; /* font size for the results code block */
   opacity: 0.86;
 }
 
@@ -177,7 +186,7 @@ pre, code{
 .sourceCode {
     margin: 0.3em 0 0em 0 !important;
     padding-bottom: 0.4em;
-    font-size: 14px; /* font size for R code block */
+    font-size: 16px; /* font size for R code block */
     width: 100%;   /* fix rendering of code block within div */
     opacity: 1; !important /* We don't want the opacity reduction from pre, code to apply to the main code blocks */
 }

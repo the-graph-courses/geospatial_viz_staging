@@ -1,19 +1,16 @@
 ---
-title: '\ '
+title: 'Density Maps'
 output:
-  # word_document:
-  #   toc: true
   html_document:
     number_sections: true
     toc: true
+    toc_float: true
     css: !expr here::here("global/style/style.css")
     highlight: kate
-    pandoc_args: --shift-heading-level-by=-1
-editor_options:
-  markdown:
-    wrap: 100
-  canonical: true
+editor_options: 
   chunk_output_type: inline
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include = FALSE, warning = FALSE, message = FALSE}
@@ -36,9 +33,7 @@ ggplot2::theme_set(new = theme_bw())
 options(scipen=10000)
 ```
 
-# Density Maps
-
-## Introduction
+# Introduction
 
 Sometimes Dot maps can have **overlapped points** that difficult the visualization of more specific patterns. Additionally, most times spatial data requires *more explicit* Google Maps-like **geographic context**.
 
@@ -46,13 +41,13 @@ Sometimes Dot maps can have **overlapped points** that difficult the visualizati
 
 In this lesson, we are going to learn about how use *Density maps* to avoid overlaps in them, and how to add *Basemaps* for Google Maps-like backgrounds.
 
-## Learning objectives
+# Learning objectives
 
 1.  Identify one more type of Thematic map (**Density maps**) used by epidemiologist to visualize *overlapping* Geospatial data.
 
 2.  Complement *Thematic maps* with **Basemaps** for Google Maps-like backgrounds using the `annotation_map_tile()` function, from the `{ggspatial}` package.
 
-## Prerequisites
+# Prerequisites
 
 This lesson requires the following packages:
 
@@ -71,15 +66,15 @@ pacman::p_load(ggspatial,
 
 This lesson requires familiarity with `{ggplot2}`: if you need to brush up, have a look at our introductory course on data visualization.
 
-## Density map
+# Density map
 
-### What is it? {.unnumbered}
+## What is it? 
 
 A *Density map* is a type of Thematic map where colours are used to represent intensity of a value, however, it does not use defined regions or geopolitical boundaries to group data. This type of map is typically used for showing **'hot spots'** or areas with a high density or concentration of points.
 
 ![Figure 4. (A). John Snow's Dot distribution map with overlapping Point pattern data. (B) Density map from John Snow's Dot distribution map Point pattern data.](images/density_map_01.png)
 
-### How to plot it? {.unnumbered}
+## How to plot it?
 
 As an example, we are going to use the `afriairports` dataset, from the `{afrilearndata}` package, that contains the locations of African airports.
 
@@ -138,7 +133,7 @@ pcrime %>%
 ```
 :::
 
-### How to use it? {.unnumbered}
+## How to use it?
 
 This type of Thematic map is best used with *Environmental data*, such as altitude, air pollution or rainfall data values measured at several monitoring stations.
 
@@ -148,7 +143,7 @@ Density maps are also used to visualize *spatially continuous disease prevalence
 
 ![Figure 6. Predicted malaria prevalence in The Gambia.](images/pre-malaria-03.PNG)
 
-### What alternative plots do we have? {.unnumbered}
+## What alternative plots do we have?
 
 There are two `{ggplot2}` alternatives to plot Density maps:
 
@@ -207,11 +202,11 @@ pcrime %>%
 ```
 :::
 
-## Basemaps
+# Basemaps
 
 For all our previous maps, we only have partial context for what we are seeing. For a more integrative view, we may want to overlay our map over *Google Maps-like* physical features. These are called **Basemaps**.
 
-### In a Dot map
+## In a Dot map
 
 For example, for our London cholera outbreak Dot map, we want to overlay it on the London street map---and this is exactly what `{ggspatial}` lets us do.
 
@@ -241,7 +236,7 @@ ggplot(data = africapitals) +
 ```
 :::
 
-### In a Density map
+## In a Density map
 
 Add a Basemap to a Density map using the `pcrime` object and the `annotation_map_tile()` function.
 
@@ -284,19 +279,19 @@ afriairports %>%
 ```
 :::
 
-## Wrap up
+# Wrap up
 
 In this lesson, we have learned about one more type of Thematic map called *Density maps* to avoid overlapping spatial points. Also, how to add Google Maps-like backgrounds called *Basemaps*.
 
 But, How can we create more *Thematic maps* from **external** Spatial data created by other GIS software? In the following lessons, we are going to learn how to **read external Spatial data** and *convert foreign* objects to *sf* files! Follow along with the lessons to find how to train these skills!
 
-## Contributors {.unlisted .unnumbered}
+# Contributors {.unlisted .unnumbered}
 
 The following team members contributed to this lesson:
 
 `r tgc_contributors_list(ids = c("avallecam", "lolovanco"))`
 
-## References {.unlisted .unnumbered}
+# References {.unlisted .unnumbered}
 
 Some material in this lesson was adapted from the following sources:
 

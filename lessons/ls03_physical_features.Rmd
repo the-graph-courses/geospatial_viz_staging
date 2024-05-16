@@ -1,19 +1,16 @@
 ---
-title: '\ '
+title: 'Physical Features'
 output:
-  # word_document:
-  #   toc: true
   html_document:
     number_sections: true
     toc: true
+    toc_float: true
     css: !expr here::here("global/style/style.css")
     highlight: kate
-    pandoc_args: --shift-heading-level-by=-1
-editor_options:
-  markdown:
-    wrap: 100
-  canonical: true
+editor_options: 
   chunk_output_type: inline
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include = FALSE, warning = FALSE, message = FALSE}
@@ -36,9 +33,7 @@ ggplot2::theme_set(new = theme_bw())
 options(scipen=10000)
 ```
 
-# Physical Features
-
-## Introduction
+# Introduction
 
 Most times spatial data requires **geographic context** to locate events with environmental features like rivers or streets.
 
@@ -46,7 +41,7 @@ Most times spatial data requires **geographic context** to locate events with en
 
 In this lesson, we are going to learn about how to add **Physical features** to our maps and plot them in *multiple layers* to complement Thematic maps!
 
-## Learning objectives
+# Learning objectives
 
 1.  Create **Physical feature maps** to visualize roads or rivers.
 
@@ -54,7 +49,7 @@ In this lesson, we are going to learn about how to add **Physical features** to 
 
 3.  Relate Physical features with a **Geometry** type.
 
-## Prerequisites
+# Prerequisites
 
 This lesson requires the following packages:
 
@@ -72,17 +67,17 @@ pacman::p_load(ggspatial,
 
 This lesson requires familiarity with `{ggplot2}`: if you need to brush up, have a look at our introductory course on data visualization.
 
-## Physical features
+# Physical features
 
-### What are they? {.unnumbered}
+## What are they? 
 
 *Physical features* include roads, buildings and rivers.
 
-### How to plot them? {.unnumbered}
+## How to plot them? 
 
 Using `{ggplot2}`, `geom_sf()`, and the `color` argument.
 
-#### With Categorical data {.unlisted .unnumbered}
+### With Categorical data
 
 We can create a Physical feature map of the Road network in South America and `color` them according to their type:
 
@@ -108,7 +103,7 @@ ggplot(data = sacramento_rivers) +
 Data from here: <https://zenodo.org/record/4985219>
 :::
 
-#### With Quantitative data {.unlisted .unnumbered}
+### With Quantitative data
 
 In Environmental Epidemiology, we can map numeric variables like the concentration of chemicals or pollutants in wastewater surveillance, or in Ecology, richness estimations from rivers.
 
@@ -133,7 +128,7 @@ ggplot(data = south_am_roads) +
 ```
 :::
 
-### How to use it? {.unnumbered}
+## How to use it?
 
 We can use *Trajectory data* and *Road network data* to evaluate the effects of human movement patterns in infectious disease transmission like [Dengue](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0172313) or [Malaria](https://malariajournal.biomedcentral.com/articles/10.1186/1475-2875-11-205).
 
@@ -150,13 +145,13 @@ Each **Thematic map** has its respective type of *Geometry*.
 ![Figure 3. Geometry types and example maps for each. Points, lines (or linestrings) and polygons are the most common geometries you will encounter.](images/geometry_types.png)
 :::
 
-## Multiple layer maps
+# Multiple layer maps
 
 So far we have been plotting single geometries. But for most maps, you will need to provide additional context. This can be done by plotting multiple geometries.
 
 We can complement Thematic maps with spatial *Physical features* like roads, buildings and rivers.
 
-### How to plot them? {.unnumbered}
+## How to plot them? 
 
 As an example, we will complement a Choropleth map with the population (`pop_est`) of African countries, from the `africountries`, with:
 
@@ -185,7 +180,7 @@ This is how you plot another map layer on top of another map.
 
 For this, instead of a *global* specification of data, you need a **local** specification of data:
 
-``` r
+```{r}
 # instead of:
 ggplot(data = data_global) +
   geom_sf()
@@ -222,7 +217,7 @@ q1
 ```
 :::
 
-### How to use it? {.unnumbered}
+## How to use it?
 
 In this example, we replicate John Snow's *Dot map* with the locations of deaths of the 1854 London cholera outbreak. We complemented this map with a *physical feature* like the *street roads* of the city: subfigure B is much more readable than subfigure A right?!
 
@@ -230,7 +225,7 @@ In this example, we replicate John Snow's *Dot map* with the locations of deaths
 
 In Figure 3B, the *physical feature* is used as background, below the Dot map. This is why it looks much more readable.
 
-## Wrap up
+# Wrap up
 
 In this lesson, we have learned about how to represent *Physical features* and how to use them to *complement* Thematic maps in *multiple layers*.
 
@@ -238,7 +233,7 @@ In this lesson, we have learned about how to represent *Physical features* and h
 
 However, most times spatial data requires *more explicit* Google Maps-like **geographic context**! For this you will need to learn how to add *Basemaps* for Google Maps-like backgrounds. Follow along with the lessons to find how to do this!
 
-## Contributors {.unlisted .unnumbered}
+# Contributors {.unlisted .unnumbered}
 
 The following team members contributed to this lesson:
 

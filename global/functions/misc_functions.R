@@ -9,7 +9,7 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 if(!require(pacman)) install.packages("pacman")
-pacman::p_load(tidyverse, htmltools, parsermd, 
+pacman::p_load(tidyverse, htmltools, parsermd, DT, reactable,
                png, openxlsx, htmlTable)
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -334,7 +334,7 @@ reshuffle_stratified_theory_quiz <-
         ungroup()
     }
     
-    final_unique_reshufflings <- unique(reshufflings_of_set_and_version) %>% head(n_reshufflings)
+    final_unique_reshufflings <- unique(reshufflings_of_set_and_version) %>% sample() %>% head(n_reshufflings)
     
     # Report on sampling procedure
     print(paste0("Your quiz has ", possible_unique, " possible unique question combinations. ", 
@@ -813,6 +813,13 @@ reactable_10_rows <- function(df, options) df %>% reactable_print(10) %>% knitr:
 head_10_rows <- function(df, options) df %>% head(10) %>% knitr::knit_print()
 head_5_rows <- function(df, options) df %>% head(5) %>% knitr::knit_print()
 
+# kable print
+kable_10_rows <- function(df, options) df %>% head(10) %>% knitr::kable() %>% knitr::knit_print()
+kable_5_rows <- function(df, options) df %>% head(5) %>% knitr::kable() %>% knitr::knit_print()
+
+# DT print
+dt_10_rows <- function(df, options) df %>% head(10) %>% DT::datatable() %>% knitr::knit_print()
+dt_5_rows <- function(df, options) df %>% head(5) %>% DT::datatable() %>% knitr::knit_print()
 
 
 #' Print the GRAPH Courses license
@@ -854,7 +861,7 @@ tgc_contributors_list <- function(ids, csv_path = here::here("global/contributor
                      tgc_contributors$tagline[rows])
   
   ## paste contributor info inside HTML decorations
-  list_elements <-glue::glue("<li><img src= {image_paths} width='50px' height='50px' />
+  list_elements <-glue::glue("<li><img src= '{image_paths}' width='50px' height='50px' />
                              <name><a href='{links}' target='_blank'>{names} </a> </name> <br>
                              <label>{labels}</label>
                              <p>{taglines}</p></li>")
