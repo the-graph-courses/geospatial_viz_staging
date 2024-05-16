@@ -1,19 +1,16 @@
 ---
 title: 'Additional Layers'
 output:
-  # word_document:
-  #   toc: true
   html_document:
     number_sections: true
     toc: true
+    toc_float: true
     css: !expr here::here("global/style/style.css")
     highlight: kate
-    pandoc_args: --shift-heading-level-by=-1
-editor_options:
-  markdown:
-    wrap: 100
-  canonical: true
+editor_options: 
   chunk_output_type: inline
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include = FALSE, warning = FALSE, message = FALSE}
@@ -34,7 +31,7 @@ ggplot2::theme_set(new = theme_bw())
 
 ------------------------------------------------------------------------
 
-## Introduction
+# Introduction
 
 Until now, we have learnt general concepts about geospatial visualization in independent lessons. The **modular** approach of `{ggplot2}` allows to successively add all of them in different **layers**.
 
@@ -46,7 +43,7 @@ In this lesson, we will learn to use functions from the `{ggspatial}` and `{ggsf
 
 ------------------------------------------------------------------------
 
-## Learning objectives
+# Learning objectives
 
 1.  Access **hospital** data coordinates using the `{afrihealthsites}` package.
 
@@ -56,7 +53,7 @@ In this lesson, we will learn to use functions from the `{ggspatial}` and `{ggsf
 
 ------------------------------------------------------------------------
 
-## Prerequisites
+# Prerequisites
 
 This lesson requires the following packages:
 
@@ -80,13 +77,15 @@ pacman::p_load_gh("yutannihilation/ggsflabel",
                   "wmgeolab/rgeoboundaries")
 ```
 
-## Build an informative map
+------------------------------------------------------------------------
+
+# Build an informative map
 
 • How are Tier 3 Hospitals distributed in the Western Province of Sierra Leone?
 
 • Retrieve real Hospital information from a public repository.
 
-### Access hospital sites with `{afrihealthsites}` {.unnumbered}
+## Access hospital sites with `{afrihealthsites}`
 
 • `afrihealthsites()` from [`{afrihealthsites}`](https://github.com/afrimapr/afrihealthsites)
 
@@ -169,7 +168,7 @@ ggplot() +
 `sf` objects can handle on the fly the **coordinate system** (both *projection* and *extent*), which can be very useful if more than one spatial objects are not in the same projection.
 :::
 
-### Add a Scale bar and North arrow with `{ggspatial}` {.unnumbered}
+## Add a Scale bar and North arrow with `{ggspatial}`
 
 • Let's use `{ggspatial}` with a `{ggplot}` map:
 
@@ -226,7 +225,7 @@ q4
 • [scale distance](https://paleolimbot.github.io/ggspatial/reference/annotation_scale.html) is set to `"km"` by default, you can also set it in "m", "cm", "mi", "ft", or "in".
 :::
 
-### Add hospital names with `geom_sf_text_repel()` {.unnumbered}
+## Add hospital names with `geom_sf_text_repel()`
 
 • Use `geom_sf_text()` to add hospital locations and names as text:
 
@@ -335,7 +334,7 @@ ggplot() +
            ylim = c(8.0,8.7))
 ```
 
-### Add province labels with `geom_sf_label_repel()` {.unnumbered}
+## Add province labels with `geom_sf_label_repel()`
 
 • Let's add names of administrative borders, available in `shapeName`:
 
@@ -411,7 +410,7 @@ ggplot() +
 
 ------------------------------------------------------------------------
 
-## Final map
+# Final map
 
 • Let's put everything together:
 
@@ -483,7 +482,7 @@ ggplot() +
 
 ------------------------------------------------------------------------
 
-## Wrap up
+# Wrap up
 
 • Adding **layers** on `ggplot2` is relatively straightforward, as long as the data is properly stored in an `sf` object.
 
@@ -491,7 +490,7 @@ ggplot() +
 
 ------------------------------------------------------------------------
 
-## Contributors {.unlisted .unnumbered}
+# Contributors {.unlisted .unnumbered}
 
 The following team members contributed to this lesson: `r tgc_contributors_list(ids = c("avallecam", "lolovanco"))`
 
@@ -514,5 +513,3 @@ Some material in this lesson was adapted from the following sources:
 ## Answer Key {.unnumbered}
 
 ### RStudio Cloud 1 {.unlisted .unnumbered}
-
-

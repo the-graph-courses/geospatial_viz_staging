@@ -1,19 +1,16 @@
 ---
-title: '\ '
+title: 'Additional Layers'
 output:
-  # word_document:
-  #   toc: true
   html_document:
     number_sections: true
     toc: true
+    toc_float: true
     css: !expr here::here("global/style/style.css")
     highlight: kate
-    pandoc_args: --shift-heading-level-by=-1
-editor_options:
-  markdown:
-    wrap: 100
-  canonical: true
+editor_options: 
   chunk_output_type: inline
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include = FALSE, warning = FALSE, message = FALSE}
@@ -35,9 +32,7 @@ mute(here("lessons/ls10_layers_autograder.R"))
 ggplot2::theme_set(new = theme_bw())
 ```
 
-# Additional layers
-
-## Introduction
+# Introduction
 
 Until now, we have learnt general concepts about geospatial visualization in independent lessons. The **modular** approach of `{ggplot2}` allows to successively add all of them in different **layers**.
 
@@ -47,7 +42,7 @@ However, these enriched thematic maps also require to contain **text** and **lab
 
 In this lesson, we will learn to use functions from the `{ggspatial}` and `{ggsflabel}` packages to add all of these additional elements to our maps!
 
-## Learning objectives
+# Learning objectives
 
 1.  Access **hospital** data coordinates using the `{afrihealthsites}` package.
 
@@ -55,7 +50,7 @@ In this lesson, we will learn to use functions from the `{ggspatial}` and `{ggsf
 
 3.  Add arrow and scale **annotations** in ggplot maps using the `{ggspatial}` package.
 
-## Prerequisites
+# Prerequisites
 
 This lesson requires the following packages:
 
@@ -79,11 +74,11 @@ pacman::p_load_gh("yutannihilation/ggsflabel",
                   "wmgeolab/rgeoboundaries")
 ```
 
-## Build an informative map
+# Build an informative map
 
 We will create a map to figure out how Tier 3 Hospitals are distributed in the Western Province of Sierra Leone. For this, we are going to retrieve real Hospital information from a public repository.
 
-### Access hospital sites with `{afrihealthsites}` {.unnumbered}
+## Access hospital sites with `{afrihealthsites}` 
 
 Instead of looking up coordinates manually, the [package `{afrihealthsites}`](https://github.com/afrimapr/afrihealthsites) provides a function `afrihealthsites()`, which allows to retrieve geographic coordinates of African health facilities from different sources.
 
@@ -161,7 +156,7 @@ ggplot() +
 `sf` objects can handle on the fly the **coordinate system** (both *projection* and *extent*), which can be very useful if more than one spatial objects are not in the same projection.
 :::
 
-### Add a Scale bar and North arrow with `{ggspatial}` {.unnumbered}
+## Add a Scale bar and North arrow with `{ggspatial}`
 
 Here we introduce the `{ggspatial}` package, which provides easy-to-use functions to create a scale bar and north arrow on a `ggplot` map:
 
@@ -220,7 +215,7 @@ q4
 -   Note that [scale distance](https://paleolimbot.github.io/ggspatial/reference/annotation_scale.html) is set to `"km"` by default in `annotation_scale()`; you can set it in "m", "cm", "mi", "ft", or "in".
 :::
 
-### Add hospital names with `geom_sf_text_repel()` {.unnumbered}
+## Add hospital names with `geom_sf_text_repel()` 
 
 We add hospital locations and names as text on the map with `geom_sf_text()`:
 
@@ -327,7 +322,7 @@ ggplot() +
            ylim = c(8.0,8.7))
 ```
 
-### Add province labels with `geom_sf_label_repel()` {.unnumbered}
+## Add province labels with `geom_sf_label_repel()` 
 
 It would be informative to add finer administrative information on top of the previous map, starting with administrative borders (`sf` object: polygon data) and their names. The package `ggsflabel` provides functions to add labels to `sf` objects (points and polygons) in maps.
 
@@ -410,7 +405,7 @@ ggplot() +
   coord_sf(xlim = c(-13.5,-12.7), ylim = c(8.0,8.7))
 ```
 
-## Final map
+# Final map
 
 For the final map, we put everything together, having a country boundary map based on the Sierra Leona map, province labels, main hospital names and locations, custom GPS collected field sites, as well as a theme adjusted with axis labels, and a north arrow and scale bar.
 
@@ -484,15 +479,15 @@ ggplot() +
 .score_print()
 ```
 
-## Wrap up
+# Wrap up
 
 This example fully demonstrates that adding **layers** on `ggplot2` is relatively straightforward, as long as the data is properly stored as an `sf` object. Adding additional layers like **external** data, color **palettes**, point or polygon **labels** and **map annotations** would simply follow the same logic, with additional calls *after* `geom_sf()` and at the *right place* in the `ggplot2` sequence.
 
-## Contributors {.unlisted .unnumbered}
+# Contributors {.unlisted .unnumbered}
 
 The following team members contributed to this lesson: `r tgc_contributors_list(ids = c("avallecam", "lolovanco"))`
 
-## References {.unlisted .unnumbered}
+# References {.unlisted .unnumbered}
 
 Some material in this lesson was adapted from the following sources:
 
