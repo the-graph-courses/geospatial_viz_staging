@@ -61,7 +61,8 @@ pacman::p_load(ggspatial,
                terra,
                dplyr,
                spData,
-               sf)
+               sf, 
+               prettymapr)
 ```
 
 This lesson requires familiarity with `{ggplot2}`: if you need to brush up, have a look at our introductory course on data visualization.
@@ -110,7 +111,7 @@ afriairports %>%
   coord_sf()
 ```
 
-::: rstudio-cloud
+::: r-practice
 Create a Density map with the `pcrime` data read from the `pcrime.rds` local file.
 
 ```{r}
@@ -137,11 +138,11 @@ pcrime %>%
 
 This type of Thematic map is best used with *Environmental data*, such as altitude, air pollution or rainfall data values measured at several monitoring stations.
 
-![Figure 5. Altitude data from The Gambia.](images/pre-malaria-02.PNG)
+![Figure 5. Altitude data from The Gambia.](images/pre-malaria-02.png)
 
 Density maps are also used to visualize *spatially continuous disease prevalence surfaces*. For example, Moraga et al. (2019) used the prevalence values of malaria in children obtained from surveys conducted at 65 villages in The Gambia to predict the *disease prevalence* at *unobserved locations*, using a geostatistical model.
 
-![Figure 6. Predicted malaria prevalence in The Gambia.](images/pre-malaria-03.PNG)
+![Figure 6. Predicted malaria prevalence in The Gambia.](images/pre-malaria-03.png)
 
 ## What alternative plots do we have?
 
@@ -187,7 +188,7 @@ afriairports %>%
   coord_sf()
 ```
 
-::: rstudio-cloud
+::: r-practice
 Use the `st_coordinates_tidy()` function to extract the X and Y coordinates from the `pcrime` dataset.
 
 This will be useful to built a Density map with `geom_density_2d_filled()` and portrait the number of crimes per area, faceted by the two types of crime in the column `marks`.
@@ -226,7 +227,7 @@ ggplot(data = cholera_deaths) +
   geom_sf(mapping = aes(size = Count), alpha = 0.5)
 ```
 
-::: rstudio-cloud
+::: r-practice
 Add a Basemap to a Dot map using the `africapitals` object and the `annotation_map_tile()` function.
 
 ```{r,eval=FALSE,echo=TRUE}
@@ -266,7 +267,7 @@ pcrime %>%
 -   The basemap must be bellow the `geom_*` function!
 :::
 
-::: rstudio-cloud
+::: r-practice
 Use two functions, `annotation_map_tile()` and `geom_bin_2d()`, to add a Basemap to a Density map using the `afriairports` object.
 
 ```{r,eval=FALSE,echo=TRUE}
@@ -284,6 +285,44 @@ afriairports %>%
 In this lesson, we have learned about one more type of Thematic map called *Density maps* to avoid overlapping spatial points. Also, how to add Google Maps-like backgrounds called *Basemaps*.
 
 But, How can we create more *Thematic maps* from **external** Spatial data created by other GIS software? In the following lessons, we are going to learn how to **read external Spatial data** and *convert foreign* objects to *sf* files! Follow along with the lessons to find how to train these skills!
+
+
+## Answer Key {.unnumbered}
+
+### Practice 1 {.unlisted .unnumbered}
+
+```{r}
+pcrime %>% 
+	@@ -366,7 +352,7 @@ pcrime %>%
+    facet_wrap(~marks)
+```
+
+### Practice 2 {.unlisted .unnumbered}
+
+```{r}
+pcrime %>% 
+	@@ -377,15 +363,15 @@ pcrime %>%
+    facet_wrap(~marks)
+```
+
+### Practice 3 {.unlisted .unnumbered}
+
+```{r}
+ggplot(data = africapitals) +
+    annotation_map_tile() + 
+    geom_sf(mapping = aes(size = pop), alpha = 0.5)
+```
+
+### Practice 4 {.unlisted .unnumbered}
+
+```{r}
+afriairports %>% 
+    epihelper::st_coordinates_tidy() %>% 
+    ggplot(aes(x = X, y = Y)) +
+    annotation_map_tile() + 
+    geom_bin_2d() +
+    coord_sf()
+```
 
 # Contributors {.unlisted .unnumbered}
 

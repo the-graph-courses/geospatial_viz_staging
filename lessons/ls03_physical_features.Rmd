@@ -62,7 +62,8 @@ pacman::p_load(ggspatial,
                mdsr,
                terra,
                spData,
-               sf)
+               sf, 
+               readr)
 ```
 
 This lesson requires familiarity with `{ggplot2}`: if you need to brush up, have a look at our introductory course on data visualization.
@@ -89,7 +90,7 @@ ggplot(data = south_am_roads) +
   geom_sf(aes(color = type))
 ```
 
-::: rstudio-cloud
+::: r-practice
 Let's create a map of the Sacramento basin in California US (`sacramento_rivers`), colored by their feature type (`FTYPE`).
 
 ```{r,eval=FALSE}
@@ -119,7 +120,7 @@ ggplot(data = sacramento_rivers) +
 
 "Richness" is the estimated number of fish species in each segment of the river.
 
-::: rstudio-cloud
+::: r-practice
 Create a Thematic map of the road network in South America, using the `south_am_roads` dataset, colored by the length in Km (`length_km`) of each road.
 
 ```{r,eval=FALSE}
@@ -132,7 +133,7 @@ ggplot(data = south_am_roads) +
 
 We can use *Trajectory data* and *Road network data* to evaluate the effects of human movement patterns in infectious disease transmission like [Dengue](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0172313) or [Malaria](https://malariajournal.biomedcentral.com/articles/10.1186/1475-2875-11-205).
 
-![Figure 2. (A) Human mobility by follow-up GPS tracks (Falcón-Lezama et al. 2017). (B) Road network map of Kenia with traffic data (Pindolia et al. 2012).](images/lines-malaria.JPG)
+![Figure 2. (A) Human mobility by follow-up GPS tracks (Falcón-Lezama et al. 2017). (B) Road network map of Kenia with traffic data (Pindolia et al. 2012).](images/lines-malaria.jpg)
 
 Both of them are depicted in a map using **Lines**.
 
@@ -211,10 +212,6 @@ q1 <-
 q1
 ```
 
-```{r,include = FALSE}
-.check_q1()
-.hint_q1()
-```
 :::
 
 ## How to use it?
@@ -232,6 +229,37 @@ In this lesson, we have learned about how to represent *Physical features* and h
 ![Figure 5. Concept map #2.](images/conceptmap-00-thematic-v3.png)
 
 However, most times spatial data requires *more explicit* Google Maps-like **geographic context**! For this you will need to learn how to add *Basemaps* for Google Maps-like backgrounds. Follow along with the lessons to find how to do this!
+
+## Answer Key {.unnumbered}
+
+### Q1 {.unlisted .unnumbered}
+
+```{r}
+sacramento_rivers <- 
+  read_rds(here("data/sacramento_rivers.rds"))
+
+ggplot(data = sacramento_rivers) + 
+    geom_sf(aes(color = FTYPE), size = 1)
+
+```
+
+### Q2 {.unlisted .unnumbered}
+
+```{r}
+south_am_roads <- 
+  read_rds(here("data/south_am_roads.rds"))
+
+ggplot(data = south_am_roads) + 
+    geom_sf(aes(color = length_km), size = 1)
+```
+
+### Q3 {.unlisted .unnumbered}
+
+```{r}
+ggplot() + 
+    geom_sf(data = world) + 
+    geom_sf(data = afrihighway)
+```
 
 # Contributors {.unlisted .unnumbered}
 

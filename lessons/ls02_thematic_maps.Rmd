@@ -23,9 +23,6 @@ source(here("global/functions/misc_functions.R"))
 
 # knitr settings
 knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
-
-# Source autograder script quietly 
-suppressMessages(source(here::here("lessons/ls02_thematic_maps_autograder.R")))
 ```
 
 ```{r,echo=FALSE}
@@ -61,7 +58,8 @@ pacman::p_load(rnaturalearth,
                ggplot2,
                mdsr,
                terra,
-               spData)
+               spData, 
+               readr)
 
 ```
 
@@ -108,11 +106,6 @@ q1 <-
 q1
 ```
 
-```{r,include = FALSE}
-# Check your answer:
-.check_q1()
-.hint_q1()
-```
 :::
 
 ### With Categorical data
@@ -208,11 +201,6 @@ q2 <-
 q2
 ```
 
-```{r,include = FALSE}
-# Check your answer:
-.check_q2()
-.hint_q2()
-```
 :::
 
 ## How to use it? 
@@ -235,7 +223,7 @@ Thematic maps visualize specific *shapes* or **Geometry** types:
 -   Choropleth maps visualize *Polygons*.
 -   Dot maps visualize *Points*.
 
-![Figure 4. Geometry types for Choropleth and Dot maps.](images/geometries-point_poly.JPG)
+![Figure 4. Geometry types for Choropleth and Dot maps.](images/geometries-point_poly.jpg)
 :::
 
 ::: practice
@@ -250,38 +238,15 @@ Your answer should be either "choropleth_map" or "dot_distribution_map".
 
 [Malaria cases in Africa](https://data.unicef.org/topic/child-health/malaria/):
 
-![](images/question_map_01.JPG){width="304"}
+![](images/question_map_01.jpg){width="304"}
 
-```{r,include = FALSE}
-# unlock your answer:
-# q3 <- "choropleth_map"
-# q3 <- "dot_distribution_map"
-
-.check_q3()
-.hint_q3()
-```
 
 [COVID-19 cases in the world](https://coronavirus.jhu.edu/map.html):
 
-![](images/question_map_02.JPG){width="436"}
+![](images/question_map_02.jpg){width="436"}
 
-```{r,include = FALSE}
-# unlock your answer:
-# q4 <- "choropleth_map"
-# q4 <- "dot_distribution_map"
-
-.check_q4()
-.hint_q4()
-```
 :::
 
-```{r include = F}
-.score_print()
-```
-
-```{r include = F}
-pacman::p_unload(raster) # avoid masking select(). Temporary investigation
-```
 
 # Wrap up
 
@@ -290,6 +255,32 @@ In this lesson, we learned about *Thematic maps*, how to create them using *{ggp
 ![Figure 5. Concept map #1.](images/conceptmap-00-thematic-v2.png)
 
 But, how can we complement Thematic maps with *geographic context*? Or how can we avoid *overlapped points* when needed? In the following lessons, we are going to learn about how to add *Physical features* to our maps and use *Density maps* to avoid overlaps in them!
+
+
+## Answer Key {.unnumbered}
+
+### Q1 {.unlisted .unnumbered}
+
+```{r}
+q1 <- ggplot(data = world) + 
+  geom_sf(aes(fill = pop))
+q1
+```
+
+### Q2 {.unlisted .unnumbered}
+
+```{r}
+q2 <- ggplot(data = afriairports) + 
+  geom_sf(aes(fill = type))
+q2
+```
+
+### Q3 & Q4 {.unlisted .unnumbered}
+
+Which of the following options of *Thematic map* types corresponds to each of these *Epidemic map* figures? Your answer should be either "choropleth_map" or "dot_distribution_map".
+
+1.  [\*\*Malaria cases in Africa]\*\* is a CHROPLETH MAP
+2.  **[COVID-19 cases in the world]** is a DOT DISTRIBUTION MAP
 
 # Contributors {.unlisted .unnumbered}
 
