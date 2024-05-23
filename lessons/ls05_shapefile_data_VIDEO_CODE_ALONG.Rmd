@@ -72,10 +72,10 @@ pacman::p_load(rnaturalearth,
                ggplot2,
                cholera,
                here,
-               sf)
+               sf, 
+               rgeoboundaries)
 
-pacman::p_load_gh("afrimapr/afrilearndata",
-                  "wmgeolab/rgeoboundaries")
+pacman::p_load_gh("afrimapr/afrilearndata")
 ```
 
 ------------------------------------------------------------------------
@@ -106,16 +106,15 @@ pacman::p_load_gh("afrimapr/afrilearndata",
 shape_file <- ______(here("data/boundaries/sle_adm3.shp"))
 ```
 
-::: rstudio-cloud
 • The output is an `sf` object and can be plotted using `geom_sf()`:
 
 ```{r,eval=FALSE}
 shape_file %>% class()
 
-______(data = ______) +
-  ______()
+# Plot with geom_sf
+# Your code here
+
 ```
-:::
 
 ::: practice
 Read the shapefile called `sle_hf.shp` inside the `data/healthsites/` folder. Use the `read_sf()` function:

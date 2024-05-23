@@ -69,12 +69,12 @@ pacman::p_load(tidyverse,
                spData,
                units,
                here,
-               sf)
+               sf, 
+               rgeoboundaries)
 
 pacman::p_load_gh("yutannihilation/ggsflabel",
                   "afrimapr/afrihealthsites",
-                  "afrimapr/afrilearndata",
-                  "wmgeolab/rgeoboundaries")
+                  "afrimapr/afrilearndata")
 ```
 
 ------------------------------------------------------------------------
@@ -103,14 +103,11 @@ sle_healthsites_all <-
 sle_healthsites_all
 ```
 
-::: rstudio-cloud
+::: r-practice
 Access to all the health facilities of `Zimbabwe` from the `healthsites` data source using the `afrihealthsites()` function.
 
 ```{r,eval=FALSE,echo=FALSE}
-afrihealthsites(country = "______", 
-                datasource = "______",
-                plot = FALSE) %>% 
-  print()
+# WRITE YOUR CODE HERE
 ```
 :::
 
@@ -359,7 +356,7 @@ zimbabwe_adm1 <- geoboundaries(country = "Zimbabwe", adm_lvl = 1)
 Create a `ggplot` map of Zimbabwe with labels for the name of each of its provinces.
 
 ```{r,eval = FALSE}
-q2 <- 
+q6 <- 
   zimbabwe_adm1 %>% 
   ggplot() + 
   
@@ -368,7 +365,7 @@ q2 <-
   
   # province labels
   ______(aes(label = ______))
-q2
+q6
 ```
 :::
 
@@ -507,9 +504,3 @@ Some material in this lesson was adapted from the following sources:
 -   *Wilke, Claus O. Fundamentals of Data Visualization. Chapter 4: Color scales*. (2020). Retrieved 01 June 2022, from <https://clauswilke.com/dataviz/color-basics.html#color-to-represent-data-values>
 
 `r tgc_license()`
-
-------------------------------------------------------------------------
-
-## Answer Key {.unnumbered}
-
-### RStudio Cloud 1 {.unlisted .unnumbered}

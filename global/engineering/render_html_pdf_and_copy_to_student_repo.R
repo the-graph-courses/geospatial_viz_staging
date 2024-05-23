@@ -24,12 +24,17 @@ current_dir <- here::here()
 # Manually list the lessons to render. You can use ChatGPT to generate such list
 selected_lessons <- 
   c(
-    "ls02_thematic_maps.Rmd"
-    ,
-    "ls03_physical_features.Rmd"
-    ,
-    "ls04_density_map.Rmd"
+    # "ls02_thematic_maps.Rmd"
+    # ,
+    # "ls03_physical_features.Rmd"
+    # ,
+    # "ls04_density_map.Rmd", 
+    
+    "ls05_shapefile_data.Rmd",
+    "ls07_boundary_data.Rmd",
+    "ls10_layers.Rmd"
   )
+
 
 
 # Get full paths of Rmds to render
