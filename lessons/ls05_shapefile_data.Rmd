@@ -65,10 +65,10 @@ pacman::p_load(rnaturalearth,
                ggplot2,
                cholera,
                here,
-               sf)
+               sf, 
+               rgeoboundaries)
 
-pacman::p_load_gh("afrimapr/afrilearndata",
-                  "wmgeolab/rgeoboundaries")
+pacman::p_load_gh("afrimapr/afrilearndata")
 ```
 
 # Shapefiles
@@ -93,7 +93,7 @@ Let's read the `sle_adm3.shp` file, available inside the `data/boundaries/` fold
 shape_file <- read_sf(here("data/boundaries/sle_adm3.shp"))
 ```
 
-::: rstudio-cloud
+::: r-practice
 Check that the output is an `sf` object and can be plotted using `geom_sf()`:
 
 ```{r,eval=FALSE}
@@ -374,9 +374,6 @@ list.files(path = here("data/newshapefile"),
   tibble::enframe(name = NULL)
 ```
 
-```{r include = F}
-.score_print()
-```
 
 # Wrap up
 

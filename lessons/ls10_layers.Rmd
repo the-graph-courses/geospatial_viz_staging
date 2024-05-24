@@ -66,12 +66,12 @@ pacman::p_load(tidyverse,
                spData,
                units,
                here,
-               sf)
+               sf, 
+               rgeoboundaries)
 
 pacman::p_load_gh("yutannihilation/ggsflabel",
                   "afrimapr/afrihealthsites",
-                  "afrimapr/afrilearndata",
-                  "wmgeolab/rgeoboundaries")
+                  "afrimapr/afrilearndata")
 ```
 
 # Build an informative map
@@ -473,10 +473,6 @@ ggplot() +
        fill = expression(Area~km^2),
        color = "GPS data",
        title = "How are Tier 3 Hospitals distributed in the Western Province of Sierra Leone?")
-```
-
-```{r include = F}
-.score_print()
 ```
 
 # Wrap up
